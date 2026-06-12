@@ -1,0 +1,9 @@
+<Solution>
+    <Project Path="Bragi/Bragi.csproj"/>
+    <Project Path="Brunnr/Brunnr.csproj"/>
+    <Project Path="Brunnr.Tests/Brunnr.Tests.csproj"/>
+    <Project Path="Kvasir/Kvasir.csproj"/>
+    <Project Path="Nornir/Nornir.csproj"/>
+    <Project Path="Nornir.Tests/Nornir.Tests.csproj"/>
+    <Project Path="Volundr/Autodoc/Autodoc.csproj"/>
+</Solution>

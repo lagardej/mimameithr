@@ -1,0 +1,9 @@
+= Components Index
+
+== Components
+
+[cols="1,3",options="header"]
+|===
+| Component | Summary
+{{components}}
+|===

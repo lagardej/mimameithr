@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Brunnr</RootNamespace>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kvasir\Kvasir.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Friflo.Engine.ECS" Version="3.6.0" />
+    <PackageReference Include="UnitsNet" Version="5.75.0" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,311 @@
+= Components
+:toc: left
+
+NOTE: Mimameithr simulates an arbitrary space body, not Earth.
+No component assumes Earth-specific conditions.
+Parameters drive all physical outcomes; Earth is one possible configuration, not the reference.
+
+== Inter-Component Communication
+
+One component owns each state field.
+No other component may write to it.
+Consumers read state as read-only.
+
+This is a hard constraint.
+Write ownership is not negotiated at runtime and not shared.
+
+== Component Boundaries
+
+Two axes determine whether a process is its own component or part of an existing one:
+
+* **Data ownership** — does this process own distinct state that no other process may write?
+If yes, it is a component.
+* **Coupling frequency** — does this process tick at a different cadence than related processes?
+If yes, it is a component.
+
+Both axes must be considered together.
+A process that shares state ownership with another is not a component regardless of cadence.
+A process that owns distinct state but ticks at the same cadence as a related process may still warrant splitting if the state domains are unrelated.
+
+_Example:_ Tectonics and Dynamics operate in the same physical domain but are separate components.
+Tectonics owns the plate and fault map; Dynamics owns stress accumulation at defined points and publishes threshold events.
+Neither writes the other's state.
+Splitting them reflects both distinct ownership and different tick behaviour.
+
+When in doubt, split.
+Merging is harder to undo than splitting.
+
+Components are grouped by the sphere they belong to.
+The climate system is the interaction between five spheres (atmosphere, hydrosphere, cryosphere, lithosphere, biosphere); each interacts with the other four.
+Primosphere sits outside that web — it is an external driver that the climate system receives from but does not feed back into.
+Civilization (anthroposphere) is layered on top of the climate system once active.
+
+== Primosphere
+
+External driver.
+Provides the physical and orbital context all other components depend on.
+Not part of the climate system interaction web.
+
+NOTE: Arrows represent data flow: A -> B means A exposes data consumed by B. External components shown with dashed style.
+Dashed arrows represent messages.
+
+[mermaid]
+....
+flowchart TD
+    %% Arrows represent data flow: A --> B means A exposes data consumed by B.
+    %% External components shown with dashed style. Dashed arrows represent messages.
+    IceSheet(["Cryosphere<br>Ice Sheet"]):::external
+    SeaIce(["Cryosphere<br>Sea Ice"]):::external
+    Flora(["Biosphere<br>Flora"]):::external
+    Domain
+    Irradiance["Irradiance"]
+    Albedo
+    Motion
+    ThermalRedistOut(["Atmosphere<br>Thermal Redistribution"]):::external
+    Domain --> Irradiance
+    Motion --> Irradiance
+    Irradiance --> ThermalRedistOut
+    Albedo --> ThermalRedistOut
+    IceSheet -.-> Albedo
+    SeaIce -.-> Albedo
+    Flora -.-> Albedo
+    classDef external fill:none,stroke-dasharray:5
+....
+
+=== Albedo
+
+=== Domain
+
+Defines the intrinsic physical properties of the simulated body.
+
+=== Irradiance
+
+Quantifies the stellar energy flux received at each point of the domain's surface.
+Driven by the orbital position exposed by <<Motion>> and the axial tilt exposed by <<Domain>>.
+
+=== Motion
+
+Tracks the orbital mechanics of the domain relative to its parent body.
+Governs how distance and angular position evolve over time.
+
+== Lithosphere
+
+NOTE: Arrows represent data flow: A -> B means A exposes data consumed by B. External components shown with dashed style.
+
+[mermaid]
+....
+flowchart TD
+    %% Arrows represent data flow: A --> B means A exposes data consumed by B.
+    ErosionMsg([erosion messages]):::external
+    Tectonics
+    Orogeny
+    Elevation
+    Dynamics
+    Sedimentation
+    Geology
+    Geothermal
+    Tectonics -->|plate map, fault map| Orogeny
+    Tectonics -->|crustal baseline| Elevation
+    Tectonics -->|stress point locations| Dynamics
+    Tectonics -->|crust type| Geology
+    Tectonics -->|crust thickness| Geothermal
+    Orogeny -->|uplift state| Elevation
+    Orogeny -->|orogeny history| Geology
+    Dynamics -->|stress point messages| Geothermal
+    ErosionMsg --> Sedimentation
+    ErosionMsg --> Elevation
+    classDef external fill:none,stroke-dasharray:5
+....
+
+=== Geology
+
+=== Geothermal
+
+=== Tectonics
+
+=== Orogeny
+
+=== Elevation
+
+=== Dynamics
+
+=== Sedimentation
+
+== Atmosphere
+
+NOTE: Arrows represent data flow: A -> B means A exposes data consumed by B. External components shown with dashed style.
+
+[mermaid]
+....
+flowchart TD
+    %% Arrows represent data flow: A --> B means A exposes data consumed by B.
+    %% External components shown with dashed style.
+    Irradiance([Irradiance - Primosphere]):::external -->|irradiance map| Thermal
+    OceanCirculation([Ocean Circulation - Hydrosphere]):::external -->|warm/cold coastal masks| Thermal
+    Elevation([Elevation - Lithosphere]):::external -->|orography| Circulation
+    Thermal[Thermal Redistribution] -->|heat distribution| Circulation
+    Thermal -->|thermal gradient| Precipitation
+    Composition -->|gas state| Circulation
+    Circulation -->|moisture, wind field| Precipitation
+    classDef external fill:none,stroke-dasharray:5
+....
+
+=== Circulation
+
+=== Composition
+
+=== Precipitation
+
+=== Thermal Redistribution
+
+== Hydrosphere
+
+NOTE: Arrows represent data flow: A -> B means A exposes data consumed by B. External components shown with dashed style.
+
+[mermaid]
+....
+flowchart TD
+    %% Arrows represent data flow: A --> B means A exposes data consumed by B.
+    %% External components shown with dashed style.
+    Elevation(["Elevation<br>Lithosphere"]):::external
+    SeaLevelMsg(["Cryosphere, Anthroposphere<br>sea level messages"]):::external
+    ThermalRedist(["Atmosphere<br>Thermal Redistribution"]):::external
+    SeaLevel["SeaLevel"]
+    Basin["Basin"]
+    OceanCirculation["Ocean<br>circulation"]
+    RiverNetwork["River<br>network"]
+    Groundwater["Groundwater"]
+    Precipitation(["Atmosphere<br>Precipitation"]):::external
+    Precipitation -- pcpn field --> Groundwater
+    Precipitation -- pcpn field --> RiverNetwork
+    RiverNetwork -- river flux --> Groundwater
+    Elevation -- elev field --> RiverNetwork
+    Elevation -- elev field --> Basin
+    Basin -- basin asgmt --> RiverNetwork
+    Basin -- basin asgmt,<br>land/ocean mask --> OceanCirculation
+    ThermalRedist -- heat dist --> OceanCirculation
+    SeaLevelMsg --> SeaLevel
+    SeaLevel -- sea level --> Basin
+    SeaLevel -- sea level --> OceanCirculation
+    classDef external fill:none,stroke-dasharray:5
+    classDef external fill:none,stroke-dasharray:5
+....
+
+=== Basin
+
+=== Sea Level
+
+=== Ocean Circulation
+
+=== River Network
+
+=== Groundwater
+
+== Cryosphere
+
+[mermaid]
+....
+flowchart TD
+    %% Arrows represent data flow: A --> B means A exposes data consumed by B.
+    %% External components shown with dashed style.
+    TemperatureIn([Atmosphere<br>Thermal Redistribution]):::external
+    PrecipitationIn([Atmosphere<br>Precipitation]):::external
+    ElevationIn([Lithosphere<br>Elevation]):::external
+    Permafrost([Permafrost])
+    SeaIce([Sea ice])
+    IceSheet([Ice sheet])
+    Glacier([Glacier])
+    CompositionOut([Atmosphere<br>Composition]):::external
+    RiverOut([Hydrosphere<br>River Network]):::external
+    AlbedoOut([Primosphere<br>Albedo]):::external
+    ElevationOut([Lithosphere<br>Elevation]):::external
+    SeaLevelOut([Hydrosphere<br>Sea Level]):::external
+    TemperatureIn -->|heat distribution| Permafrost
+    Permafrost -.->|methane| CompositionOut
+    TemperatureIn -->|heat distribution| SeaIce
+    SeaIce -.->|sea ice coverage| AlbedoOut
+    TemperatureIn -->|heat distribution| IceSheet
+    PrecipitationIn -->|precipitation field| IceSheet
+    IceSheet -->|ice coverage| SeaIce
+    IceSheet -.->|sea level| SeaLevelOut
+    IceSheet -.->|ice coverage| AlbedoOut
+    IceSheet -.->|erosion| ElevationOut
+    TemperatureIn -->|heat distribution| Glacier
+    PrecipitationIn -->|precipitation field| Glacier
+    ElevationIn -->|elevation field| Glacier
+    Glacier -.->|erosion| ElevationOut
+    Glacier -.->|melt flux| RiverOut
+    classDef external fill:none,stroke-dasharray:5
+....
+
+=== Ice Sheet
+
+=== Glacier
+
+=== Sea Ice
+
+=== Permafrost
+
+== Biosphere
+
+NOTE: Arrows represent data flow: A -> B means A exposes data consumed by B. External components shown with dashed style.
+
+[mermaid]
+....
+flowchart TD
+    %% Arrows represent data flow: A --> B means A exposes data consumed by B.
+    %% External components shown with dashed style.
+    ErosionMsg([Lithosphere<br>erosion]):::external
+    SedimentationIn([Lithosphere<br>Sedimentation]):::external
+    PrecipitationIn([Atmosphere<br>Precipitation]):::external
+    TemperatureIn([Atmosphere<br>Thermal Redistribution]):::external
+    ElevationIn([Lithosphere<br>Elevation]):::external
+    GroundwaterIn([Hydrosphere<br>Groundwater]):::external
+    RiverIn([Hydrosphere<br>River Network]):::external
+    CirculationIn([Atmosphere<br>Circulation]):::external
+    Soil
+    Flora
+    Biome
+    Fauna
+    Disease
+    AlbedoOut([Primosphere<br>Albedo]):::external
+    SpilloverOut([Anthroposphere<br>spillover risk]):::external
+    SedimentationIn -->|sediment deposit| Soil
+    ErosionMsg -->|erosion delta| Soil
+    GroundwaterIn -->|water table depth| Flora
+    RiverIn -->|river flux| Flora
+    PrecipitationIn -->|precipitation field| Flora
+    Flora -->|vegetation cover| AlbedoOut
+    Flora -->|vegetation cover| Fauna
+    Soil -->|fertility, depth| Flora
+    Flora -->|organic matter| Soil
+    GroundwaterIn -->|water table depth| Fauna
+    RiverIn -->|river flux| Fauna
+    ElevationIn -->|elevation field| Biome
+    PrecipitationIn -->|precipitation field| Biome
+    TemperatureIn -->|heat distribution| Biome
+    Biome -->|biome class| Flora
+    Biome -->|biome class| Fauna
+    Biome -->|biome class| Soil
+    Biome -->|habitat suitability| Disease
+    CirculationIn -->|airborne vector| Disease
+    GroundwaterIn -->|waterborne vector| Disease
+    RiverIn -->|waterborne vector| Disease
+    Disease -.->|spillover risk| SpilloverOut
+    Fauna -->|host density| Disease
+    classDef external fill:none,stroke-dasharray:5
+....
+
+=== Biome
+
+=== Flora
+
+=== Soil
+
+=== Fauna
+
+=== Disease
+
+== Anthroposphere
+
+=== Civilization

@@ -1,0 +1,11 @@
+# Where the bulk of the surface sits relative to mean elevation.
+# Range: -10–10. Earth: -2.
+# Low: most terrain above mean — high plateaus dominate, few deep rifts.
+# High: most terrain below mean — deep basins dominate, few high peaks.
+terrain_skew = 0
+
+# Vertical distance between the lowest and highest point on the surface.
+# Range: 1–10. Earth: 6.
+# Low: flat, featureless terrain.
+# High: extreme vertical range.
+amplitude = 0

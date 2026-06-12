@@ -1,0 +1,20 @@
+= Mimameithr
+
+A civilization-scale planetary simulation engine.
+Models physical and civilizational processes over a 10 000-year horizon — tectonics, climate, hydrology, geology, weather, vegetation, fauna, and the civilizations that emerge from and are constrained by them.
+
+Godot 4 is the rendering layer.
+The simulation runs headless.
+
+== Repository layout
+
+|===
+|Directory |Purpose
+
+|`docs/` |Design documents and backlog
+|link:Bragi/README.adoc[`Bragi`] |Rendering layer and third-party adapters
+|link:Brunnr/README.adoc[`Brunnr`] |Simulation framework — topology, scheduling, validation
+|link:Kvasir/README.adoc[`Kvasir`] |Science knowledge
+|link:Nornir/README.adoc[`Nornir`] |Domain models — tectonics, climate, civilization, …
+|link:Volundr/README.adoc[`Volundr`] |Developer toolbox (Autodoc, …)
+|===

@@ -1,0 +1,11 @@
+# Spatial scale of terrain features.
+# Range: 1–10.
+# Low: many small hills and valleys — detail-dominated surface.
+# High: a few massive landmasses and basins — continental-scale features dominate.
+scale = 0
+
+# Surface irregularity at any given scale.
+# Range: 1–10.
+# Low: smooth rolling terrain, gentle slopes.
+# High: sharp peaks, deep canyons, fractured and jagged surface.
+roughness = 0

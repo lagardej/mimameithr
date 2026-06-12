@@ -1,0 +1,42 @@
+= Geometry Abstraction
+:toc: left
+
+Open design question.
+Not yet implemented.
+
+== Problem
+
+`IGrid` encodes topology: cells, neighbours, resolution.
+It does not encode geometry: distances, areas, insolation angles, coordinate projections.
+
+DynaCores need geometry behaviour, not grid topology.
+The two are currently conflated.
+
+== Proposed Split
+
+* `IGrid` — topology only.
+Unchanged.
+* `IGeometry` — geometry behaviour.
+Separate interface, separate dependency.
+
+`IGeometry` would cover at minimum: cell area, cell centroid, great-circle distance between cells, surface normal.
+Implementations vary by domain shape.
+
+`ComputeContext` would carry both.
+
+== Known Geometry Archetypes
+
+|===
+|Shape |Notes
+
+|Sphere |Standard. Reference implementation.
+|Flat disc |Discworld scenario. Cartesian distances; no poles.
+|Ring (cylinder) |Halo scenario. Gravity is centrifugal; no poles; insolation lateral.
+|Inside-out sphere |Inner surface of a sphere, central star. Topology identical to a normal sphere; all geometry inverts. Also covers the Dyson sphere archetype (megastructure framing, same geometry).
+|Torus (donut) |Wraps in both axes. Neighbour relationships are clean; gravity undefined.
+|===
+
+== Constraint
+
+`IGrid` must remain geometry-agnostic.
+Any component that calls geometry operations through `IGrid` directly is a violation of this boundary.

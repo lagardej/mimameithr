@@ -1,5 +1,6 @@
 bin/
 obj/
+target/
 
 # NuGet
 project.assets.json
@@ -9,3 +10,4 @@ project.assets.json
 
 # Test output
 TestResults/
+coverage/

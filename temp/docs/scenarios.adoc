@@ -1,0 +1,412 @@
+= Scenarios
+
+// Living document. Every fever dream the game designer produces lands here first.
+// Engine compliance is verified against this list.
+// Senior dev reserves the right to express opinions.
+
+== Engine Constants
+
+These are not negotiable.
+Do not bring them up in design meetings as if they are.
+
+=== Hex Grid
+
+Hexagonal grid only.
+Cleaner neighbour relationships than squares, no diagonal bullshit.
+All spatial operations are defined over «topology-cell,Cells» at a given «topology-resolution,Resolution».
+
+=== Hierarchical DGGS — 16 Resolutions
+
+* `R0` covers the entire domain surface.
+* Each `Rn` cell covers approximately 7 `R(n+1)` cells (H3 aperture-7 hierarchy).
+* 16 resolution levels: `R0`–`R15`.
+* Backend: Uber H3. The engine is unaware of this. `IGrid` is the only surface that matters.
+If H3 ever gets replaced, Nornir and Brunnr must not notice.
+
+=== Configuration Injection
+
+All engine «domain-parameter,Parameters» are injected through configuration.
+Supports file-based config and runtime UI-based config interchangeably.
+No recompilation to tweak a simulation.
+No hardcoded constants in domain code.
+This is how you change the gravitational constant for a flat world without touching the engine.
+
+== Scenarios
+
+Scenarios are ordered from "boring and expected" to "what is wrong with you".
+Each scenario must be expressible as a «engine-domain,Domain» configuration.
+The engine must not require code changes to support any scenario listed here.
+
+'''
+
+=== 1. Standard Star System — Solar Analogue
+
+*Purpose:* Benchmark.
+If this doesn't work, nothing else matters.
+
+The reference configuration.
+One star, planets in stable orbits, at least one with conditions permissive to life.
+Climate, hydrology, tectonics, and civilization emergence all exercised here.
+
+*Configuration surface:*
+
+* Star luminosity, spectral class
+* Planetary orbital parameters (semi-major axis, eccentricity, inclination)
+* Planetary physical parameters (radius, mass, axial tilt, rotation period)
+* Atmospheric composition
+* Hydrosphere fraction
+
+*Engine requirements:*
+
+* Spherical «engine-domain,Domain» topology
+* Standard insolation model (star at finite distance, orbiting body)
+* All cadences from tectonic (slow) to atmospheric (fast) '''
+
+=== 1c. Solar Analogue — Earth Equivalent, -5000 to +5000
+
+*Purpose:* Civilization component full-window stress test.
+Hydrosphere rapid-initialization stress test on a dry secondary domain.
+
+Earth-equivalent planet as the primary domain.
+Civilization window anchored at year 0 (present Earth equivalent), running from -5000 to +5000. Late neolithic at start; space age and interplanetary presence at end.
+The civilization arc is flavour to anchor the scenario — the engine does not model a tech tree.
+
+Mars analogue added as a secondary domain.
+Begins completely dry.
+Terraforming is initiated as a civilization-driven «domain-forcing,Forcing» late in the run.
+The hydrosphere component on the Mars analogue must bootstrap from zero to a functional water cycle within ~100 years — orders of magnitude faster than geological hydrosphere formation.
+This is the actual test.
+
+*Configuration surface:*
+
+* Primary domain: Earth-equivalent parameters (baseline from scenario 1)
+* Simulation window: 10 000 years, offset to -5000 / +5000
+* Secondary domain: Mars-analogue (lower mass, thin CO₂ atmosphere, zero initial hydrosphere)
+* Terraforming forcing: onset year configurable; hydrosphere volume injected over a ~100-year ramp
+* Inter-domain coupling: civilization state on primary drives terraforming forcing on secondary
+
+*Engine requirements:*
+
+* Simulation window offset is a configuration value — year zero is not special
+* Hydrosphere component initializes correctly from zero (no water at t=0 is a valid state)
+* Hydrosphere component stable under rapid forced initialization (~100-year timescale)
+* Civilization state on one domain expressible as a «domain-forcing,Forcing» on another domain
+* Lightweight multi-domain support (two domains, minimal coupling — this is not Nine Realms)
+
+*Emergent behaviour of interest:*
+
+* Hydrosphere stabilization curve on the Mars analogue — equilibrium, overshoot, or oscillation?
+* Climate feedback loop on the Mars analogue once liquid water exists
+* Civilisation-driven environmental pressure on the primary domain's own hydrosphere over 10 000 years '''
+
+=== 1b. Nine Realms — As a Solar System
+
+*Purpose:* Boundary check on the standard star system.
+Same physics, knobs at 11.
+
+The Nine Realms recast as a physically plausible (loosely) star system.
+Each realm maps to an astronomical archetype with extreme but valid parameters.
+One star.
+Orbital mechanics apply.
+The engine does not get to have opinions about what "reasonable" means.
+
+[cols="<,<,<"]
+|===
+|Realm |Astronomical Archetype |Primary Simulation Constraints
+
+|*Muspelheim* |Interior Lava World |Extreme solar forcing, high tectonic activity, runaway greenhouse effect.
+|*Svartalfheim* |Stripped Chthonian / Underground |Extreme tidal heating, high metal/mineral abundance, subterranean living constraints.
+|*Asgard &amp; Vanaheim* |Habitable Binary / Trojans |Stable orbital resonance, optimized magnetosphere, high habitability index.
+|*Midgard* |Terrestrial Habitable |Baseline controls, standard hydrological and atmospheric cycling.
+|*Jotunheim* |Cold Super-Earth / Jovian |High gravity, extreme atmospheric mass, border of the frost line.
+|*Alfheim* |High-Albedo Exomoon |High ambient light levels, secondary tidal forcing from parent planet.
+|*Niflheim* |Cryovolcanic Ice Giant |Minimal stellar forcing, methane/ammonia hydrosphere, freezing.
+|*Helheim* |High-Inclination Kuiper Object |High delta-v insertion requirement, extreme orbital eccentricity, permanent freeze.
+|===
+
+// Yggdrasil is not in the table. Yggdrasil does not have an astronomical archetype.
+// Do not file a ticket asking for one.
+
+*Configuration surface:*
+
+* Per-realm orbital parameters pushed to physical extremes
+* Binary/Trojan orbital configuration for Asgard &amp; Vanaheim
+* Moon-parent relationship for Alfheim (tidal forcing source is a configured body, not the star)
+* Subterranean domain flag for Svartalfheim (surface insolation is irrelevant; tidal flux is primary)
+
+*Engine requirements:*
+
+* Insolation model supports moon/exomoon geometry (parent body + star, not star only)
+* Tidal heating as a configurable forcing source, independent of stellar distance
+* Binary/co-orbital body support in the orbital mechanics model
+* Extreme parameter values must not be clamped or silently corrected by the engine
+* "Subterranean" domain mode: surface grid exists but stellar insolation contribution is zero '''
+
+=== 2. Nine Realms — As Norse Mythology
+
+*Purpose:* Multi-domain topology with causality-as-forcing.
+Genuinely deranged.
+
+// Promoted to its own tier of madness. Earned it.
+
+Nine distinct realms («informal-heimr,Heimr») connected by Yggdrasil.
+Not nine planets — nine domains with non-standard inter-domain relationships.
+Asgard does not orbit anything.
+Niflheim is cold because it is Niflheim, not because of orbital mechanics.
+
+This scenario verifies that:
+
+* The «engine-domain,Domain» model does not assume a single root domain
+* Inter-domain «domain-forcing,Forcings» can represent mythological causality without a physical basis
+* Climate components accept "it's just cold here" as a valid parameter set
+* The engine does not panic when handed a topology that cannot be embedded in 3D space
+
+*Configuration surface:*
+
+* Per-realm physical constants (gravity, insolation, temperature baseline) as direct overrides
+* Inter-realm coupling topology: Yggdrasil modelled as a forcing graph, not a physics graph
+* Realm-specific atmospheric and hydrological overrides
+* Forcing channels between realms (e.g. Niflheim cold flux into adjacent realms via Yggdrasil)
+
+*Engine requirements:*
+
+* Multi-domain support with explicit, configurable coupling topology
+* Insolation model accepts an external constant flux (realm has no star; receives a configured value)
+* All physically derived quantities must be overridable by configuration
+* Forcing graph topology is not required to be planar, hierarchical, or physically motivated
+* Domain count is a configuration value, not a compile-time constant
+
+*Note:* Bifröst is a transport mechanism, not a climate forcing.
+Probably.
+// The game designer will try to make it a climate forcing. Log the ticket. Reject the ticket.
+
+'''
+
+=== 3. Discworld
+
+*Purpose:* Topology independence from geometry.
+
+// GNU Terry Pratchett.
+// We never read enough Pratchett. This scenario exists in his honour and is not up for debate.
+
+A flat, circular disc.
+Topology is still a valid «engine-domain,Domain» — the grid covers a surface, cells have neighbours, components advance state.
+The geometry is just not a sphere.
+
+The sun orbits the Discworld.
+Not the other way around.
+The sun is small and close.
+This produces a climate model that is, charitably, unusual.
+
+Obligatory note: the turtle and four elephants are load-bearing infrastructure and are explicitly out of scope.
+Do not file a ticket.
+
+*Configuration surface:*
+
+* Domain geometry: flat disc (radius; thickness negligible)
+* Solar body: orbital radius, orbital period, luminosity, orbital plane (equatorial — the sun circuits the rim)
+* Gravity: constant vector field, downward, uniform across the surface
+* Edge boundary condition: open — material exits at the Rim and is not reflected
+
+*Configuration explicitly absent:*
+
+* Axial tilt (meaningless on a disc)
+* Coriolis effect (meaningless until "north" is defined; left as a future theological dispute)
+
+*Engine requirements:*
+
+* Non-spherical domain geometry. `IGrid` topology is unchanged; geometry is a rendering concern.
+* Solar body component accepts an arbitrary orbital path, not only elliptical around the domain centre
+* Climate component must not assume spherical geometry for insolation calculations
+* Open boundary condition on domain edge
+
+*Emergent behaviour of interest:* A permanent storm system anchored at the Hub (centre) is expected from first principles.
+This is not configured.
+If the engine produces it unprompted, that is a validation success and the round is on the engine.
+
+'''
+
+=== 4. High-Eccentricity Planet — Unpredictable Winters
+
+*Purpose:* Extreme orbital forcing on climate and civilization components.
+
+A planet with a highly eccentric orbit.
+Winters are long, deep, and the precise timing is difficult to predict from within the simulation — civilizations do not have access to the orbital parameters.
+"Winter is coming" is the design brief.
+
+// "Or is it just a high eccentricity planet?" — yes. Yes it is. It's always just physics.
+// The game designer spent three sentences independently deriving Kepler's second law.
+
+*Configuration surface:*
+
+* Orbital eccentricity (target: &gt;0.4; Earth is 0.017 for reference)
+* Orbital period
+* Perihelion/aphelion seasonal alignment
+* Stellar luminosity (baseline temperature tuning)
+
+*Engine requirements:*
+
+* Insolation model correctly handles high eccentricity (large variation in star-planet distance over one orbit)
+* Climate component responds to rapid insolation changes at perihelion passage
+* Civilization component experiences resource pressure during extended aphelion winters
+* No hardcoded year length anywhere — orbital period is a parameter
+
+*Emergent behaviour of interest:*
+
+* Civilization collapse/regression cycles synchronized with orbital period
+* Agricultural stress during multi-year aphelion winters at extreme eccentricities
+* In-simulation calendrical systems that fail to predict winter onset accurately '''
+
+=== 5. Tidally Locked Planet
+
+*Purpose:* Cadence scheduling stress.
+Breaks any component that assumes a diurnal cycle.
+
+One hemisphere in permanent day.
+One in permanent night.
+The terminator is a permanent weather front.
+No sunrise, no sunset, no diurnal forcing signal — just a static thermal gradient from one side of the planet to the other.
+
+*Configuration surface:*
+
+* Rotation period equal to orbital period (synchronous rotation)
+* Stellar flux (day-side only; night-side receives zero direct insolation)
+* Atmospheric mass (determines how much heat the atmosphere redistributes to the night side)
+
+*Engine requirements:*
+
+* No component may assume a non-zero diurnal cycle
+* Cadence scheduler must function when the primary periodic forcing (day/night) is absent
+* Insolation model supports hemisphere-locked illumination
+* Atmospheric heat redistribution between permanently lit and permanently dark hemispheres
+
+*Emergent behaviour of interest:*
+
+* Permanent storm system at the sub-stellar point (day side)
+* Atmospheric collapse on the night side if atmospheric mass is too low (gases freeze out)
+* Civilization constrained to the terminator band '''
+
+=== 6. Archipelago World with Sea Level Rise
+
+*Purpose:* Hydrology stress and civilization response to progressive forcing.
+
+High ocean fraction, low continental fraction.
+Land exists as archipelagos — no continents.
+A configurable sea level rise forcing is applied during the simulation run, progressively drowning land area.
+Waterworld is the failure state, not the starting configuration.
+
+// Yes, this is Waterworld. No, Kevin Costner is not a simulation parameter.
+
+*Configuration surface:*
+
+* Continental fraction (target: low; ~10–15% land)
+* Hydrosphere volume
+* Sea level rise forcing: rate, onset time, total magnitude
+* Archipelago generation parameters (island size distribution, elevation profile)
+
+*Engine requirements:*
+
+* Hydrological component handles near-zero continental fraction without degenerating
+* Sea level rise expressible as a «domain-forcing,Forcing» applied to a running simulation
+* Civilization component responds to progressive land loss (migration, contraction, collapse)
+* Coastal boundary recalculation as sea level changes — topology does not change, cell habitability does
+
+*Emergent behaviour of interest:*
+
+* Civilization migration patterns as islands become uninhabitable
+* Resource competition on shrinking land area
+* Complete civilization collapse if land area drops below viability threshold before adaptation '''
+
+=== 7. Dynamic Resolution Boundary Test
+
+*Purpose:* Verify dynamic resolution degrades correctly at the minimum cell size floor.
+
+Not a world scenario — a resolution stress test.
+The engine enforces a minimum cell edge length of 100m.
+This test verifies that the dynamic resolution system respects that floor, does not silently exceed it, and that components operating near the boundary behave correctly.
+
+// This is an engineering test dressed as a scenario. It belongs here because if it fails,
+// every other scenario that uses high-resolution detail is lying to you.
+
+*Configuration surface:*
+
+* Domain: standard spherical, Earth-scale
+* Resolution policy: aggressive — push toward maximum resolution in a defined region
+* Minimum cell edge length: 100m (engine floor; must be enforced, not assumed)
+
+*Engine requirements:*
+
+* Dynamic resolution system enforces the 100m minimum edge length floor
+* No component receives a cell smaller than the floor, regardless of resolution policy
+* Resolution transitions at the floor boundary are stable (no oscillation, no invalid cells)
+* Floor violations are logged as errors, not silently clamped
+
+*Pass criteria:*
+
+* No cell below 100m edge length is ever instantiated
+* Simulation remains stable when the resolution policy saturates at the floor
+* Floor enforcement is observable in logs '''
+
+== Engine Compliance Checklist
+
+Derived from the scenarios above.
+If any row requires a code change to satisfy, the configuration injection principle has been violated.
+
+[cols="<,<"]
+|===
+|Requirement |Scenario
+
+|Non-spherical domain geometry |Discworld
+|Multi-domain coupling topology |Nine Realms (Mythology)
+|Forcing graph topology unconstrained |Nine Realms (Mythology)
+|All physically derived quantities overridable |Nine Realms (Mythology)
+|Insolation: external constant flux (no star) |Nine Realms (Mythology)
+|Insolation: moon/exomoon geometry |Nine Realms (Solar), Alfheim
+|Tidal heating as independent forcing source |Nine Realms (Solar), Svartalfheim
+|Binary/co-orbital body support |Nine Realms (Solar), Asgard &amp; Vanaheim
+|Extreme parameter values not clamped |Nine Realms (Solar)
+|Subterranean domain mode |Nine Realms (Solar), Svartalfheim
+|Solar body: arbitrary orbital path |Discworld
+|Climate component geometry-agnostic |Discworld
+|Open edge boundary condition |Discworld
+|High-eccentricity orbital mechanics |High-Eccentricity
+|No hardcoded orbital period / year length |High-Eccentricity
+|Domain count is a configuration value |Nine Realms (Mythology)
+|No assumed diurnal cycle in any component |Tidally Locked
+|Cadence scheduler functions without periodic forcing |Tidally Locked
+|Insolation: hemisphere-locked illumination |Tidally Locked
+|Hydrological component stable at near-zero continental fraction |Archipelago
+|Sea level rise expressible as a runtime Forcing |Archipelago
+|Civilization component responds to progressive land loss |Archipelago
+|Coastal boundary recalculation without topology change |Archipelago
+|Dynamic resolution enforces minimum cell edge length (100m) |Resolution Boundary
+|Floor violations logged as errors, not silently clamped |Resolution Boundary
+|Resolution transitions stable at floor boundary |Resolution Boundary
+|Simulation window offset is a configuration value |Solar Analogue 1c
+|Hydrosphere initializes correctly from zero |Solar Analogue 1c
+|Hydrosphere stable under ~100-year forced initialization |Solar Analogue 1c
+|Civilization state expressible as a Forcing on another domain |Solar Analogue 1c
+|===
+
+'''
+
+== Exploratory Geometries
+
+Not scenarios.
+Geometry archetypes that the abstraction should not preclude.
+
+* *Ring (Halo)* — cylindrical band.
+Gravity is centrifugal.
+Insolation is constant and lateral.
+No poles.
+* *Dyson Sphere* — full enclosure of a star.
+Inner surface only.
+Insolation uniform everywhere.
+No day/night cycle by default.
+* *Toroidal world* — surface wraps in both axes.
+Topology is clean; gravity is not a solved problem.
+Interesting edge case for neighbour relationships.
+* *Inside-out (hollow sphere)* — civilization on the inner surface.
+Central star.
+No horizon.
+Every geometry calculation inverts relative to a normal sphere. `IGrid` topology is identical; geometry is the only delta.

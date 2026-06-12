@@ -1,0 +1,23 @@
+# Where the bulk of the surface sits relative to mean elevation.
+# Range: -10–10. Earth: -2.
+# Low: most terrain above mean — high plateaus dominate, few deep rifts.
+# High: most terrain below mean — deep basins dominate, few high peaks.
+terrain_skew = 0
+
+# Vertical distance between the lowest and highest point on the surface.
+# Range: 1–10. Earth: 6.
+# Low: flat, featureless terrain.
+# High: extreme vertical range.
+amplitude = 0
+
+# Spatial scale of noise features layered over the tectonic baseline.
+# Range: 1–10.
+# Low: fine-grained detail — small hills, local variation.
+# High: broad noise features — regional undulation over the tectonic structure.
+scale = 0
+
+# Surface irregularity introduced by the noise layer.
+# Range: 1–10.
+# Low: smooth, noise adds gentle variation over the tectonic baseline.
+# High: jagged, noise introduces sharp local relief.
+roughness = 0

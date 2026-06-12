@@ -1,0 +1,271 @@
+= Mimameithr Architecture Overview
+:toc: left
+:toclevels: 3
+:icons: font
+
+[IMPORTANT]
+====
+This document describes architectural intent, not current implementation.
+The codebase is in early development with a single DynaCore implemented.
+Known divergences between code and this document are expected and will be resolved as the architecture is applied.
+This document is the reference; the code yields to it.
+====
+
+A civilization-scale planetary simulation engine.
+Models physical and civilizational processes over a 10 000-year horizon — tectonics, climate, hydrology, geology, weather, vegetation, fauna, and the civilizations that emerge from and are constrained by them.
+The simulation runs headless.
+Godot 4 is the rendering layer only.
+
+== Subprojects
+
+=== Brunnr — Engine Framework
+
+The simulation framework.
+Abstract contracts and common infrastructure.
+No domain logic.
+
+Analogous to the Spring Framework.
+
+=== Nornir — Application Layer
+
+Implements Brunnr abstractions for the planetary simulation domain.
+Contains Components and DynaCores.
+
+The engine is `Brunnr + Nornir`.
+It runs headless; no dependency on Godot.
+
+Analogous to a Spring application.
+
+=== Seidr — Computational Backend
+
+A Rust project.
+Contains the heavy mathematical models.
+Compiled as a separate binary; called by Nornir via FFI.
+A DynaCore is the adapter between Seidr's optimized input/output and the domain side.
+
+=== Bragi — Rendering and Infrastructure
+
+The Godot 4 application.
+Drives the engine.
+Rendering and platform infrastructure only; no simulation logic.
+
+Analogous to a Spring Boot application.
+
+=== Volundr — Developer Tools
+
+Build-time utilities.
+Currently: an autodoc generator for Nornir components.
+Not part of the simulation runtime.
+
+== Configuration
+
+Configuration is mandatory and total: no constants, no default values anywhere in the engine.
+Every parameter used by Brunnr or Nornir must be externally supplied.
+
+Configuration is provided by the caller via `Brunnr.Configure(EngineConfiguration)` before the engine starts.
+`EngineConfiguration` is the single entry point for all parameters.
+Sources (files, UI) are resolved outside the engine; Brunnr receives only the assembled configuration object.
+
+Bragi is responsible for loading configuration from files and/or the user interface and constructing the `EngineConfiguration` before handing it to the engine.
+
+DynaCore parameters are part of the domain configuration, declared under the selected DynaCore key for each Component slot.
+
+== Configuration Agnosticism
+
+The engine makes no assumptions about the values it receives.
+It does not assume Earth-like gravity, a solar-analogue star, a spherical surface, a realistic atmosphere, or any other physically motivated baseline.
+It does not clamp, correct, or warn about extreme values.
+
+This is a hard design principle, not a quality-of-life feature.
+The engine must behave correctly when handed a flat disc with a small orbiting sun, nine mythological realms with non-physical inter-domain coupling, or a gravitational constant set to zero.
+If a component silently assumes Earth values, it is broken — even if every scenario run so far happened to be Earth-like.
+
+A direct consequence: topology and geometry are separate concerns.
+The grid defines cell neighbourhood relationships (topology).
+The geometry — spherical, flat, toroidal, or otherwise — is a configuration of the rendering and insolation layers, not of the grid itself.
+A Discworld and an Earth can share the same grid topology; their geometry differs.
+No engine component may conflate the two.
+
+See `docs/scenarios.adoc` for the full scenario suite that exercises these constraints.
+
+== Simulation Time
+
+One engine tick equals one simulated second.
+Time compression is entirely external: the caller controls how fast simulation time advances by how frequently it calls `Brunnr.Tick()`.
+The engine does not manage wall-clock time or frame rate.
+
+Component cadences are expressed in simulation ticks.
+A tectonic component advancing every 10 000 simulated years schedules its next job 315 576 000 000 ticks ahead.
+The Scheduler resolves which components are due on each tick and dispatches accordingly.
+
+== Communication
+
+Inter-component communication is indirect, through a message bus.
+The message bus contract is defined in Brunnr.
+
+A direct call hierarchy between simulation domains is not viable.
+Tectonics drives elevation, elevation constrains hydrology, hydrology feeds erosion, erosion modifies elevation, climate interacts with all of them.
+The dependency graph is not a tree.
+The message bus decouples producers from consumers and makes the interaction graph manageable.
+
+Sanctioned exceptions exist for cases where dependency injection or a shared accessible service is less painful than routing through the bus.
+These are deliberate escapes from the architecture, not violations of it.
+
+=== Cadencing
+
+Components do not share a global tick.
+Each domain operates at its own coupling frequency — tectonics advances on a timescale orders of magnitude slower than local weather.
+
+Cadence is self-managed: when a component finishes a computation step, it schedules its own next tick by posting a job message to the bus.
+The Scheduler and Job Dispatcher (defined in Brunnr) consume these messages and invoke the component at the due simulation time.
+
+This means the execution order of components is not fixed.
+Components read the latest available state from other components when they tick; they do not wait for others to synchronize.
+
+== Component and DynaCore
+
+Components and DynaCores are stateless singletons.
+They are not bound to any specific domain instance.
+The domain identity is carried by the job message.
+
+=== Component
+
+The Component is the CQRS command handler for its simulation concern.
+When a job arrives:
+
+. It reads the relevant domain state from the Store, keyed by domain.
+. It configures and calls its DynaCore.
+. It saves the result back to the Store.
+. It publishes the output event on the bus.
+. It schedules its next tick as a job message.
+
+It holds no computation logic and retains no state between invocations.
+
+=== DynaCore
+
+The DynaCore is the stateless computational unit.
+Its responsibilities, in order of preference:
+
+. Translate domain input data into the format expected by the Seidr computational core.
+. Invoke Seidr and receive the result.
+. Translate the Seidr output back into domain data and return it to the Component.
+
+When the computation is not heavy enough to warrant a Seidr call, the DynaCore may implement it directly.
+A mix is also valid: call Seidr for the core computation, then derive additional output data locally — for example, computing boundary cells from the raw Seidr output before returning to the Component.
+
+The DynaCore does not interact with the message bus or the Store.
+It receives data in, returns data out.
+
+=== Multiple DynaCore Implementations
+
+A Component defines a contract.
+Multiple DynaCore implementations may exist for the same Component, each covering a different physical regime.
+The DynaCore implementation bound to a Component is selected per domain via configuration.
+
+This is what allows the same `climate` Component slot to use a spherical atmosphere model for Earth and a geometry-agnostic constant-flux model for a Norse mythological realm.
+
+== Domain
+
+A Domain is a bounded simulated entity: a configured set of Components instantiated and running together over a shared grid.
+Components absent from the domain configuration are not instantiated for it.
+
+At the high level, shape is an implementation detail — a domain is just a surface with components on it.
+At the low level, shape matters: a spherical climate model and a flat-disc climate model are not interchangeable.
+
+The domain configuration therefore declares:
+
+* The shape of the domain (e.g. `sphere`, `flat-disc`).
+* Which Components are active, each with the specific DynaCore implementation to use.
+
+Example:
+
+[source,yaml]
+----
+domain:
+  name: Earth
+  shape: sphere
+  components:
+    lithosphere:
+      tectonics: mobile-lid
+----
+
+The shape drives which DynaCore implementations are valid for each Component slot.
+An invalid combination — a spherical-only DynaCore bound to a flat-disc domain — is a configuration error, caught before the simulation starts.
+
+== Store
+
+The Store is the domain state repository.
+Its interface is a Brunnr contract.
+
+Components read from and write to the Store keyed by domain identity.
+No component holds state itself — all simulation state lives in the Store.
+
+State density is resolution-dependent: lower resolutions are dense (all cells populated), higher resolutions are sparse (only cells relevant to the current computation are populated).
+Each job message carries a `CellSet` field that limits the Store mutations to the declared cells only, enabling parallelism across non-overlapping CellSets for the same component.
+
+The intended implementation is in-memory with cell-level caching and offloading of less-accessed cells to disk.
+Persistent save (manual or autosave) is not yet designed.
+
+NOTE: Who determines the CellSet per job is an open question.
+Options include the component itself at self-scheduling time, an external partitioner, or a combination.
+This needs design work when multiple components operate at higher resolutions concurrently.
+
+== Forcings
+
+A Forcing is an external perturbation applied to a running DynaCore through a well-defined entry point.
+It is the physical translation of an intent.
+
+The origin of the forcing is irrelevant to the engine.
+An earthquake triggered by tectonic stress, by a game event, by an angry god, or by a wizard is the same forcing applied to the same entry point in the tectonics DynaCore.
+The engine sees physical quantities, not narrative causes.
+
+Forcings are message-based and enter the system through the bus like any other message.
+A Forcing message targets a specific domain and a specific DynaCore entry point.
+The receiving Component reads it, schedules a job immediately, and the DynaCore applies the forcing on that invocation.
+
+NOTE: Continuous forcings — persistent perturbations applied over multiple ticks — are not yet designed.
+When introduced, they will need either a dedicated cadence or a repeating job mechanism distinct from the one-shot forcing path.
+
+NOTE: Multi-domain forcing — where the state of one domain drives a forcing on another — is not yet designed.
+It is a known future requirement (see scenario 1c: civilization state on Earth driving terraforming forcings on a Mars analogue).
+The current architecture does not preclude it; the message bus is the natural delivery mechanism when the time comes.
+
+== Grid
+
+The grid is a Discrete Global Grid System (DGGS) with hexagonal cells.
+Its interface (`IGrid`) is a Brunnr contract.
+The implementation is in Bragi: a high-level adapter over a GDExtension calling the Uber H3 native C library.
+Brunnr and Nornir are unaware of H3; if H3 is ever replaced, neither should notice.
+
+NOTE: The H3 binding currently lives in Bragi, the rendering layer.
+Running the engine headless without Bragi therefore has no `IGrid` implementation.
+The binding should be extracted to its own subproject so the engine can run independently of Godot.
+This is a known structural issue, deferred until prioritized.
+
+=== Hierarchy
+
+The grid is hierarchical, with up to 16 resolution levels (`R0`–`R15`), matching the H3 limit.
+
+* `R0` is the base level: 122 cells covering the entire domain surface, including 12 pentagons at every resolution level.
+* Each `Rn` cell covers approximately 7 `R(n+1)` cells (H3 aperture-7 hierarchy).
+* The only guaranteed resolution is `R0`.
+All others depend on domain size.
+
+=== Maximum Useful Resolution
+
+The effective maximum resolution is determined by domain size, not by the grid limit.
+The target floor is a cell edge length of approximately 100m; the exact value is to be determined.
+Resolutions beyond that floor are not instantiated.
+
+NOTE: The maximum useful resolution is domain-size-dependent, not a fixed engine constant.
+For a domain significantly smaller or larger than Earth, the resolution level corresponding to ~100m cells will differ.
+This must be derived from domain configuration, not hardcoded.
+
+== CQRS Intent
+
+The architecture follows CQRS principles on the command side.
+Commands drive state advancement; the Component/DynaCore pipeline is the command handler.
+
+A strict query side — separate read models, separate query handlers — is not yet implemented.
+It is a stated architectural goal.
+When introduced, the query side will be fed by events published by Components and will not touch the command pipeline.

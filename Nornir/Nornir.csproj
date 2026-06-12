@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Nornir</RootNamespace>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Nornir.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Brunnr\Brunnr.csproj" />
+    <ProjectReference Include="..\Kvasir\Kvasir.csproj" />
+    <ProjectReference Include="..\Volundr\Autodoc\Autodoc.csproj" ReferenceOutputAssembly="false" SkipGetTargetFrameworkProperties="true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Friflo.Engine.ECS" Version="3.6.0" />
+    <PackageReference Include="Tomlyn" Version="0.17.0" />
+    <PackageReference Include="UnitsNet" Version="5.75.0" />
+  </ItemGroup>
+
+  <Target Name="BuildRustLib" BeforeTargets="Build">
+    <Exec Command="cargo build --release" WorkingDirectory="..\Seidr" />
+  </Target>
+
+  <Target Name="CopyRustLibWindows" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+    <Copy SourceFiles="..\Seidr\target\release\seidr.dll" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="CopyRustLibLinux" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+    <Copy SourceFiles="..\Seidr\target\release\libseidr.so" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="CopyRustLibMac" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+    <Copy SourceFiles="..\Seidr\target\release\libseidr.dylib" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="RunAutodoc" AfterTargets="Build">
+    <Exec Command="dotnet $(SolutionDir)Volundr/Autodoc/bin/$(Configuration)/net10.0/Autodoc.dll $(SolutionDir)" />
+  </Target>
+
+</Project>

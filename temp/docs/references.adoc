@@ -1,0 +1,112 @@
+= References
+:toc: left
+
+Curated references for inspiration, borrowing, or direct adoption.
+
+== Worldgen
+
+=== FreezeDriedMangos: Realistic Planet Generation and Simulation
+
+* *URL:* https://github.com/FreezeDriedMangos/realistic-planet-generation-and-simulation
+* *Status:* Unmaintained (last updated 3 years ago).
+Directly inspired by Red Blob Games.
+
+Full plate tectonic initialization coupled with a dynamic, ticking climate loop tracking air temperature, ocean temperature, humidity, rainfall, and wind vectors.
+Includes an implementation of oceanic gyres on a discrete cell grid, circulating heat based on planetary rotation parameters.
+
+*Relevance:* Reference for how computational performance degrades as climate features stack up, reinforcing the headless architecture decision.
+Ocean gyre implementation is a rare concrete example of procedural ocean currents on a discrete grid.
+
+=== Planet Heightmap Generation
+
+* *URL:* https://github.com/raguilar011095/planet_heightmap_generation
+* *Status:* Active (last updated 2 months ago).
+
+Browser-based procedural planet generator using tectonic plate simulation instead of noise-based heightmaps.
+Supports 5,000 to 2.5M+ cells on a sphere.
+Handles multi-pass continental drift, custom land-coverage thresholds, and precipitation dampening based on ocean volume.
+
+*Relevance:* Proof of concept for multi-resolution pipelines — low-resolution grid for stable tectonic geometry, high-resolution grid for surface detail.
+
+=== Red Blob Games: Procedural Map Generation on a Sphere
+
+* *URL:* https://www.redblobgames.com/maps/planet/
+* *Status:* Active reference; considered the modern benchmark for pseudo-physical planetary generation.
+
+Seeds random tectonic plate coordinates, expands them using breadth-first search, and assigns movement vectors.
+Evaluates boundary collisions (convergent vs. divergent) to stack elevation, tracks moisture vectors from ocean bodies, and paths rivers down local slope gradients on a Voronoi/hexagonal discrete grid.
+
+*Relevance:* Demonstrates how a discrete grid can elegantly solve plate collisions and hydrological pathing without complex particle tracking.
+
+== Physics
+
+=== ASPECT (Advanced Solver for Planetary Evolution, Convection, and Tectonics)
+
+* *URL:* https://aspect.geodynamics.org/
+* *Status:* Active scientific tool.
+
+High-performance scientific modelling application for mantle convection, crustal loading constraints, and deep lithospheric deformation.
+
+*Relevance:* Scientific reference for tectonic and crustal deformation modelling at geological timescales.
+
+=== VPLanet (Virtual Planet Simulator)
+
+* *URL:* https://github.com/VirtualPlanetaryLaboratory/vplanet
+* *Status:* Active scientific tool.
+
+Modular planet simulation suite from the Virtual Planetary Laboratory.
+Models atmospheric escape, internal thermal tectonics, and energy balance profiles via interconnected physics modules.
+
+*Relevance:* Scientific reference for modular physical component design and energy balance modelling.
+
+== Socio-Environmental
+
+=== Bretherton Diagram
+
+* *Status:* Conceptual reference (Earth System Science, late 1980s).
+
+Foundational system-dynamics diagram linking the physical climate system (atmosphere, oceans) to a "Human Activities" box via CO2 emissions, pollutant emissions, and land-use change.
+
+*Relevance:* Conceptual blueprint for the boundary between physical simulation and human/civilization systems.
+
+=== GCAM (Global Change Analysis Model)
+
+* *URL:* https://github.com/JGCRI/gcam-core
+* *Status:* Active scientific tool, maintained by JGCRI.
+
+Couples economy/energy, agriculture/land-use, water, and climate submodules.
+Maps human variables (population, energy demand) to physical outputs (deforestation, water depletion, GHG emissions) over decadal/century timescales.
+
+*Relevance:* Concrete open-source (C++) example of a headless balancing architecture where human economic activity drives physical/environmental state.
+
+=== NetLogo (Human-Environment ABM Frameworks)
+
+* *URL:* https://www.netlogoweb.org/launch#https://www.netlogoweb.org/assets/modelslib/IABM%20Textbook/
+* *Status:* Active ABM platform and model library.
+
+Agent-based modelling environment with open-source human-environment models (e.g. "Tragedy of the Commons", "Collapse", climate-agent models) where agents default to short-term resource exploitation until feedback loops (famine, degradation) force behavioural shifts or collapse.
+
+*Relevance:* Reference for agent utility functions and feedback-driven behavioural transitions in civilization-layer modelling.
+
+== Case Studies
+
+=== "500 Million Years in 500 Steps" Civilization Project
+
+* *URL:* https://www.reddit.com/r/proceduralgeneration/ (search: "Procedural planet generation with full geological simulation — 500 million years")
+* *Status:* Active hobbyist project.
+
+Seeds 14-22 tectonic plates via multi-source BFS on a spherical grid, applies Euler pole rotations for plate velocity, runs multi-pass hydraulic/thermal erosion, models ITCZ-offset atmospheric circulation, and simulates wind-driven ocean currents.
+Human factions emerge afterward, bounded by the resulting cratons, divides, and basins.
+
+*Relevance:* Validates the "one tick = all subsystems compute sequentially" architecture and the principle that civilization emerges as a constrained reaction to pre-baked geography.
+
+== Civilisation
+
+=== Ultima Ratio Regum
+
+* *URL:* https://ultimaratioregum.co.uk/game/devblog/
+* *Status:* Indie/academic procedural culture generation project.
+
+Generates architectural styles, religious taboos, and heraldry procedurally from environmental constraints (local stone types, biomes, agricultural availability).
+
+*Relevance:* Reference for translating physical/environmental constraints into emergent cultural outcomes during civilization initialization.

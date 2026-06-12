@@ -1,0 +1,3 @@
+= Bragi
+
+Rendering layer and platform adapter for `Mimameithr`, built on Godot 4.

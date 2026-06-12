@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Nornir.Tests</RootNamespace>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Brunnr\Brunnr.csproj"/>
+    <ProjectReference Include="..\Nornir\Nornir.csproj"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.4"/>
+    <PackageReference Include="coverlet.msbuild" Version="6.0.4"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0"/>
+    <PackageReference Include="UnitsNet" Version="5.75.0"/>
+    <PackageReference Include="xunit" Version="2.9.3"/>
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2"/>
+  </ItemGroup>
+
+  <Target Name="BuildRustLib" BeforeTargets="Build">
+    <Exec Command="cargo build --release" WorkingDirectory="..\Seidr"/>
+  </Target>
+
+  <Target Name="CopyRustLibWindows" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+    <Copy SourceFiles="..\Seidr\target\release\seidr.dll" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
+  </Target>
+
+  <Target Name="CopyRustLibLinux" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+    <Copy SourceFiles="..\Seidr\target\release\libseidr.so" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
+  </Target>
+
+  <Target Name="CopyRustLibMac" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+    <Copy SourceFiles="..\Seidr\target\release\libseidr.dylib" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
+  </Target>
+
+</Project>

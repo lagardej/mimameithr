@@ -1,0 +1,8 @@
+# Sidereal rotation period in s.
+rotation_period = 0.0
+
+# Axial tilt relative to the domain's orbital plane in degrees.
+axial_tilt = 0.0
+
+# Starting rotational angle at tick 0, in degrees. 0: reference meridian faces the reference direction.
+initial_rotation_angle = 0.0
