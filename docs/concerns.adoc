@@ -3,6 +3,13 @@
 
 NOTE: All physical quantities via UnitsNet — no raw `double` for science values.
 
+NOTE: Boundary processes (energy or matter transfer between two spheres) are assigned to the *receiver*, not the emitter.
+Example: surface-to-air heat transfer belongs to Aerosphere, not Gaiasphere.
+
+NOTE: Sphere boundaries are organisational, not hard constraints.
+Concerns may be split, merged, or reassigned as implementation reveals better boundaries.
+The sphere a concern belongs to reflects current understanding, not a permanent contract.
+
 == Aethersphere
 
 Celestial mechanics at body scale.
@@ -110,7 +117,6 @@ flowchart TB
     subgraph Pyrosphere
         Irradiance([Irradiance])
         Albedo([Albedo])
-        SurfaceTemperature([Surface temperature])
     end
 
     StellarLuminosity([Stellar luminosity])
@@ -122,8 +128,6 @@ flowchart TB
     BodyGeometry -.-> Irradiance
     Orbit -.-> Irradiance
     Rotation -.-> Irradiance
-    Irradiance --> SurfaceTemperature
-    Albedo --> SurfaceTemperature
 ....
 
 === Irradiance
@@ -166,21 +170,6 @@ _Nothing, external driver for now. Will read surface composition when designed._
 
 _To be filled when consumers are designed._
 
-=== Surface temperature
-
-==== Owns
-
-* Surface temperature per R0 cell — `Temperature`
-
-==== Reads
-
-* Insolation ← Irradiance
-* Albedo ← Albedo
-
-==== Exposes
-
-_To be filled when consumers are designed._
-
 == Gaiasphere
 
 Solid earth at cell scale.
@@ -198,7 +187,11 @@ flowchart TB
         Sedimentation([Sedimentation])
         Geology([Geology])
         Geothermal([Geothermal])
+        SurfaceTemperature([Surface temperature])
     end
+
+    Irradiance([Irradiance])
+    Albedo([Albedo])
 
     Tectonics --> Orogeny
     Tectonics --> Elevation
@@ -209,6 +202,8 @@ flowchart TB
     Orogeny --> Geology
     Dynamics --> Geothermal
     Elevation --> Sedimentation
+    Irradiance -.-> SurfaceTemperature
+    Albedo -.-> SurfaceTemperature
 ....
 
 === Tectonics
@@ -218,6 +213,21 @@ flowchart TB
 === Sedimentation
 === Geology
 === Geothermal
+
+=== Surface temperature
+
+==== Owns
+
+* Surface temperature per R0 cell — `Temperature`
+
+==== Reads
+
+* Insolation ← Irradiance
+* Albedo ← Albedo
+
+==== Exposes
+
+_To be filled when consumers are designed._
 
 == Hydrosphere
 
@@ -426,7 +436,6 @@ flowchart TB
     subgraph Pyrosphere
         Irradiance([Irradiance])
         Albedo([Albedo])
-        SurfaceTemperature([Surface temperature])
     end
 
     subgraph Gaiasphere
@@ -437,6 +446,7 @@ flowchart TB
         Sedimentation([Sedimentation])
         Geology([Geology])
         Geothermal([Geothermal])
+        SurfaceTemperature([Surface temperature])
     end
 
     subgraph Hydrosphere
