@@ -104,11 +104,11 @@ static string BuildParameterRows(Assembly assembly, string ns)
     var holders = assembly.GetTypes()
         .Where(t => t.Namespace == ns && t.GetCustomAttribute<ParametersAttribute>() is not null);
     foreach (var holder in holders)
-        foreach (var member in GetAnnotatedMembers(holder, typeof(ParameterAttribute)))
-        {
-            var a = member.GetCustomAttribute<ParameterAttribute>()!;
-            sb.AppendLine($"| {member.Name} | {a.Unit} | {a.Purpose}");
-        }
+    foreach (var member in GetAnnotatedMembers(holder, typeof(ParameterAttribute)))
+    {
+        var a = member.GetCustomAttribute<ParameterAttribute>()!;
+        sb.AppendLine($"| {member.Name} | {a.Unit} | {a.Purpose}");
+    }
 
     return sb.Length > 0 ? sb.ToString().TrimEnd() : "_None declared._";
 }
@@ -119,11 +119,11 @@ static string BuildStateRows(Assembly assembly, string ns)
     var holders = assembly.GetTypes()
         .Where(t => t.Namespace == ns && t.GetCustomAttribute<StatesAttribute>() is not null);
     foreach (var holder in holders)
-        foreach (var member in GetAnnotatedMembers(holder, typeof(StateAttribute)))
-        {
-            var a = member.GetCustomAttribute<StateAttribute>()!;
-            sb.AppendLine($"| {member.Name} | {a.Unit} | {a.Purpose}");
-        }
+    foreach (var member in GetAnnotatedMembers(holder, typeof(StateAttribute)))
+    {
+        var a = member.GetCustomAttribute<StateAttribute>()!;
+        sb.AppendLine($"| {member.Name} | {a.Unit} | {a.Purpose}");
+    }
 
     return sb.Length > 0 ? sb.ToString().TrimEnd() : "_None declared._";
 }

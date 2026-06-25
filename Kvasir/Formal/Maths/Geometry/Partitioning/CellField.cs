@@ -1,4 +1,4 @@
-namespace Kvasir.Science.Maths.Geometry.Partitioning;
+namespace Kvasir.Formal.Maths.Geometry.Partitioning;
 
 /// <summary>Math operations over per-cell scalar fields.</summary>
 public static class CellField

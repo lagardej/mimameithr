@@ -7,4 +7,5 @@ edition = "2024"
 crate-type = ["cdylib"]
 
 [dependencies]
+h3o = "0.10.0"
 rayon = "1.12.0"

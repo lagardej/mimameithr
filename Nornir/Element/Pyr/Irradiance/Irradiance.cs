@@ -1,7 +1,7 @@
 using Brunnr.Grid;
 using Friflo.Engine.ECS;
 using Friflo.Engine.ECS.Systems;
-using Kvasir.Science.Physics;
+using Kvasir.Natural.Physical.Physics;
 using Nornir.Element.Aither.BodyGeometry;
 using Nornir.Element.Aither.BodyRotation;
 using Nornir.Element.Aither.Orbit;

@@ -13,7 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Science\Physics\OrbitalMechanics\"/>
+    <Folder Include="Natural\Physical\Astronomy\"/>
+    <Folder Include="Social\Economics\"/>
+    <Folder Include="Social\History\"/>
   </ItemGroup>
 
 </Project>

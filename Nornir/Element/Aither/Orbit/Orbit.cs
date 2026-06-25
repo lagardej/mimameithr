@@ -1,6 +1,6 @@
 using Friflo.Engine.ECS;
 using Friflo.Engine.ECS.Systems;
-using Kvasir.Science.Physics.OrbitalMechanics;
+using Kvasir.Natural.Physical.Astronomy.OrbitalMechanics;
 using UnitsNet;
 
 namespace Nornir.Element.Aither.Orbit;

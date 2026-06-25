@@ -1,6 +1,6 @@
 using UnitsNet;
 
-namespace Kvasir.Science.Physics.OrbitalMechanics;
+namespace Kvasir.Natural.Physical.Astronomy.OrbitalMechanics;
 
 /// <summary>Kepler orbit equations for elliptical orbits.</summary>
 public static class KeplerOrbit

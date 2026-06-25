@@ -1,4 +1,4 @@
-namespace Kvasir.Science.Maths.Geometry;
+namespace Kvasir.Formal.Maths.Geometry;
 
 /// <summary>
 ///     A 3D position with double-precision components.

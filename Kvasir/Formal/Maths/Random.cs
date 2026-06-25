@@ -1,4 +1,4 @@
-namespace Kvasir.Science.Maths;
+namespace Kvasir.Formal.Maths;
 
 /// <summary>
 ///     Deterministic pseudo-random number generator based on a 32-bit XOR-shift algorithm.

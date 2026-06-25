@@ -1,4 +1,4 @@
-namespace Kvasir.Science.Maths.Geometry;
+namespace Kvasir.Formal.Maths.Geometry;
 
 /// <summary>An immutable 3D vector with double-precision components. Supports standard vector arithmetic.</summary>
 public readonly record struct Vector3D(double X, double Y, double Z)

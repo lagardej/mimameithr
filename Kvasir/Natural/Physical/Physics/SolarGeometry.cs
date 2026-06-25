@@ -1,8 +1,8 @@
-using Kvasir.Science.Geography;
-using Kvasir.Science.Maths.Geometry;
+using Kvasir.Formal.Maths.Geometry;
+using Kvasir.Natural.Physical.Geodesy;
 using UnitsNet;
 
-namespace Kvasir.Science.Physics;
+namespace Kvasir.Natural.Physical.Physics;
 
 /// <summary>Solar geometry and rotation functions for computing sun position relative to a surface cell.</summary>
 public static class SolarGeometry

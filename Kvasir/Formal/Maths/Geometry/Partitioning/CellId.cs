@@ -1,4 +1,4 @@
-namespace Kvasir.Science.Maths.Geometry.Partitioning;
+namespace Kvasir.Formal.Maths.Geometry.Partitioning;
 
 /// <summary>
 ///     Opaque cell identifier. The underlying representation is implementation-specific.

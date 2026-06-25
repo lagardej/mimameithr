@@ -1,4 +1,4 @@
-namespace Kvasir.Science.Maths.Geometry.Partitioning;
+namespace Kvasir.Formal.Maths.Geometry.Partitioning;
 
 /// <summary>
 ///     Space partitioning contract over a discrete grid.

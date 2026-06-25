@@ -1,12 +1,12 @@
-using Kvasir.Science.Maths.Geometry.Partitioning;
+using Kvasir.Formal.Maths.Geometry.Partitioning;
 
-namespace Kvasir.Science.Geography.Spatial;
+namespace Kvasir.Natural.Physical.Geodesy;
 
 /// <summary>
 ///     Geographic extension of <see cref="IGrid" /> for spherical discrete global grids.
 ///     Adds coordinate-based lookup and geographic cell geometry using latitude/longitude.
 /// </summary>
-public interface IGeoGrid : IGrid
+public interface IGeodesicGrid : IGrid
 {
     /// <summary>Resolves the cell at the given coordinates and resolution.</summary>
     CellId CellAt(double latDeg, double lngDeg, Resolution resolution);

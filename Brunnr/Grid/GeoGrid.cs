@@ -1,4 +1,4 @@
-using Kvasir.Science.Geography.Spatial;
+using Kvasir.Natural.Physical.Geodesy;
 
 namespace Brunnr.Grid;
 
@@ -9,8 +9,8 @@ namespace Brunnr.Grid;
 public static class GeoGrid
 {
     /// <summary>The active grid implementation.</summary>
-    public static IGeoGrid Instance { get; private set; } = null!;
+    public static IGeodesicGrid Instance { get; private set; } = null!;
 
     /// <summary>Initializes the grid. Must be called once before the first tick.</summary>
-    public static void Initialize(IGeoGrid grid) => Instance = grid;
+    public static void Initialize(IGeodesicGrid grid) => Instance = grid;
 }

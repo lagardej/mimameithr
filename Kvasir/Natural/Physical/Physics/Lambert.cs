@@ -1,6 +1,6 @@
-using Kvasir.Science.Maths.Geometry;
+using Kvasir.Formal.Maths.Geometry;
 
-namespace Kvasir.Science.Physics;
+namespace Kvasir.Natural.Physical.Physics;
 
 /// <summary>Lambert's cosine law: irradiance on a surface scales with the cosine of the angle of incidence.</summary>
 public static class Lambert

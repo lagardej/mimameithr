@@ -22,20 +22,4 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2"/>
   </ItemGroup>
 
-  <Target Name="BuildRustLib" BeforeTargets="Build">
-    <Exec Command="cargo build --release" WorkingDirectory="..\Seidr"/>
-  </Target>
-
-  <Target Name="CopyRustLibWindows" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('Windows'))">
-    <Copy SourceFiles="..\Seidr\target\release\seidr.dll" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
-  </Target>
-
-  <Target Name="CopyRustLibLinux" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('Linux'))">
-    <Copy SourceFiles="..\Seidr\target\release\libseidr.so" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
-  </Target>
-
-  <Target Name="CopyRustLibMac" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('OSX'))">
-    <Copy SourceFiles="..\Seidr\target\release\libseidr.dylib" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
-  </Target>
-
 </Project>

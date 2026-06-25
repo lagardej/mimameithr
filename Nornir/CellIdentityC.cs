@@ -1,5 +1,5 @@
 using Friflo.Engine.ECS;
-using Kvasir.Science.Maths.Geometry.Partitioning;
+using Kvasir.Formal.Maths.Geometry.Partitioning;
 
 namespace Nornir;
 

@@ -1,4 +1,4 @@
-namespace Kvasir.Science.Maths;
+namespace Kvasir.Formal.Maths;
 
 /// <summary>Deterministic hashing utilities for stable, seed-driven value generation.</summary>
 public static class Hashing

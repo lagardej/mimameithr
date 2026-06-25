@@ -1,10 +1,9 @@
-using Kvasir.Science.Geography;
-using Kvasir.Science.Geography.Spatial;
-using Kvasir.Science.Maths.Geometry.Partitioning;
+using Kvasir.Formal.Maths.Geometry.Partitioning;
+using Kvasir.Natural.Physical.Geodesy;
 
 namespace Nornir.Tests;
 
-public sealed class StubGrid : IGeoGrid
+public sealed class StubGrid : IGeodesicGrid
 {
     public static readonly StubGrid Instance = new();
 

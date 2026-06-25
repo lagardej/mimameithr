@@ -2,15 +2,15 @@ using Brunnr.Engine.Time;
 using Brunnr.Grid;
 using Friflo.Engine.ECS;
 using Friflo.Engine.ECS.Systems;
-using Kvasir.Science.Geography.Spatial;
+using Kvasir.Natural.Physical.Geodesy;
 
 namespace Brunnr.Engine;
 
 public abstract class BaseEngine
 {
     private MonotonicClock _clock = new();
-    private EntityStore? _store;
     private SystemRoot? _root;
+    private EntityStore? _store;
 
     /// <summary>Current time compression factor. Defaults to <see cref="TimeCompression.RealTime" />.</summary>
     public TimeCompression Compression { get; set; } = TimeCompression.RealTime;
@@ -22,7 +22,7 @@ public abstract class BaseEngine
     ///     Replaces any existing configuration.
     ///     Must be called before the first <see cref="Advance" />.
     /// </summary>
-    public void Configure(IGeoGrid grid, Action<EntityStore> configure)
+    public void Configure(IGeodesicGrid grid, Action<EntityStore> configure)
     {
         GeoGrid.Initialize(grid);
         _store = new EntityStore();

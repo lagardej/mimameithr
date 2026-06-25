@@ -1,4 +1,4 @@
-namespace Kvasir.Science.Geography;
+namespace Kvasir.Natural.Physical.Geodesy;
 
 /// <summary>
 ///     Latitude/longitude coordinate in degrees.

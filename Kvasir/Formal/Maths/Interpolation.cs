@@ -1,4 +1,4 @@
-namespace Kvasir.Science.Maths;
+namespace Kvasir.Formal.Maths;
 
 /// <summary>Interpolation helpers for scalar values.</summary>
 public static class Interpolation

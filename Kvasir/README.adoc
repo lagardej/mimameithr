@@ -1,1 +1,42 @@
 = Kvasir
+
+Knowledge library for Mimameithr.
+Provides domain-neutral scientific knowledge used across the simulation — mathematics, physics, geodesy, and eventually social sciences.
+
+Kvasir follows the standard classification of science into three major branches.
+
+== Formal sciences
+
+The study of formal systems using a priori methodology.
+Concerned with abstract structures defined by rules and definitions, independent of empirical observation.
+
+[cols="1,3"]
+|===
+|Namespace |Content
+
+|`Kvasir.Formal.Maths`
+|Geometry, spatial partitioning, interpolation, hashing, random
+|===
+
+== Natural sciences
+
+The study of natural phenomena — cosmological, geological, physical, chemical, and biological.
+
+[cols="1,3"]
+|===
+|Namespace |Content
+
+|`Kvasir.Natural.Physical.Astronomy`
+|Orbital mechanics, stellar geometry
+|`Kvasir.Natural.Physical.Physics`
+|Radiative transfer, solar geometry
+|`Kvasir.Natural.Physical.Geodesy`
+|Planetary coordinate systems, discrete global grids (`IGeodesicGrid`, `LatLng`)
+|===
+
+== Social sciences
+
+The study of human behaviour and the functioning of societies.
+Covers anthropology, economics, history, and related disciplines needed for the Anthroposphere simulation.
+
+Currently empty — populated as the Anthroposphere develops.

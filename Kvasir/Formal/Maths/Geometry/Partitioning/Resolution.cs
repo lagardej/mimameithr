@@ -1,4 +1,4 @@
-namespace Kvasir.Science.Maths.Geometry.Partitioning;
+namespace Kvasir.Formal.Maths.Geometry.Partitioning;
 
 /// <summary>
 ///     Grid resolution level. R0 is the coarsest level; higher values are finer.
