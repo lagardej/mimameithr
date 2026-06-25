@@ -1,6 +1,5 @@
 using Friflo.Engine.ECS;
 using Friflo.Engine.ECS.Systems;
-using Kvasir.Science.Geography.Spatial;
 using Kvasir.Science.Physics;
 using Nornir.Aethersphere.BodyGeometry;
 using Nornir.Aethersphere.Orbit;
@@ -17,16 +16,15 @@ namespace Nornir.Pyrosphere.Irradiance;
 ///     - Daytime flag from zenith angle (day if angle &lt; 90°).
 ///     - Insolation as flux scaled by Lambert cosine factor.
 /// </summary>
-public sealed class IrradianceSystem(IGeoGrid grid) : QuerySystem<IrradianceC, IdentityC, PlanetRefC>
+public sealed class IrradianceSystem : QuerySystem<IrradianceC, IdentityC, PlanetRefC>
 {
     protected override void OnUpdate() =>
         Query.ForEachEntity((ref irradiance, ref identity, ref planetRef, _) =>
         {
-            irradiance = ComputeIrradiance(irradiance, identity, planetRef.Entity, grid);
+            irradiance = ComputeIrradiance(irradiance, identity, planetRef.Entity);
         });
 
-    private static IrradianceC ComputeIrradiance(IrradianceC irradiance, IdentityC identity, Entity planet,
-        IGeoGrid grid)
+    private static IrradianceC ComputeIrradiance(IrradianceC irradiance, IdentityC identity, Entity planet)
     {
         var orbit = planet.GetComponent<OrbitC>();
         var rotation = planet.GetComponent<RotationC>();
@@ -38,7 +36,7 @@ public sealed class IrradianceSystem(IGeoGrid grid) : QuerySystem<IrradianceC, I
         var fluxWattsPerM2 = stellar.Luminosity.Watts / (4.0 * Math.PI * distanceMeters * distanceMeters);
 
         var zenith = SolarGeometry.SolarZenithAngle(
-            grid.CenterOf(identity.CellId),
+            Grid.Instance.CenterOf(identity.CellId),
             orbit.OrbitalAngle,
             rotation.CurrentAngle,
             geometry.AxialTilt);

@@ -6,6 +6,9 @@ namespace Nornir;
 [ComponentKey("planet-ref")]
 public struct PlanetRefC : ILinkComponent
 {
+    /// <summary>The planet entity this cell belongs to.</summary>
     public Entity Entity { get; set; }
-    public Entity GetIndexedValue() => throw new NotImplementedException();
+
+    /// <inheritdoc />
+    public Entity GetIndexedValue() => Entity;
 }

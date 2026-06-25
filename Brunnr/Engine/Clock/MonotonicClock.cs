@@ -9,7 +9,7 @@ public sealed class MonotonicClock
     /// <summary>
     ///     The number of seconds since Epoch
     /// </summary>
-    public ulong ElapsedSeconds { get; private set; }
+    public float ElapsedSeconds { get; private set; }
 
-    internal void Advance(ulong delta) => ElapsedSeconds += delta;
+    public void Advance(float delta) => ElapsedSeconds += delta;
 }

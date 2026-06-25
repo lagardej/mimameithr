@@ -36,9 +36,7 @@ public static class SolarGeometry
     /// <param name="rotationAngle">Current rotation angle of the body around its axis.</param>
     /// <param name="axialTilt">Angle between the body's rotation axis and its orbital plane normal.</param>
     /// <returns>Solar zenith angle. Values above 90° indicate the night side.</returns>
-    public static Angle SolarZenithAngle(
-        LatLng position,
-        Angle orbitalAngle, Angle rotationAngle, Angle axialTilt)
+    public static Angle SolarZenithAngle(LatLng position, Angle orbitalAngle, Angle rotationAngle, Angle axialTilt)
     {
         var sunDir = ApplyRotation(ApplyAxialTilt(SunDirectionOrbital(orbitalAngle), axialTilt), rotationAngle);
         var normal = SurfaceNormal(position);
@@ -75,6 +73,9 @@ public static class SolarGeometry
     {
         var lat = position.Lat * Math.PI / 180.0;
         var lng = position.Lng * Math.PI / 180.0;
-        return new Vector3D(Math.Cos(lat) * Math.Cos(lng), Math.Cos(lat) * Math.Sin(lng), Math.Sin(lat));
+        return new Vector3D(
+            Math.Cos(lat) * Math.Cos(lng),
+            Math.Cos(lat) * Math.Sin(lng),
+            Math.Sin(lat));
     }
 }

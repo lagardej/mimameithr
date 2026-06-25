@@ -7,7 +7,7 @@ namespace Kvasir.Science.Maths.Geometry.Partitioning;
 /// </summary>
 public interface IGrid
 {
-    // Partition access
+    #region Partition access
 
     /// <summary>Returns the complete top-level partition (R0 cells).</summary>
     CellId[] RootCells();
@@ -15,7 +15,9 @@ public interface IGrid
     /// <summary>Enumerates all cells at a given resolution.</summary>
     IEnumerable<CellId> CellsAtResolution(Resolution resolution);
 
-    // Cell introspection
+    #endregion
+
+    #region Cell introspection
 
     /// <summary>Returns the resolution of a given cell.</summary>
     Resolution ResolutionOf(CellId cell);
@@ -23,7 +25,9 @@ public interface IGrid
     /// <summary>Returns whether a cell identifier is valid.</summary>
     bool IsValid(CellId cell);
 
-    // Hierarchy traversal
+    #endregion
+
+    #region Hierarchy traversal
 
     /// <summary>Returns the ancestor cell at a given coarser resolution.</summary>
     CellId ParentOf(CellId cell, Resolution parentResolution);
@@ -37,7 +41,9 @@ public interface IGrid
     /// </summary>
     Resolution InferResolution<T>(Dictionary<CellId, T> cells, Resolution fallback);
 
-    // Neighbourhood traversal
+    #endregion
+
+    #region Neighbourhood traversal
 
     /// <summary>Returns all cells within ring radius k of a centre cell, including the centre.</summary>
     CellId[] Disk(CellId cell, int k);
@@ -47,4 +53,6 @@ public interface IGrid
     ///     k = 0 yields only the centre cell itself.
     /// </summary>
     IEnumerable<CellId> GridRing(CellId center, int k);
+
+    #endregion
 }
