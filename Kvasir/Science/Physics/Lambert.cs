@@ -1,5 +1,4 @@
 using Kvasir.Science.Maths.Geometry;
-using Kvasir.Science.Maths.Geometry.Spherics;
 
 namespace Kvasir.Science.Physics;
 
@@ -11,6 +10,6 @@ public static class Lambert
     ///     1.0 = light hits head-on, 0.0 = terminator, negative = surface faces away from the light source.
     ///     Unitless.
     /// </summary>
-    public static double CosineFactor(Coords3D normal, Coords3D lightDirection) =>
-        SphericalGeometry.Dot(normal, lightDirection);
+    public static double CosineFactor(Vector3D normal, Vector3D lightDirection) =>
+        Vector3D.Dot(normal, lightDirection);
 }
