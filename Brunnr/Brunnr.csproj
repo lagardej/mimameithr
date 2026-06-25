@@ -8,12 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Kvasir\Kvasir.csproj" />
+    <ProjectReference Include="..\Kvasir\Kvasir.csproj"/>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Friflo.Engine.ECS" Version="3.6.0" />
-    <PackageReference Include="UnitsNet" Version="5.75.0" />
+    <PackageReference Include="Friflo.Engine.ECS" Version="3.6.0"/>
+    <PackageReference Include="UnitsNet" Version="5.75.0"/>
   </ItemGroup>
 
 </Project>
