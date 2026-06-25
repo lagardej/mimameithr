@@ -1,8 +1,9 @@
+using Brunnr.System;
 using Friflo.Engine.ECS;
 using Friflo.Engine.ECS.Systems;
-using Nornir.Aethersphere.Orbit;
-using Nornir.Aethersphere.Rotation;
-using Nornir.Pyrosphere.Irradiance;
+using Nornir.Element.Aither.BodyRotation;
+using Nornir.Element.Aither.Orbit;
+using Nornir.Element.Pyr.Irradiance;
 
 namespace Nornir;
 
@@ -24,6 +25,6 @@ public static class NornirSystems
     private static StaggeredSystemGroup StaggeredAt10S() =>
         new("10s staggered systems", SimSecond * 10, StaggerOffset)
         {
-            new RotationSystem(), new OrbitSystem(), new IrradianceSystem()
+            new BodyRotationSystem(), new OrbitSystem(), new IrradianceSystem()
         };
 }

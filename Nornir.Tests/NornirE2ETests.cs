@@ -1,5 +1,5 @@
-using Nornir.Aethersphere.Orbit;
-using Nornir.Aethersphere.Rotation;
+using Nornir.Element.Aither.BodyRotation;
+using Nornir.Element.Aither.Orbit;
 using UnitsNet;
 using Xunit;
 using Xunit.Abstractions;
@@ -21,7 +21,7 @@ public sealed class NornirE2ETests(ITestOutputHelper output)
                 OrbitalPeriod = Duration.FromDays(365.25),
                 MeanAnomaly = Angle.FromDegrees(0)
             });
-            planet.AddComponent(new RotationC
+            planet.AddComponent(new BodyRotationC
             {
                 RotationRate = RotationalSpeed.FromDegreesPerSecond(360.0 / 86400.0),
                 CurrentAngle = Angle.FromDegrees(0)

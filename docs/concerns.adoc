@@ -4,13 +4,13 @@
 NOTE: All physical quantities via UnitsNet — no raw `double` for science values.
 
 NOTE: Boundary processes (energy or matter transfer between two spheres) are assigned to the *receiver*, not the emitter.
-Example: surface-to-air heat transfer belongs to Aerosphere, not Gaiasphere.
+Example: surface-to-air heat transfer belongs to Aer, not Gaiasphere.
 
-NOTE: Sphere boundaries are organisational, not hard constraints.
+NOTE: Sphere boundaries are organizational, not hard constraints.
 Concerns may be split, merged, or reassigned as implementation reveals better boundaries.
 The sphere a concern belongs to reflects current understanding, not a permanent contract.
 
-== Aethersphere
+== Aither
 
 Celestial mechanics at body scale.
 Covers the astronomical properties of space bodies — their geometry, orbital dynamics, and rotation.
@@ -20,19 +20,19 @@ Forms the root dependency layer for all other spheres.
 [mermaid]
 ....
 flowchart TB
-    subgraph Aethersphere
+    subgraph Aither
         StellarLuminosity([Stellar luminosity])
         BodyGeometry([Body geometry])
         Orbit([Orbit])
-        Rotation([Rotation])
+        BodyRotation([BodyRotation])
     end
 
     Irradiance([Irradiance])
 
-    BodyGeometry --> Rotation
+    BodyGeometry --> BodyRotation
     StellarLuminosity -.-> Irradiance
     BodyGeometry -.-> Irradiance
-    Rotation -.-> Irradiance
+    BodyRotation -.-> Irradiance
     Orbit -.-> Irradiance
 ....
 
@@ -84,11 +84,11 @@ _Nothing, external driver._
 
 _To be filled when consumers are designed._
 
-=== Rotation
+=== BodyRotation
 
 ==== Owns
 
-* Rotation rate — `RotationalSpeed`
+* BodyRotation rate — `RotationalSpeed`
 * Current rotation angle — `Angle`
 
 ==== Reads
@@ -104,17 +104,17 @@ _To be filled when consumers are designed._
 * Computed state, ticks every step.
 * Rotation rate is stable; angle is derived from rate × elapsed time.
 
-== Pyrosphere
+== Pyr
 
 Surface energy input at cell scale.
 Covers how energy from the star arrives at and is absorbed by each surface cell.
 Concerns here operate on R0 cell entities.
-Forms the thermal foundation for Aerosphere and Hydrosphere.
+Forms the thermal foundation for Aer and Hydor.
 
 [mermaid]
 ....
 flowchart TB
-    subgraph Pyrosphere
+    subgraph Pyr
         Irradiance([Irradiance])
         Albedo([Albedo])
     end
@@ -122,12 +122,12 @@ flowchart TB
     StellarLuminosity([Stellar luminosity])
     BodyGeometry([Body geometry])
     Orbit([Orbit])
-    Rotation([Rotation])
+    BodyRotation([BodyRotation])
 
     StellarLuminosity -.-> Irradiance
     BodyGeometry -.-> Irradiance
     Orbit -.-> Irradiance
-    Rotation -.-> Irradiance
+    BodyRotation -.-> Irradiance
 ....
 
 === Irradiance
@@ -170,7 +170,7 @@ _Nothing, external driver for now. Will read surface composition when designed._
 
 _To be filled when consumers are designed._
 
-== Gaiasphere
+== Gaea
 
 Solid earth at cell scale.
 Covers tectonic processes, terrain formation, soil composition, and geological timescales.
@@ -179,7 +179,7 @@ The physical substrate on which all other cell-scale spheres operate.
 [mermaid]
 ....
 flowchart TB
-    subgraph Gaiasphere
+    subgraph Gaea
         Tectonics([Tectonics])
         Orogeny([Orogeny])
         Elevation([Elevation])
@@ -229,16 +229,16 @@ flowchart TB
 
 _To be filled when consumers are designed._
 
-== Hydrosphere
+== Hydor
 
 Water at cell and body scale.
 Covers ocean currents, freshwater distribution, and river drainage.
-Driven by Pyrosphere energy input, Aerosphere precipitation, and Gaiasphere terrain.
+Driven by Pyr energy input, Aer precipitation, and Gaea terrain.
 
 [mermaid]
 ....
 flowchart TB
-    subgraph Hydrosphere
+    subgraph Hydor
         SeaLevel([Sea level])
         Basin([Basin])
         OceanCirculation([Ocean circulation])
@@ -268,16 +268,16 @@ flowchart TB
 === River Network
 === Groundwater
 
-== Cryosphere
+== Kryos
 
 Ice and permafrost at cell scale.
 Covers ice sheets, glaciers, sea ice, and frozen ground.
-Modifies albedo, sea level, and river flux; feeds back into Aerosphere and Hydrosphere.
+Modifies albedo, sea level, and river flux; feeds back into Aer and Hydor.
 
 [mermaid]
 ....
 flowchart TB
-    subgraph Cryosphere
+    subgraph Kryos
         IceSheet([Ice sheet])
         Glacier([Glacier])
         SeaIce([Sea ice])
@@ -314,16 +314,16 @@ flowchart TB
 === Sea Ice
 === Permafrost
 
-== Aerosphere
+== Aer
 
 Atmospheric dynamics at cell scale.
 Covers air temperature, pressure, wind circulation, and weather patterns.
-Bridges Pyrosphere energy input and Hydrosphere water movement.
+Bridges Pyr energy input and Hydor water movement.
 
 [mermaid]
 ....
 flowchart TB
-    subgraph Aerosphere
+    subgraph Aer
         ThermalRedistribution([Thermal redistribution])
         Circulation([Circulation])
         Composition([Composition])
@@ -348,16 +348,16 @@ flowchart TB
 === Composition
 === Precipitation
 
-== Biosphere
+== Bios
 
 Living systems at cell scale.
 Covers vegetation, fauna, soil biology, and disease vectors.
-Constrained by Gaiasphere, Hydrosphere, Aerosphere, and Cryosphere conditions.
+Constrained by Gaea, Hydor, Aer, and Kryos conditions.
 
 [mermaid]
 ....
 flowchart TB
-    subgraph Biosphere
+    subgraph Bios
         Biome([Biome])
         Flora([Flora])
         Soil([Soil])
@@ -419,26 +419,26 @@ Do not belong to any sphere.
 
 Aggregates per-cell surface composition from all spheres that expose a surface state.
 Single consumer: Albedo.
-Fed by: Cryosphere (Ice Sheet, Sea Ice), Biosphere (Flora), Hydrosphere (Ocean), Gaiasphere (terrain) — as those spheres are designed.
+Fed by: Kryos (Ice Sheet, Sea Ice), Bios (Flora), Hydor (Ocean), Gaea (terrain) — as those spheres are designed.
 
 == Full dependency graph
 
 [mermaid]
 ....
 flowchart TB
-    subgraph Aethersphere
+    subgraph Aither
         StellarLuminosity([Stellar luminosity])
         BodyGeometry([Body geometry])
         Orbit([Orbit])
-        Rotation([Rotation])
+        BodyRotation([BodyRotation])
     end
 
-    subgraph Pyrosphere
+    subgraph Pyr
         Irradiance([Irradiance])
         Albedo([Albedo])
     end
 
-    subgraph Gaiasphere
+    subgraph Gaea
         Tectonics([Tectonics])
         Orogeny([Orogeny])
         Elevation([Elevation])
@@ -449,7 +449,7 @@ flowchart TB
         SurfaceTemperature([Surface temperature])
     end
 
-    subgraph Hydrosphere
+    subgraph Hydor
         SeaLevel([Sea level])
         Basin([Basin])
         OceanCirculation([Ocean circulation])
@@ -457,21 +457,21 @@ flowchart TB
         Groundwater([Groundwater])
     end
 
-    subgraph Cryosphere
+    subgraph Kryos
         IceSheet([Ice sheet])
         Glacier([Glacier])
         SeaIce([Sea ice])
         Permafrost([Permafrost])
     end
 
-    subgraph Aerosphere
+    subgraph Aer
         ThermalRedistribution([Thermal redistribution])
         Circulation([Circulation])
         Composition([Composition])
         Precipitation([Precipitation])
     end
 
-    subgraph Biosphere
+    subgraph Bios
         Biome([Biome])
         Flora([Flora])
         Soil([Soil])
@@ -479,11 +479,11 @@ flowchart TB
         Disease([Disease])
     end
 
-    BodyGeometry --> Rotation
+    BodyGeometry --> BodyRotation
     StellarLuminosity --> Irradiance
     BodyGeometry --> Irradiance
     Orbit --> Irradiance
-    Rotation --> Irradiance
+    BodyRotation --> Irradiance
     Irradiance --> SurfaceTemperature
     Albedo --> SurfaceTemperature
 

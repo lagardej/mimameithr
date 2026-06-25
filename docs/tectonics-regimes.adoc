@@ -1,0 +1,44 @@
+= Tectonics Regimes (Reference)
+
+This note lists common tectonic regimes for simulation reference.
+It is descriptive, not prescriptive.
+
+== 1. Mobile lid (plate tectonics)
+
+- Surface shell is partitioned into moving plates.
+- Boundaries show convergent, divergent, and transform behaviour.
+- Typical signals: active orogeny, subduction volcanism, distributed seismic belts.
+- Modelling fit: plate-based dynacore.
+
+== 2. Stagnant lid
+
+- Outer shell behaves as a mostly single, immobile lid.
+- Heat loss is dominated by conduction and localized plume-like activity.
+- Typical signals: broad volcanic provinces, weak long-lived plate boundaries.
+- Modelling fit: stress and plume field dynacore, no persistent plate map.
+
+== 3. Episodic lid
+
+- Long quiescent intervals punctuated by resurfacing or rapid reorganization.
+- Can alternate between near-stagnant and short mobile phases.
+- Typical signals: age clustering of crustal reset events, bursty tectonism.
+- Modelling fit: threshold or event-driven dynacore.
+
+== 4. Heat-pipe / volcanism-dominated resurfacing
+
+- Surface renewal is driven mainly by high eruption flux and burial.
+- Common in very high internal heat scenarios.
+- Typical signals: rapid crust replacement, weak horizontal plate transport.
+- Modelling fit: resurfacing flux dynacore.
+
+== 5. Tidal fracture tectonics (common for icy worlds)
+
+- Deformation is driven by cyclic tidal stress more than mantle convection.
+- Typical signals: global fracture systems, periodic activity, cryovolcanic coupling.
+- Modelling fit: forcing-driven fracture dynacore.
+
+== Notes for parameterization
+
+- Earth-like values are one calibration point, not a universal baseline.
+- Regime selection should define expected parameter ranges and event cadence.
+- Unknown worlds should be sampled across plausible ranges, then filtered for gameplay credibility.
