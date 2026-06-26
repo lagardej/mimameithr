@@ -18,7 +18,7 @@ report-open:
     {{ if os() == "macos" { "open ./coverage/report/index.html" } else if os() == "linux" { "xdg-open ./coverage/report/index.html" } else { "start ./coverage/report/index.html" } }}
 
 report: coverage
-    dotnet tool run reportgenerator -- -reports:./coverage/**/coverage.cobertura.xml -targetdir:./coverage/report -reporttypes:Html
+    dotnet tool run reportgenerator -- -filefilters:-*LibraryImports.g.cs -reports:./coverage/**/coverage.cobertura.xml -targetdir:./coverage/report -reporttypes:Html
     just report-open
 
 [group('seidr')]

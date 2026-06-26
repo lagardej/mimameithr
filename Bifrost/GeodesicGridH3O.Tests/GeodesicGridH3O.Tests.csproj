@@ -36,4 +36,5 @@
   <Target Name="CopyRustLibMac" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('OSX'))">
     <Copy SourceFiles="..\..\Seidr\target\release\libseidr.dylib" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
   </Target>
+
 </Project>
