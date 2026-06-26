@@ -1,5 +1,6 @@
 using Kvasir.Formal.Maths.Geometry.Partitioning;
 using Kvasir.Natural.Physical.Geodesy;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace GeogridH3o;
@@ -7,19 +8,41 @@ namespace GeogridH3o;
 /// <summary>
 ///     <see cref="IGeodesicGrid" /> implementation backed by the h3o Rust library via P/Invoke.
 /// </summary>
-public sealed class GeodesicGridH3O : IGeodesicGrid
+public sealed partial class GeodesicGridH3O : IGeodesicGrid
 {
-    // --- IGeoGrid ------------------------------------------------------------
+    #region Helpers
 
-    public CellId CellAt(double latDeg, double lngDeg, Resolution resolution) =>
-        new(geogrid_cell_at(latDeg, lngDeg, resolution.Value));
-
-    public LatLng CenterOf(CellId cell)
+    private void GuardResolution(Resolution resolution)
     {
-        geogrid_center_of(cell.Value, out var lat, out var lng);
-        return new LatLng(lat, lng);
+        if (resolution.Value <= MaxResolution.Value)
+        {
+            return;
+        }
+
+        throw new ArgumentOutOfRangeException(
+            nameof(resolution),
+            resolution.Value,
+            $"Resolution {resolution.Value} exceeds the maximum supported level ({MaxResolution.Value}).");
     }
 
+    #endregion
+
+    #region IGeodesicGrid
+
+    /// <inheritdoc />
+    public CellId CellAt(double latDeg, double lngDeg, Resolution resolution)
+    {
+        GuardResolution(resolution);
+        return new CellId(geogrid_cell_at(latDeg, lngDeg, resolution.Value));
+    }
+
+    /// <inheritdoc />
+    public LatLng CenterOf(CellId cell) =>
+        geogrid_center_of(cell.Value, out var lat, out var lng)
+            ? new LatLng(lat, lng)
+            : throw new ArgumentException($"Invalid cell: {cell.Value}", nameof(cell));
+
+    /// <inheritdoc />
     public LatLng[] BoundaryOf(CellId cell)
     {
         var buf = new double[10 * 2];
@@ -33,8 +56,14 @@ public sealed class GeodesicGridH3O : IGeodesicGrid
         return result;
     }
 
-    // --- IGrid ---------------------------------------------------------------
+    #endregion
 
+    #region IGrid
+
+    /// <inheritdoc />
+    public Resolution MaxResolution { get; } = new(15);
+
+    /// <inheritdoc />
     public CellId[] RootCells()
     {
         var len = geogrid_root_cells_len();
@@ -43,31 +72,47 @@ public sealed class GeodesicGridH3O : IGeodesicGrid
         return buf.Select(v => new CellId(v)).ToArray();
     }
 
+    /// <inheritdoc />
     public IEnumerable<CellId> CellsAtResolution(Resolution resolution)
     {
+        GuardResolution(resolution);
         var len = geogrid_cells_at_resolution_len(resolution.Value);
         var buf = new ulong[len];
-        geogrid_cells_at_resolution(resolution.Value, buf, len);
+        _ = geogrid_cells_at_resolution(resolution.Value, buf, len);
         return buf.Select(v => new CellId(v));
     }
 
+    /// <inheritdoc />
     public Resolution ResolutionOf(CellId cell) =>
         new(geogrid_resolution_of(cell.Value));
 
+    /// <inheritdoc />
     public bool IsValid(CellId cell) =>
         geogrid_is_valid(cell.Value);
 
-    public CellId ParentOf(CellId cell, Resolution parentResolution) =>
-        new(geogrid_parent_of(cell.Value, parentResolution.Value));
+    /// <inheritdoc />
+    public CellId ParentOf(CellId cell, Resolution parentResolution)
+    {
+        GuardResolution(parentResolution);
+        return new CellId(geogrid_parent_of(cell.Value, parentResolution.Value));
+    }
 
+    /// <inheritdoc />
     public CellId[] ChildrenOf(CellId cell, Resolution childResolution)
     {
+        GuardResolution(childResolution);
         var len = geogrid_children_len(cell.Value, childResolution.Value);
+        if (len == -1)
+        {
+            throw new ArgumentException($"Invalid cell: {cell.Value}", nameof(cell));
+        }
+
         var buf = new ulong[len];
-        geogrid_children_of(cell.Value, childResolution.Value, buf, len);
+        _ = geogrid_children_of(cell.Value, childResolution.Value, buf, len);
         return buf.Select(v => new CellId(v)).ToArray();
     }
 
+    /// <inheritdoc />
     public Resolution InferResolution<T>(Dictionary<CellId, T> cells, Resolution fallback)
     {
         foreach (var k in cells.Keys)
@@ -78,14 +123,21 @@ public sealed class GeodesicGridH3O : IGeodesicGrid
         return fallback;
     }
 
+    /// <inheritdoc />
     public CellId[] Disk(CellId cell, int k)
     {
         var len = geogrid_disk_len(cell.Value, k);
+        if (len == -1)
+        {
+            throw new ArgumentException($"Invalid cell: {cell.Value}", nameof(cell));
+        }
+
         var buf = new ulong[len];
-        geogrid_disk(cell.Value, k, buf, len);
+        _ = geogrid_disk(cell.Value, k, buf, len);
         return buf.Select(v => new CellId(v)).ToArray();
     }
 
+    /// <inheritdoc />
     public IEnumerable<CellId> GridRing(CellId center, int k)
     {
         if (k == 0)
@@ -96,47 +148,68 @@ public sealed class GeodesicGridH3O : IGeodesicGrid
         var inner = new HashSet<CellId>(Disk(center, k - 1));
         return Disk(center, k).Where(c => !inner.Contains(c));
     }
-    // --- P/Invoke ------------------------------------------------------------
 
-    [DllImport("seidr", CallingConvention = CallingConvention.Cdecl)]
-    private static extern ulong geogrid_cell_at(double lat, double lng, int res);
+    #endregion
 
-    [DllImport("seidr", CallingConvention = CallingConvention.Cdecl)]
-    private static extern int geogrid_resolution_of(ulong cell);
+    #region P/Invoke
 
-    [DllImport("seidr", CallingConvention = CallingConvention.Cdecl)]
-    private static extern bool geogrid_is_valid(ulong cell);
+    [LibraryImport("seidr")]
+    [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial ulong geogrid_cell_at(double lat, double lng, uint res);
 
-    [DllImport("seidr", CallingConvention = CallingConvention.Cdecl)]
-    private static extern bool geogrid_center_of(ulong cell, out double lat, out double lng);
+    [LibraryImport("seidr")]
+    [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial uint geogrid_resolution_of(ulong cell);
 
-    [DllImport("seidr", CallingConvention = CallingConvention.Cdecl)]
-    private static extern int geogrid_boundary_of(ulong cell, [Out] double[] out_);
+    [LibraryImport("seidr")]
+    [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool geogrid_is_valid(ulong cell);
 
-    [DllImport("seidr", CallingConvention = CallingConvention.Cdecl)]
-    private static extern ulong geogrid_parent_of(ulong cell, int parentRes);
+    [LibraryImport("seidr")]
+    [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool geogrid_center_of(ulong cell, out double lat, out double lng);
 
-    [DllImport("seidr", CallingConvention = CallingConvention.Cdecl)]
-    private static extern int geogrid_children_len(ulong cell, int childRes);
+    [LibraryImport("seidr")]
+    [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial int geogrid_boundary_of(ulong cell, [Out] double[] outBuffer);
 
-    [DllImport("seidr", CallingConvention = CallingConvention.Cdecl)]
-    private static extern int geogrid_children_of(ulong cell, int childRes, [Out] ulong[] out_, int len);
+    [LibraryImport("seidr")]
+    [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial ulong geogrid_parent_of(ulong cell, uint parentRes);
 
-    [DllImport("seidr", CallingConvention = CallingConvention.Cdecl)]
-    private static extern int geogrid_root_cells_len();
+    [LibraryImport("seidr")]
+    [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial int geogrid_children_len(ulong cell, uint childRes);
 
-    [DllImport("seidr", CallingConvention = CallingConvention.Cdecl)]
-    private static extern void geogrid_root_cells([Out] ulong[] out_, int len);
+    [LibraryImport("seidr")]
+    [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial int geogrid_children_of(ulong cell, uint childRes, [Out] ulong[] outBuffer, int len);
 
-    [DllImport("seidr", CallingConvention = CallingConvention.Cdecl)]
-    private static extern int geogrid_cells_at_resolution_len(int res);
+    [LibraryImport("seidr")]
+    [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial int geogrid_root_cells_len();
 
-    [DllImport("seidr", CallingConvention = CallingConvention.Cdecl)]
-    private static extern int geogrid_cells_at_resolution(int res, [Out] ulong[] out_, int len);
+    [LibraryImport("seidr")]
+    [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial void geogrid_root_cells([Out] ulong[] outBuffer, int len);
 
-    [DllImport("seidr", CallingConvention = CallingConvention.Cdecl)]
-    private static extern int geogrid_disk_len(ulong cell, int k);
+    [LibraryImport("seidr")]
+    [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial int geogrid_cells_at_resolution_len(uint res);
 
-    [DllImport("seidr", CallingConvention = CallingConvention.Cdecl)]
-    private static extern int geogrid_disk(ulong cell, int k, [Out] ulong[] out_, int len);
+    [LibraryImport("seidr")]
+    [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial int geogrid_cells_at_resolution(uint res, [Out] ulong[] outBuffer, int len);
+
+    [LibraryImport("seidr")]
+    [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial int geogrid_disk_len(ulong cell, int k);
+
+    [LibraryImport("seidr")]
+    [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial int geogrid_disk(ulong cell, int k, [Out] ulong[] outBuffer, int len);
+
+    #endregion
 }

@@ -6,14 +6,14 @@ fn to_cell(raw: u64) -> Option<CellIndex> {
     CellIndex::try_from(raw).ok()
 }
 
-fn to_res(raw: i32) -> Option<Resolution> {
+fn to_res(raw: u32) -> Option<Resolution> {
     Resolution::try_from(raw as u8).ok()
 }
 
 // --- cell lookup -------------------------------------------------------------
 
 #[unsafe(no_mangle)]
-pub extern "C" fn geogrid_cell_at(lat_deg: f64, lng_deg: f64, res: i32) -> u64 {
+pub extern "C" fn geogrid_cell_at(lat_deg: f64, lng_deg: f64, res: u32) -> u64 {
     let Some(resolution) = to_res(res) else { return u64::MAX };
     let coord = LatLng::new(lat_deg, lng_deg).expect("valid lat/lng");
     u64::from(coord.to_cell(resolution))
@@ -22,8 +22,8 @@ pub extern "C" fn geogrid_cell_at(lat_deg: f64, lng_deg: f64, res: i32) -> u64 {
 // --- cell introspection ------------------------------------------------------
 
 #[unsafe(no_mangle)]
-pub extern "C" fn geogrid_resolution_of(cell: u64) -> i32 {
-    to_cell(cell).map(|c| u8::from(c.resolution()) as i32).unwrap_or(-1)
+pub extern "C" fn geogrid_resolution_of(cell: u64) -> u32 {
+    to_cell(cell).map(|c| u8::from(c.resolution()) as u32).unwrap_or(u32::MAX)
 }
 
 #[unsafe(no_mangle)]
@@ -64,21 +64,21 @@ pub extern "C" fn geogrid_boundary_of(cell: u64, out: *mut f64) -> i32 {
 // --- hierarchy ---------------------------------------------------------------
 
 #[unsafe(no_mangle)]
-pub extern "C" fn geogrid_parent_of(cell: u64, parent_res: i32) -> u64 {
+pub extern "C" fn geogrid_parent_of(cell: u64, parent_res: u32) -> u64 {
     let Some(c) = to_cell(cell) else { return u64::MAX };
     let Some(r) = to_res(parent_res) else { return u64::MAX };
     c.parent(r).map(u64::from).unwrap_or(u64::MAX)
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn geogrid_children_len(cell: u64, child_res: i32) -> i32 {
+pub extern "C" fn geogrid_children_len(cell: u64, child_res: u32) -> i32 {
     let Some(c) = to_cell(cell) else { return -1 };
     let Some(r) = to_res(child_res) else { return -1 };
     c.children_count(r) as i32
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn geogrid_children_of(cell: u64, child_res: i32, out: *mut u64, len: i32) -> i32 {
+pub extern "C" fn geogrid_children_of(cell: u64, child_res: u32, out: *mut u64, len: i32) -> i32 {
     let Some(c) = to_cell(cell) else { return -1 };
     let Some(r) = to_res(child_res) else { return -1 };
     let children: Vec<CellIndex> = c.children(r).collect();
@@ -112,7 +112,7 @@ pub extern "C" fn geogrid_root_cells(out: *mut u64, len: i32) {
 // --- cells at resolution -----------------------------------------------------
 
 #[unsafe(no_mangle)]
-pub extern "C" fn geogrid_cells_at_resolution_len(res: i32) -> i32 {
+pub extern "C" fn geogrid_cells_at_resolution_len(res: u32) -> i32 {
     let Some(r) = to_res(res) else { return -1 };
     CellIndex::base_cells()
         .flat_map(move |base| base.children(r))
@@ -120,7 +120,7 @@ pub extern "C" fn geogrid_cells_at_resolution_len(res: i32) -> i32 {
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn geogrid_cells_at_resolution(res: i32, out: *mut u64, len: i32) -> i32 {
+pub extern "C" fn geogrid_cells_at_resolution(res: u32, out: *mut u64, len: i32) -> i32 {
     let Some(r) = to_res(res) else { return -1 };
     let mut count = 0;
     unsafe {

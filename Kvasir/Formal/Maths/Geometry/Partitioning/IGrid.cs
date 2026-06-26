@@ -9,6 +9,9 @@ public interface IGrid
 {
     #region Partition access
 
+    /// <summary>The finest resolution level supported by this grid backend.</summary>
+    Resolution MaxResolution { get; }
+
     /// <summary>Returns the complete top-level partition (R0 cells).</summary>
     CellId[] RootCells();
 

@@ -3,7 +3,7 @@ using Xunit;
 
 namespace GeogridH3o.Tests;
 
-public sealed class GeogridH3oSmokeTests
+public sealed class GeogridH3OSmokeTests
 {
     private readonly GeodesicGridH3O _grid = new();
 
@@ -23,6 +23,7 @@ public sealed class GeogridH3oSmokeTests
     public void CenterOf_ReturnsPlausibleCoordinates()
     {
         var center = _grid.CenterOf(Cell);
+
         Assert.InRange(center.Lat, 40.0, 55.0);
         Assert.InRange(center.Lng, -5.0, 10.0);
     }
@@ -31,6 +32,7 @@ public sealed class GeogridH3oSmokeTests
     public void BoundaryOf_ReturnsSixOrSevenVertices()
     {
         var boundary = _grid.BoundaryOf(Cell);
+
         Assert.InRange(boundary.Length, 6, 7);
     }
 
@@ -38,6 +40,7 @@ public sealed class GeogridH3oSmokeTests
     public void RootCells_Returns122Cells()
     {
         var roots = _grid.RootCells();
+
         Assert.Equal(122, roots.Length);
     }
 
@@ -45,6 +48,7 @@ public sealed class GeogridH3oSmokeTests
     public void ParentOf_ReturnsCoarserCell()
     {
         var parent = _grid.ParentOf(Cell, new Resolution(2));
+
         Assert.True(_grid.IsValid(parent));
         Assert.Equal(new Resolution(2), _grid.ResolutionOf(parent));
     }
@@ -53,8 +57,17 @@ public sealed class GeogridH3oSmokeTests
     public void ChildrenOf_ReturnsNonEmptySet()
     {
         var children = _grid.ChildrenOf(Cell, new Resolution(4));
+
         Assert.NotEmpty(children);
         Assert.All(children, c => Assert.True(_grid.IsValid(c)));
+    }
+
+    [Fact]
+    public void CellsAtResolution_InvalidResolution_Throws()
+    {
+        var invalidResolution = new Resolution(_grid.MaxResolution.Value + 1);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => _grid.CellsAtResolution(invalidResolution).ToList());
     }
 
     [Fact]
