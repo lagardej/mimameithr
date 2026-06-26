@@ -1,0 +1,11 @@
+= Rustr
+
+Rust workspace for Mimameithr. Contains crates that provide native performance where C# is insufficient.
+
+[cols="1,3"]
+|===
+|Crate |Purpose
+
+|link:Kart/README.adoc[`Kart`] |Geodesic grid — H3/h3o cell operations exposed via C FFI
+|link:Seidr/README.adoc[`Seidr`] |Heavy math — numerical and scientific computation
+|===

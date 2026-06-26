@@ -8,6 +8,7 @@ The simulation runs headless.
 
 == Repository layout
 
+[cols="1,3"]
 |===
 |Directory |Purpose
 
@@ -16,5 +17,6 @@ The simulation runs headless.
 |link:Brunnr/README.adoc[`Brunnr`] |Simulation framework — topology, scheduling, validation
 |link:Kvasir/README.adoc[`Kvasir`] |Science knowledge
 |link:Nornir/README.adoc[`Nornir`] |Domain models — tectonics, climate, civilization, …
+|link:Rustr/README.adoc[`Rustr`] |Rust workspace — native performance crates
 |link:Volundr/README.adoc[`Volundr`] |Developer toolbox (Autodoc, …)
 |===

@@ -1,0 +1,21 @@
+= Kart
+
+Old Norse: _map_.
+
+Rust crate exposing geodesic grid operations via C FFI, backed by the https://github.com/HydroniumLabs/h3o[h3o] library.
+Consumed by `GeodesicGridH3O` in Bifrost via P/Invoke.
+
+== Modules
+
+[cols="1,3"]
+|===
+|Module |Purpose
+
+|`geogrid` |Cell lookup, introspection, hierarchy traversal, and neighbourhood operations
+|===
+
+== FFI contract
+
+All exported functions use `extern "C"` with `cdecl` calling convention.
+Resolution levels are `u32`; cell identifiers are `u64` (raw H3 index).
+Error sentinel values: `u64::MAX` for invalid cell results, `-1` for invalid counts.

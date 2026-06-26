@@ -1,5 +1,5 @@
 [package]
-name = "seidr"
+name = "kart"
 version = "0.1.0"
 edition = "2024"
 
@@ -8,4 +8,3 @@ crate-type = ["cdylib"]
 
 [dependencies]
 h3o = "0.10.0"
-rayon = "1.12.0"

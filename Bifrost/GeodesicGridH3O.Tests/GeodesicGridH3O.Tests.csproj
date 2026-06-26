@@ -22,19 +22,19 @@
   </ItemGroup>
 
   <Target Name="BuildRustLib" BeforeTargets="Build">
-    <Exec Command="cargo build --release" WorkingDirectory="..\..\Seidr"/>
+    <Exec Command="cargo build --release" WorkingDirectory="..\..\Rustr\Kart"/>
   </Target>
 
   <Target Name="CopyRustLibWindows" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('Windows'))">
-    <Copy SourceFiles="..\..\Seidr\target\release\seidr.dll" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
+    <Copy SourceFiles="..\..\Rustr\Kart\target\release\kart.dll" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
   </Target>
 
   <Target Name="CopyRustLibLinux" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('Linux'))">
-    <Copy SourceFiles="..\..\Seidr\target\release\libseidr.so" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
+    <Copy SourceFiles="..\..\Rustr\Kart\target\release\libkart.so" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
   </Target>
 
   <Target Name="CopyRustLibMac" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('OSX'))">
-    <Copy SourceFiles="..\..\Seidr\target\release\libseidr.dylib" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
+    <Copy SourceFiles="..\..\Rustr\Kart\target\release\libkart.dylib" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
   </Target>
 
 </Project>

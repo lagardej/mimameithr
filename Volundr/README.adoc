@@ -4,6 +4,7 @@ Developer toolbox for Mimameithr.
 
 == Projects
 
+[cols="1,3"]
 |===
 |Directory |Purpose
 

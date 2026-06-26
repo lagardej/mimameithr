@@ -13,7 +13,7 @@ public sealed class StubGrid : IGeodesicGrid
 
     public LatLng[] BoundaryOf(CellId cell) => [];
 
-    public Resolution MaxResolution { get; } = new (15);
+    public Resolution MaxResolution { get; } = new(15);
 
     public CellId[] RootCells() => [];
 

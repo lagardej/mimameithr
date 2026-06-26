@@ -1,0 +1,6 @@
+= Seidr
+
+Old Norse: _seiðr_ — magic, the art of shaping forces.
+
+Rust crate for heavy numerical and scientific computation.
+Consumed by C# via P/Invoke where floating-point performance or SIMD is required.
