@@ -3,19 +3,21 @@
 
 NOTE: All physical quantities via UnitsNet — no raw `double` for science values.
 
-NOTE: Boundary processes (energy or matter transfer between two spheres) are assigned to the *receiver*, not the emitter.
-Example: surface-to-air heat transfer belongs to Aer, not Gaiasphere.
+NOTE: Elements are named after the Greek classical elements — a deliberate nod to alchemy. The irony of using alchemical terminology for hard-science simulation is intentional. See also: Seidr.
 
-NOTE: Sphere boundaries are organizational, not hard constraints.
+NOTE: Boundary processes (energy or matter transfer between two elements) are assigned to the *receiver*, not the emitter.
+Example: surface-to-air heat transfer belongs to Aer, not Gaea.
+
+NOTE: Element boundaries are organizational, not hard constraints.
 Concerns may be split, merged, or reassigned as implementation reveals better boundaries.
-The sphere a concern belongs to reflects current understanding, not a permanent contract.
+The element a concern belongs to reflects current understanding, not a permanent contract.
 
 == Aither
 
 Celestial mechanics at body scale.
 Covers the astronomical properties of space bodies — their geometry, orbital dynamics, and rotation.
 Concerns here operate on body entities, not cells.
-Forms the root dependency layer for all other spheres.
+Forms the root dependency layer for all other elements.
 
 [mermaid]
 ....
@@ -174,7 +176,7 @@ _To be filled when consumers are designed._
 
 Solid earth at cell scale.
 Covers tectonic processes, terrain formation, soil composition, and geological timescales.
-The physical substrate on which all other cell-scale spheres operate.
+The physical substrate on which all other cell-scale elements operate.
 
 [mermaid]
 ....
@@ -207,12 +209,156 @@ flowchart TB
 ....
 
 === Tectonics
+
+==== Owns
+
+* Crust composition per cell — felsic / mafic (enum)
+* Crustal thickness per cell — `Length`
+* Vertical displacement rate per cell — `Speed` (m/yr)
+* Boundary type per cell — convergent / divergent / transform / none (enum)
+
+==== Reads
+
+_Nothing, external driver._
+
+==== Exposes
+
+* Crust composition → Elevation
+* Crustal thickness → Elevation
+* Vertical displacement rate → Elevation
+* Boundary type → Elevation, Dynamics, Geothermal
+
+==== Notes
+
+* One-shot computation at world gen. Only changes via explicit forcings.
+* Timescale: Myr.
+
 === Orogeny
+
+==== Owns
+
+* Orogenic age per cell — `Duration`
+* Accumulated crustal shortening per cell — `Length`
+* Relief potential per cell — `Ratio` (0–1, decays with age)
+
+==== Reads
+
+* Boundary type ← Tectonics
+* Vertical displacement rate ← Tectonics
+
+==== Exposes
+
+* Orogenic age → Elevation
+* Accumulated crustal shortening → Elevation
+* Relief potential → Elevation
+* Orogenic age → Geology
+
+==== Notes
+
+* HYPOTHESIS: age + relief potential is sufficient to distinguish old vs young mountains. Validate when Elevation is implemented.
+* One-shot computation at world gen. Only changes via explicit forcings.
+* Timescale: Myr.
+
 === Elevation
+
+==== Owns
+
+* Elevation per cell — `Length`
+
+==== Reads
+
+* Crust composition ← Tectonics
+* Crustal thickness ← Tectonics
+* Vertical displacement rate ← Tectonics
+* Boundary type ← Tectonics
+* Orogenic age ← Orogeny
+* Accumulated crustal shortening ← Orogeny
+* Relief potential ← Orogeny
+
+==== Exposes
+
+_To be filled when consumers are designed._
+
+==== Notes
+
+* Derived from isostatic balance + tectonic displacement.
+* One-shot computation at world gen. Only changes via explicit forcings.
+* Timescale: Myr.
+
 === Dynamics
+
+==== Owns
+
+* Seismic frequency index per cell — `Ratio`
+* Seismic intensity index per cell — `Ratio`
+* Seismic duration index per cell — `Ratio`
+* Volcanic frequency index per cell — `Ratio`
+* Volcanic intensity index per cell — `Ratio`
+* Volcanic duration index per cell — `Ratio`
+
+==== Reads
+
+* Boundary type ← Tectonics
+* Vertical displacement rate ← Tectonics
+* Crust composition ← Tectonics
+
+==== Exposes
+
+* Volcanic frequency index → Geothermal
+* Volcanic intensity index → Geothermal
+
+==== Notes
+
+* Index values are designer-scaled (1–10), not physical quantities. Scaling driven by config.
+* One-shot computation at world gen. Only changes via explicit forcings.
+* Timescale: Myr.
+
 === Sedimentation
 === Geology
+
+==== Owns
+
+* Dominant rock type per cell — igneous / metamorphic / sedimentary (enum)
+* Surface rock age per cell — `Duration`
+
+==== Reads
+
+* Crust composition ← Tectonics
+* Boundary type ← Tectonics
+* Orogenic age ← Orogeny
+
+==== Exposes
+
+_To be filled when consumers are designed._
+
+==== Notes
+
+* Sedimentary classification has no driver at Myr scale — Sedimentation (shorter timescale) is out of scope here. Revisit when Sedimentation is designed.
+* One-shot computation at world gen. Only changes via explicit forcings.
+* Timescale: Myr.
+
 === Geothermal
+
+==== Owns
+
+* Heat flux per cell — `HeatFlux` (W/m²)
+
+==== Reads
+
+* Volcanic frequency index ← Dynamics
+* Volcanic intensity index ← Dynamics
+* Crust composition ← Tectonics
+* Crustal thickness ← Tectonics
+
+==== Exposes
+
+_To be filled when consumers are designed._
+
+==== Notes
+
+* Models continuous background heat flux, not discrete volcanic events.
+* One-shot computation at world gen. Only changes via explicit forcings.
+* Timescale: Myr.
 
 === Surface temperature
 
@@ -403,23 +549,23 @@ flowchart TB
 === Fauna
 === Disease
 
-== Anthroposphere
+== Anthropos
 
 Human civilization at cell and network scale.
 Covers settlement, resource extraction, infrastructure, and cultural dynamics.
-Emerges from and is constrained by all other spheres.
+Emerges from and is constrained by all other elements.
 
 == Projections
 
-Read-only aggregations derived from one or more spheres.
+Read-only aggregations derived from one or more elements.
 No simulation logic — pure views over existing concern state.
-Do not belong to any sphere.
+Do not belong to any element.
 
 === Surface cover
 
-Aggregates per-cell surface composition from all spheres that expose a surface state.
+Aggregates per-cell surface composition from all elements that expose a surface state.
 Single consumer: Albedo.
-Fed by: Kryos (Ice Sheet, Sea Ice), Bios (Flora), Hydor (Ocean), Gaea (terrain) — as those spheres are designed.
+Fed by: Kryos (Ice Sheet, Sea Ice), Bios (Flora), Hydor (Ocean), Gaea (terrain) — as those elements are designed.
 
 == Full dependency graph
 
