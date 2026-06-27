@@ -1,9 +1,0 @@
-# Stellar output driving surface irradiance.
-# Logarithmic scale: equal steps represent equal multipliers of luminosity.
-# Range: 1–100.
-# 1:   near-dead brown dwarf (~0.00001 L☉).
-# 25:  dim red dwarf (~0.01 L☉).
-# 50:  Sol-like star (~1 L☉).
-# 75:  hot A-class star (~100 L☉).
-# 100: hypergiant (~5 000 000 L☉).
-stellar_luminosity = 0.0

@@ -1,10 +1,10 @@
-= 
+= Irradiance
 
-xref:../../index.adoc[Nornir] > xref:../index.adoc[Pyr] > 
+xref:../../index.adoc[Nornir] > xref:../index.adoc[Pyr] > Irradiance
 
 Solar irradiance state at a surface cell.
 
-== Parameters
+== Settings
 
 [cols="1,1,3",options="header"]
 |===

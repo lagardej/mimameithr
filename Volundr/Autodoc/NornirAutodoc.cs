@@ -65,7 +65,10 @@ internal static class NornirAutodoc
                 ? ns[nsPrefix.Length..].Replace('.', Path.DirectorySeparatorChar)
                 : string.Empty;
 
-            var title = attr.Title ?? (relativePath.Length > 0 ? Path.GetFileName(relativePath) : componentType.Name);
+            var title = attr.Title.Length == 0 && relativePath.Length > 0
+                ? Path.GetFileName(relativePath)
+                : componentType.Name;
+
             var summary = AutodocHelpers.GetXmlSummary(componentType) ?? "_No summary provided._";
             var outputDir = Path.Combine(sourceRoot, relativePath);
             var outputPath = Path.Combine(outputDir, outputFileName);
@@ -77,7 +80,7 @@ internal static class NornirAutodoc
                 .Replace("{{breadcrumb}}",
                     $"xref:../../{outputFileName}[Nornir] > xref:../{outputFileName}[{Path.GetDirectoryName(relativePath)}] > {title}")
                 .Replace("{{summary}}", summary)
-                .Replace("{{parameters}}", BuildParameterRows(componentType))
+                .Replace("{{settings}}", BuildParameterRows(componentType))
                 .Replace("{{states}}", BuildStateRows(componentType))
                 .Replace("{{forcings}}", BuildForcingRows(assembly, ns));
 
@@ -105,9 +108,11 @@ internal static class NornirAutodoc
                 var relativePath = ns.StartsWith(nsPrefix)
                     ? ns[nsPrefix.Length..].Replace('.', Path.DirectorySeparatorChar)
                     : string.Empty;
-                var title = attr.Title ?? (relativePath.Length > 0 ? Path.GetFileName(relativePath) : t.Name);
-                var summary = attr.Summary ?? "-";
-                return (topLevel, subLevel, title, summary, relativePath, Type: t);
+                var title = attr.Title.Length == 0 && relativePath.Length > 0
+                    ? Path.GetFileName(relativePath)
+                    : t.Name;
+
+                return (topLevel, subLevel, title, attr.Summary, relativePath, Type: t);
             })
             .GroupBy(x => x.topLevel)
             .OrderBy(g => g.Key)
@@ -144,8 +149,9 @@ internal static class NornirAutodoc
             var groupDoc = groupTemplate
                 .Replace("{{title}}", g.Key)
                 .Replace("{{breadcrumb}}", $"xref:../{outputFileName}[Nornir] > " + g.Key)
-                .Replace("{{summary}}",
-                    groupAttr.Summary ?? AutodocHelpers.GetXmlSummary(groupType) ?? "_No summary provided._")
+                .Replace("{{summary}}", groupAttr.Summary.Length != 0
+                    ? groupAttr.Summary
+                    : AutodocHelpers.GetXmlSummary(groupType) ?? "_No summary provided._")
                 .Replace("{{components}}", componentRows.ToString().TrimEnd());
 
             Directory.CreateDirectory(groupOutputDir);

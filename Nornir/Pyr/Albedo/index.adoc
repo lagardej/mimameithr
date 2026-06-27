@@ -1,10 +1,10 @@
-= 
+= Albedo
 
-xref:../../index.adoc[Nornir] > xref:../index.adoc[Pyr] > 
+xref:../../index.adoc[Nornir] > xref:../index.adoc[Pyr] > Albedo
 
 Surface reflectivity of a cell.
 
-== Parameters
+== Settings
 
 [cols="1,1,3",options="header"]
 |===

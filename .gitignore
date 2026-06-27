@@ -1,6 +1,7 @@
 bin/
 obj/
 target/
+tmp/
 
 # NuGet
 project.assets.json
