@@ -9,5 +9,6 @@ namespace Nornir;
 /// </summary>
 public class Nornir : BaseEngine
 {
+    /// <inheritdoc />
     protected override SystemRoot BuildRoot(EntityStore store) => NornirSystems.Build(store);
 }

@@ -69,57 +69,78 @@ foreach (var componentType in componentTypes)
     var doc = template
         .Replace("{{title}}", title)
         .Replace("{{summary}}", summary)
-        .Replace("{{parameters}}", BuildParameterRows(assembly, ns))
-        .Replace("{{states}}", BuildStateRows(assembly, ns))
+        .Replace("{{parameters}}", BuildParameterRows(componentType))
+        .Replace("{{states}}", BuildStateRows(componentType))
         .Replace("{{forcings}}", BuildForcingRows(assembly, ns));
 
     File.WriteAllText(outputPath, doc);
     Console.WriteLine($"Written: {outputPath}");
 }
 
-// Generate components index
-var indexRows = new StringBuilder();
-foreach (var componentType in componentTypes)
+// Generate grouped components index
+var grouped = componentTypes
+    .Select(t =>
+    {
+        var attr = t.GetCustomAttribute<ComponentAttribute>()!;
+        var group = attr.Group ?? string.Empty;
+        var slash = group.IndexOf('/');
+        var topLevel = slash >= 0 ? group[..slash] : group;
+        var subLevel = slash >= 0 ? group[(slash + 1)..] : string.Empty;
+        var ns = t.Namespace ?? string.Empty;
+        var nsPrefix = "Nornir.";
+        var relativePath = ns.StartsWith(nsPrefix)
+            ? ns[nsPrefix.Length..].Replace('.', Path.DirectorySeparatorChar)
+            : string.Empty;
+        var title = attr.Title ?? (relativePath.Length > 0 ? Path.GetFileName(relativePath) : t.Name);
+        var summary = attr.Summary ?? "-";
+        return (topLevel, subLevel, title, summary, relativePath);
+    })
+    .GroupBy(x => x.topLevel)
+    .OrderBy(g => g.Key);
+
+var indexSections = new StringBuilder();
+foreach (var g in grouped)
 {
-    var attr = componentType.GetCustomAttribute<ComponentAttribute>()!;
-    var ns = componentType.Namespace ?? string.Empty;
-    var nsPrefix = "Nornir.";
-    var relativePath = ns.StartsWith(nsPrefix)
-        ? ns[nsPrefix.Length..].Replace('.', Path.DirectorySeparatorChar)
-        : string.Empty;
-    var title = attr.Title ?? (relativePath.Length > 0 ? Path.GetFileName(relativePath) : componentType.Name);
-    var summary = attr.Summary ?? "-";
-    indexRows.AppendLine($"| {title} | {summary}");
+    indexSections.AppendLine($"== {g.Key}");
+    indexSections.AppendLine();
+    indexSections.AppendLine("[cols=\"1,3\",options=\"header\"]");
+    indexSections.AppendLine("|===");
+    indexSections.AppendLine("| Component | Summary");
+    foreach (var (_, subLevel, title, summary, relativePath) in g.OrderBy(x => x.subLevel))
+    {
+        var label = string.IsNullOrEmpty(subLevel) ? title : subLevel;
+        var readmePath = relativePath.Length > 0
+            ? $"link:{relativePath.Replace(Path.DirectorySeparatorChar, '/')}/README.adoc[{label}]"
+            : label;
+        indexSections.AppendLine($"| {readmePath} | {summary}");
+    }
+
+    indexSections.AppendLine("|===");
+    indexSections.AppendLine();
 }
 
-var indexDoc = indexTemplate.Replace("{{components}}", indexRows.ToString().TrimEnd());
+var indexDoc = indexTemplate.Replace("{{components}}", indexSections.ToString().TrimEnd());
 File.WriteAllText(Path.Combine(sourceRoot, "README.adoc"), indexDoc);
 Console.WriteLine($"Written: {Path.Combine(sourceRoot, "README.adoc")}");
 
 return 0;
 
-static string BuildParameterRows(Assembly assembly, string ns)
+static string BuildParameterRows(Type componentType)
 {
     var sb = new StringBuilder();
-    var holders = assembly.GetTypes()
-        .Where(t => t.Namespace == ns && t.GetCustomAttribute<ParametersAttribute>() is not null);
-    foreach (var holder in holders)
-    foreach (var member in GetAnnotatedMembers(holder, typeof(ParameterAttribute)))
+    foreach (var member in GetAnnotatedMembers(componentType, typeof(SettingAttribute)))
     {
-        var a = member.GetCustomAttribute<ParameterAttribute>()!;
+        var a = member.GetCustomAttribute<SettingAttribute>()!;
         sb.AppendLine($"| {member.Name} | {a.Unit} | {a.Purpose}");
     }
 
     return sb.Length > 0 ? sb.ToString().TrimEnd() : "_None declared._";
 }
 
-static string BuildStateRows(Assembly assembly, string ns)
+static string BuildStateRows(Type componentType)
 {
     var sb = new StringBuilder();
-    var holders = assembly.GetTypes()
-        .Where(t => t.Namespace == ns && t.GetCustomAttribute<StatesAttribute>() is not null);
-    foreach (var holder in holders)
-    foreach (var member in GetAnnotatedMembers(holder, typeof(StateAttribute)))
+    foreach (var member in GetAnnotatedMembers(componentType, typeof(StateAttribute)))
     {
         var a = member.GetCustomAttribute<StateAttribute>()!;
         sb.AppendLine($"| {member.Name} | {a.Unit} | {a.Purpose}");

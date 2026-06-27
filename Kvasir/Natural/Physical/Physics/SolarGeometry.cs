@@ -4,7 +4,7 @@ using UnitsNet;
 
 namespace Kvasir.Natural.Physical.Physics;
 
-/// <summary>Solar geometry and rotation functions for computing sun position relative to a surface cell.</summary>
+/// <summary>Solar geometry functions for computing sun position and flux at a surface cell.</summary>
 public static class SolarGeometry
 {
     /// <summary>
@@ -42,6 +42,21 @@ public static class SolarGeometry
         var normal = SurfaceNormal(position);
         var cosTheta = Vector3D.Dot(normal, sunDir);
         return Angle.FromRadians(Math.Acos(Math.Clamp(cosTheta, -1.0, 1.0)));
+    }
+
+    /// <summary>
+    ///     Computes the solar flux at a surface cell.
+    ///     Returns zero on the night side.
+    /// </summary>
+    /// <param name="luminosity">Total power radiated by the star across all wavelengths.</param>
+    /// <param name="distanceFromStar">Distance between the body and its parent star.</param>
+    /// <param name="zenithAngle">Solar zenith angle at the cell.</param>
+    /// <returns>Incoming solar flux at the cell's surface.</returns>
+    public static Irradiance Insolation(Luminosity luminosity, Length distanceFromStar, Angle zenithAngle)
+    {
+        var fluxWattsPerM2 = luminosity.Watts / (4.0 * Math.PI * distanceFromStar.Meters * distanceFromStar.Meters);
+        var watts = zenithAngle.Degrees < 90.0 ? fluxWattsPerM2 * Math.Cos(zenithAngle.Radians) : 0.0;
+        return Irradiance.FromWattsPerSquareMeter(watts);
     }
 
     /// <summary>Sun direction in the orbital plane (planet → star, unit vector).</summary>

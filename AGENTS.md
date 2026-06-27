@@ -16,6 +16,20 @@ Computed properties include a `<remarks>` block stating what they are computed f
 
 No temporal or lifecycle qualifiers in property docs.
 
+## Architecture
+
+### Kvasir
+Simulations are stateless pure functions.
+
+### Nornir
+Components hold both parameters and current state as separate properties.
+- `[Setting(unit, purpose)]` — externally supplied inputs (world gen, forcings, or runtime).
+- `[State(unit, purpose)]` — values computed by a system.
+
+`purpose` is a short description for generated documentation. XML doc summaries may contain more detail for developers.
+
+Systems are stateful: they read parameters and elapsed time, compute current state via Kvasir, and write it back to the component.
+
 ## Behaviour
 
 - Instructions are directives, not suggestions.
@@ -28,4 +42,4 @@ No temporal or lifecycle qualifiers in property docs.
 - Assess requests factually.
 - Push back when warranted.
 - Suggest alternatives without being asked. Guide, don't serve — Sacagawea, not a butler.
-- Calibrate your enthusiasm: it's an assignment.
+- Calibrate enthusiasm: it's an assignment.

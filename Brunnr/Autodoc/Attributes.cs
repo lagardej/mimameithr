@@ -1,0 +1,45 @@
+namespace Brunnr.Autodoc;
+
+/// <summary>
+///     Marks a class as an engine component for autodoc generation.
+///     The generator will produce a reference document at the component's folder root.
+/// </summary>
+/// <param name="title">Optional display title. Defaults to the component's folder name.</param>
+/// <param name="summary">Optional short description of the component.</param>
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false)]
+public sealed class ComponentAttribute(string? group = null, string? title = null, string? summary = null) : Attribute
+{
+    public string? Group { get; } = group;
+    public string? Title { get; } = title;
+    public string? Summary { get; } = summary;
+}
+
+/// <summary>Documents a single simulation input field on a [Settings] holder.</summary>
+/// <param name="unit">Physical unit (e.g. "K", "m/s", "Pa"). Use "-" for dimensionless.</param>
+/// <param name="purpose">Short description of what this parameter controls.</param>
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+public sealed class SettingAttribute(string unit, string purpose) : Attribute
+{
+    public string Unit { get; } = unit;
+    public string Purpose { get; } = purpose;
+}
+
+/// <summary>
+///     Documents a single exposed state field on a [States] holder.
+/// </summary>
+/// <param name="unit">Physical unit (e.g. "K", "m/s", "Pa"). Use "-" for dimensionless.</param>
+/// <param name="purpose">Short description of what this value represents.</param>
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+public sealed class StateAttribute(string unit, string purpose) : Attribute
+{
+    public string Unit { get; } = unit;
+    public string Purpose { get; } = purpose;
+}
+
+/// <summary>
+///     Marks a record as a forcing type for autodoc generation.
+///     The generator will list all [Forcing]-annotated types in the same namespace
+///     under the Forcings section of the component document.
+/// </summary>
+[AttributeUsage(AttributeTargets.Class, Inherited = false)]
+public sealed class ForcingAttribute : Attribute;

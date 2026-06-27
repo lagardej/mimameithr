@@ -1,3 +1,4 @@
+using Brunnr.Autodoc;
 using Brunnr.Grid;
 using Friflo.Engine.ECS;
 using Friflo.Engine.ECS.Systems;
@@ -12,59 +13,46 @@ namespace Nornir.Element.Pyr.Irradiance;
 
 /// <summary>Solar irradiance state at a surface cell.</summary>
 [ComponentKey("irradiance")]
+[Component(summary: "Solar irradiance state at a surface cell.", group: "Pyr/Irradiance")]
 public struct IrradianceC : IComponent
 {
     /// <summary>Incoming solar flux at this cell's surface.</summary>
     /// <remarks>Computed from stellar luminosity, orbital distance, and solar zenith angle.</remarks>
+    [State("W/m²", "Incoming solar flux at this cell's surface.")]
     public UnitsNet.Irradiance Insolation;
 
     /// <summary>Angle between the sun and the local vertical at this cell. Zero at solar noon directly below the sun.</summary>
+    [State("°", "Angle between the sun and the local vertical at this cell.")]
     public Angle SolarZenithAngle;
 
     /// <summary>Whether this cell is currently on the sunlit side of the body.</summary>
+    [State("-", "Whether this cell is currently on the sunlit side of the body.")]
     public bool IsDaytime;
 }
 
 /// <summary>
-///     Computes <see cref="IrradianceC" /> for each cell entity.
-///     For each cell, reads planet state via <see cref="PlanetRefC" /> and derives:
-///     - Solar flux at the planet's distance (inverse square law).
-///     - Solar zenith angle at the cell's geographic position.
-///     - Daytime flag from zenith angle (day if angle &lt; 90°).
-///     - Insolation as flux scaled by Lambert cosine factor.
+///     Computes <see cref="IrradianceC" /> for each cell entity from planet state via <see cref="PlanetRefC" />.
 /// </summary>
 public sealed class IrradianceSystem : QuerySystem<IrradianceC, CellIdentityC, PlanetRefC>
 {
+    /// <inheritdoc />
     protected override void OnUpdate() =>
         Query.ForEachEntity((ref irradiance, ref identity, ref planetRef, _) =>
         {
-            irradiance = ComputeIrradiance(irradiance, identity, planetRef.Entity);
+            var planet = planetRef.Entity;
+            var orbit = planet.GetComponent<OrbitC>();
+            var rotation = planet.GetComponent<BodyRotationC>();
+            var geometry = planet.GetComponent<BodyGeometryC>();
+            var luminosity = planet.GetComponent<StellarLuminosityC>();
+
+            var zenith = SolarGeometry.SolarZenithAngle(
+                GeoGrid.Instance.CenterOf(identity.Id),
+                orbit.OrbitalAngle,
+                rotation.CurrentAngle,
+                geometry.AxialTilt);
+
+            irradiance.SolarZenithAngle = zenith;
+            irradiance.IsDaytime = zenith.Degrees < 90.0;
+            irradiance.Insolation = SolarGeometry.Insolation(luminosity.Luminosity, orbit.DistanceFromStar, zenith);
         });
-
-    private static IrradianceC ComputeIrradiance(IrradianceC irradiance, CellIdentityC cellId, Entity planet)
-    {
-        var orbit = planet.GetComponent<OrbitC>();
-        var rotation = planet.GetComponent<BodyRotationC>();
-        var geometry = planet.GetComponent<BodyGeometryC>();
-        var luminosity = planet.GetComponent<StellarLuminosityC>();
-
-        // Flux at planet distance: F = L / (4π r²)
-        var distanceMeters = orbit.DistanceFromStar.Meters;
-        var fluxWattsPerM2 = luminosity.Luminosity.Watts / (4.0 * Math.PI * distanceMeters * distanceMeters);
-
-        var zenith = SolarGeometry.SolarZenithAngle(
-            GeoGrid.Instance.CenterOf(cellId.Id),
-            orbit.OrbitalAngle,
-            rotation.CurrentAngle,
-            geometry.AxialTilt);
-
-        var isDaytime = zenith.Degrees < 90.0;
-        var insolation = isDaytime ? fluxWattsPerM2 * Math.Cos(zenith.Radians) : 0.0;
-
-        irradiance.SolarZenithAngle = zenith;
-        irradiance.IsDaytime = isDaytime;
-        irradiance.Insolation = UnitsNet.Irradiance.FromWattsPerSquareMeter(insolation);
-
-        return irradiance;
-    }
 }

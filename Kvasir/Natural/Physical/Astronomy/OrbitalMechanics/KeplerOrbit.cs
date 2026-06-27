@@ -40,6 +40,19 @@ public static class KeplerOrbit
     }
 
     /// <summary>
+    ///     Computes the current mean anomaly from an initial mean anomaly and elapsed time.
+    /// </summary>
+    /// <param name="initialMeanAnomaly">Mean anomaly at epoch (t = 0).</param>
+    /// <param name="orbitalPeriod">Sidereal orbital period.</param>
+    /// <param name="elapsedTime">Total elapsed time since epoch.</param>
+    /// <returns>Current mean anomaly, wrapped to [0°, 360°).</returns>
+    public static Angle CurrentMeanAnomaly(Angle initialMeanAnomaly, Duration orbitalPeriod, Duration elapsedTime)
+    {
+        var meanMotionDeg = 360.0 / orbitalPeriod.Seconds;
+        return Angle.FromDegrees((initialMeanAnomaly.Degrees + (meanMotionDeg * elapsedTime.Seconds)) % 360.0);
+    }
+
+    /// <summary>
     ///     Computes the instantaneous distance from the focus (star) to the orbiting body.
     ///     Derived from the conic section equation in polar form:
     ///     <code>r = a(1 − e²) / (1 + e·cos θ)</code>
