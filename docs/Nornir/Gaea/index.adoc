@@ -1,0 +1,13 @@
+= Gaea
+
+xref:../index.adoc[Nornir] / Gaea
+
+include::../../../_autodoc/nornir/Gaea.summary.adoc[]
+
+== Components
+
+[cols="1,3",options="header"]
+|===
+| Component | Summary
+| link:Tectonics.adoc[Tectonics] |
+|===

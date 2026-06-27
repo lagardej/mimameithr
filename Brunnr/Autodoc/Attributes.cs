@@ -17,13 +17,11 @@ public sealed class GroupAttribute(string summary = "") : Attribute
 ///     index.
 /// </param>
 /// <param name="title">Optional display title. Defaults to the component's folder name.</param>
-/// <param name="summary">Optional short description of the component.</param>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false)]
-public sealed class ComponentAttribute(string group = "", string title = "", string summary = "") : Attribute
+public sealed class ComponentAttribute(string group = "", string title = "") : Attribute
 {
     public string Group { get; } = group;
     public string Title { get; } = title;
-    public string Summary { get; } = summary;
 }
 
 /// <summary>Documents a single simulation input field on a component struct.</summary>

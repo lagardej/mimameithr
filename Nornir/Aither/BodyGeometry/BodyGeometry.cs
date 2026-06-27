@@ -6,7 +6,7 @@ namespace Nornir.Aither.BodyGeometry;
 
 /// <summary>Physical geometry of a planetary body.</summary>
 [ComponentKey("body-geometry")]
-[Component(summary: "Physical geometry of a planetary body.", group: "Aither/BodyGeometry")]
+[Component(group: "Aither/BodyGeometry")]
 public struct BodyGeometryC : IComponent
 {
     /// <summary>Mean radius of the body.</summary>

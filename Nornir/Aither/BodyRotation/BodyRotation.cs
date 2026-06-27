@@ -7,7 +7,7 @@ namespace Nornir.Aither.BodyRotation;
 
 /// <summary>Rotational state of a planetary body.</summary>
 [ComponentKey("body-rotation")]
-[Component(summary: "Rotational state of a planetary body.", group: "Aither/BodyRotation")]
+[Component(group: "Aither/BodyRotation")]
 public struct BodyRotationC : IComponent
 {
     /// <summary>Rate at which the body completes a full rotation.</summary>

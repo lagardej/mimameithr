@@ -1,0 +1,29 @@
+= StellarLuminosity
+
+xref:../index.adoc[Nornir] / xref:index.adoc[Aither] / Stellar Luminosity
+
+include::../../../_autodoc/nornir/Aither-StellarLuminosity.summary.adoc[]
+
+== Settings
+
+[cols="1,1,3",options="header"]
+|===
+| Name | Unit | Purpose
+include::../../../_autodoc/nornir/Aither-StellarLuminosity.settings.adoc[]
+|===
+
+== States
+
+[cols="1,1,3",options="header"]
+|===
+| Name | Unit | Purpose
+include::../../../_autodoc/nornir/Aither-StellarLuminosity.states.adoc[]
+|===
+
+== Forcings
+
+[cols="1,3",options="header"]
+|===
+| Type | Summary
+include::../../../_autodoc/nornir/Aither-StellarLuminosity.forcings.adoc[]
+|===

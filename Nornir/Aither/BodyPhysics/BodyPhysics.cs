@@ -7,7 +7,7 @@ namespace Nornir.Aither.BodyPhysics;
 
 /// <summary>Physical properties of a planetary body.</summary>
 [ComponentKey("body-physics")]
-[Component(summary: "Physical properties of a planetary body.", group: "Aither/BodyPhysics")]
+[Component(group: "Aither/BodyPhysics")]
 public struct BodyPhysicsC : IComponent
 {
     /// <summary>Total mass of the body.</summary>

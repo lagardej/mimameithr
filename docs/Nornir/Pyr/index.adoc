@@ -1,0 +1,14 @@
+= Pyr
+
+xref:../index.adoc[Nornir] / Pyr
+
+include::../../../_autodoc/nornir/Pyr.summary.adoc[]
+
+== Components
+
+[cols="1,3",options="header"]
+|===
+| Component | Summary
+| link:Albedo.adoc[Albedo] | Surface reflectivity of a cell.
+| link:Irradiance.adoc[Irradiance] | Solar irradiance state at a surface cell.
+|===

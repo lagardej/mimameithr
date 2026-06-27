@@ -14,7 +14,7 @@ namespace Nornir.Pyr.Irradiance;
 
 /// <summary>Solar irradiance state at a surface cell.</summary>
 [ComponentKey("irradiance")]
-[Component(summary: "Solar irradiance state at a surface cell.", group: "Pyr/Irradiance")]
+[Component(group: "Pyr/Irradiance")]
 public struct IrradianceC : IComponent
 {
     /// <summary>Incoming solar flux at this cell's surface.</summary>

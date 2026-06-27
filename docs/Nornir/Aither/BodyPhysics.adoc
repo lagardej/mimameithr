@@ -1,0 +1,29 @@
+= Body Physics
+
+xref:../index.adoc[Nornir] / xref:index.adoc[Aither] / Body Physics
+
+include::../../../_autodoc/nornir/Aither-BodyPhysics.summary.adoc[]
+
+== Settings
+
+[cols="1,1,3",options="header"]
+|===
+| Name | Unit | Purpose
+include::../../../_autodoc/nornir/Aither-BodyPhysics.settings.adoc[]
+|===
+
+== States
+
+[cols="1,1,3",options="header"]
+|===
+| Name | Unit | Purpose
+include::../../../_autodoc/nornir/Aither-BodyPhysics.states.adoc[]
+|===
+
+== Forcings
+
+[cols="1,3",options="header"]
+|===
+| Type | Summary
+include::../../../_autodoc/nornir/Aither-BodyPhysics.forcings.adoc[]
+|===

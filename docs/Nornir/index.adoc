@@ -1,0 +1,9 @@
+= Nornir
+
+[cols="1,3",options="header"]
+|===
+| Group | Summary
+| link:Aither/index.adoc[Aither] |
+| link:Gaea/index.adoc[Gaea] |
+| link:Pyr/index.adoc[Pyr] |
+|===

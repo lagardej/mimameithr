@@ -6,7 +6,7 @@ namespace Nornir.Pyr.Albedo;
 
 /// <summary>Surface reflectivity of a cell.</summary>
 [ComponentKey("albedo")]
-[Component(summary: "Surface reflectivity of a cell.", group: "Pyr/Albedo")]
+[Component(group: "Pyr/Albedo")]
 public struct AlbedoC : IComponent
 {
     /// <summary>
