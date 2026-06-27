@@ -1,6 +1,7 @@
 using Brunnr.Engine;
 using Friflo.Engine.ECS;
 using Friflo.Engine.ECS.Systems;
+using Kvasir.Natural.Physical.Geodesy;
 
 namespace Nornir;
 
@@ -10,5 +11,6 @@ namespace Nornir;
 public class Nornir : BaseEngine
 {
     /// <inheritdoc />
-    protected override SystemRoot BuildRoot(EntityStore store) => NornirSystems.Build(store);
+    protected override SystemRoot BuildRoot(EntityStore store, IGeodesicGrid grid, int seed) =>
+        NornirSystems.Build(store, grid, seed);
 }

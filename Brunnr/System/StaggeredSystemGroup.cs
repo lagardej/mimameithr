@@ -9,15 +9,28 @@ namespace Brunnr.System;
 ///     Children fire independently — member N fires <paramref name="offset" /> simulated seconds
 ///     after member N-1. Member order determines firing order.
 /// </summary>
-public class StaggeredSystemGroup(string name, float interval, float offset) : SystemGroup(name)
+public class StaggeredSystemGroup : SystemGroup
 {
+    private readonly SystemGroup _inner;
+    private readonly float _interval;
     private readonly List<(SystemGroup Wrapper, float Accumulator)> _members = [];
+    private readonly float _offset;
+
+    public StaggeredSystemGroup(string name, float interval, float offset = 0f) : base(name)
+    {
+        _interval = interval;
+        _offset = offset;
+        _inner = new SystemGroup(name + ".Inner");
+        base.Add(_inner);
+    }
 
     /// <summary>Adds a system to the staggered group, phased by its insertion order.</summary>
     public new void Add(BaseSystem system)
     {
-        var initialAccumulator = -offset * _members.Count;
+        var initialAccumulator = -_offset * _members.Count;
         var wrapper = new SystemGroup(system.Name) { system };
+        _inner.Add(wrapper);
+        wrapper.Enabled = false;
         _members.Add((wrapper, initialAccumulator));
     }
 
@@ -30,9 +43,11 @@ public class StaggeredSystemGroup(string name, float interval, float offset) : S
             var (wrapper, accumulator) = _members[i];
             accumulator += delta;
 
-            if (accumulator >= interval)
+            if (accumulator >= _interval)
             {
+                wrapper.Enabled = true;
                 wrapper.Update(new UpdateTick(accumulator, Tick.time));
+                wrapper.Enabled = false;
                 accumulator = 0f;
             }
 

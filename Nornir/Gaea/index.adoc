@@ -9,5 +9,6 @@ Surface and subsurface processes.
 [cols="1,3",options="header"]
 |===
 | Component | Summary
+| link:Tectonics/index.adoc[Tectonics] | Designer-facing world-gen knobs for the tectonics simulation.
 | link:Tectonics/index.adoc[Tectonics] | Tectonic state of a surface cell.
 |===

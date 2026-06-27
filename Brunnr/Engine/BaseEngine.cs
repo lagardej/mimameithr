@@ -15,19 +15,19 @@ public abstract class BaseEngine
     /// <summary>Current time compression factor. Defaults to <see cref="TimeCompression.RealTime" />.</summary>
     public TimeCompression Compression { get; set; } = TimeCompression.RealTime;
 
-    protected abstract SystemRoot BuildRoot(EntityStore store);
+    protected abstract SystemRoot BuildRoot(EntityStore store, IGeodesicGrid grid, int seed);
 
     /// <summary>
     ///     Initializes the simulation with the given grid and entity setup.
     ///     Replaces any existing configuration.
     ///     Must be called before the first <see cref="Advance" />.
     /// </summary>
-    public void Configure(IGeodesicGrid grid, Action<EntityStore> configure)
+    public void Configure(IGeodesicGrid grid, int seed, Action<EntityStore> configure)
     {
         GeoGrid.Initialize(grid);
         _store = new EntityStore();
         configure(_store);
-        var root = BuildRoot(_store);
+        var root = BuildRoot(_store, grid, seed);
         _clock = new MonotonicClock();
         _root = root;
     }
@@ -49,6 +49,15 @@ public abstract class BaseEngine
         _root!.Update(new UpdateTick(simDelta, _clock.ElapsedSeconds));
     }
 
+    /// <summary>Returns component <typeparamref name="T" /> for the given entity.</summary>
+    public T Query<T>(int entityId) where T : struct, IComponent
+    {
+        EnsureConfigured();
+        return _store!.GetEntityById(entityId).GetComponent<T>();
+    }
+
+    #region Performance monitor
+
     public string GetPerfLog()
     {
         EnsureConfigured();
@@ -67,10 +76,5 @@ public abstract class BaseEngine
         _root!.SetMonitorPerf(false);
     }
 
-    /// <summary>Returns component <typeparamref name="T" /> for the given entity.</summary>
-    public T Query<T>(int entityId) where T : struct, IComponent
-    {
-        EnsureConfigured();
-        return _store!.GetEntityById(entityId).GetComponent<T>();
-    }
+    #endregion
 }

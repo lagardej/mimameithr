@@ -1,6 +1,7 @@
 using Brunnr.System;
 using Friflo.Engine.ECS;
 using Friflo.Engine.ECS.Systems;
+using Kvasir.Natural.Physical.Geodesy;
 using Nornir.Aither.BodyRotation;
 using Nornir.Aither.Orbit;
 using Nornir.Gaea.Tectonics;
@@ -20,12 +21,15 @@ public static class NornirSystems
     /// <summary>
     ///     Creates and returns a configured <see cref="SystemRoot" /> bound to the given <paramref name="store" />.
     /// </summary>
-    public static SystemRoot Build(EntityStore store) =>
-        new(store) { StaggeredAt10S() };
+    /// <param name="store">Entity store to bind the system root to.</param>
+    /// <param name="grid">Geodesic grid. Injected until a singleton story is settled.</param>
+    /// <param name="seed">World generation seed. Injected until a universe-entity or global seed store exists.</param>
+    public static SystemRoot Build(EntityStore store, IGeodesicGrid grid, int seed) =>
+        new(store) { StaggeredAt10S(grid, seed) };
 
-    private static StaggeredSystemGroup StaggeredAt10S() =>
+    private static StaggeredSystemGroup StaggeredAt10S(IGeodesicGrid grid, int seed) =>
         new("10s staggered systems", SimSecond * 10, StaggerOffset)
         {
-            new BodyRotationSystem(), new OrbitSystem(), new IrradianceSystem(), new TectonicsSystem()
+            new BodyRotationSystem(), new OrbitSystem(), new IrradianceSystem(), new TectonicsSystem(grid, seed)
         };
 }
