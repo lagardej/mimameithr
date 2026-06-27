@@ -5,6 +5,7 @@ using UnitsNet;
 namespace Kvasir.Natural.Physical.Physics;
 
 /// <summary>Solar geometry functions for computing sun position and flux at a surface cell.</summary>
+[Module("Natural/Physical/Physics", "Sun direction, zenith angle, and insolation at a surface cell.")]
 public static class SolarGeometry
 {
     /// <summary>

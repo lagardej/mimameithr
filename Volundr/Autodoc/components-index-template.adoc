@@ -1,7 +1,11 @@
 = Components Index
-:toc:
+:toc: left
 :toc-title: Groups
 
-{{group_list}}
+[cols="1,3",options="header"]
+|===
+| Group | Summary
+{{group_table}}
+|===
 
 {{components}}

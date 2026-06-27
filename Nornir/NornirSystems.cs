@@ -1,10 +1,10 @@
 using Brunnr.System;
 using Friflo.Engine.ECS;
 using Friflo.Engine.ECS.Systems;
-using Nornir.Element.Aither.BodyRotation;
-using Nornir.Element.Aither.Orbit;
-using Nornir.Element.Gaea.Tectonics;
-using Nornir.Element.Pyr.Irradiance;
+using Nornir.Aither.BodyRotation;
+using Nornir.Aither.Orbit;
+using Nornir.Gaea.Tectonics;
+using Nornir.Pyr.Irradiance;
 
 namespace Nornir;
 

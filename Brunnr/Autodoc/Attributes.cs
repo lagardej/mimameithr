@@ -1,26 +1,29 @@
 namespace Brunnr.Autodoc;
 
+/// <summary>Marks a static class as a component group for autodoc generation.</summary>
+/// <param name="summary">Optional short description of the group.</param>
+[AttributeUsage(AttributeTargets.Class, Inherited = false)]
+public sealed class GroupAttribute(string summary = "") : Attribute
+{
+    public string Summary { get; } = summary;
+}
+
 /// <summary>
 ///     Marks a class as an engine component for autodoc generation.
 ///     The generator will produce a reference document at the component's folder root.
 /// </summary>
-/// <param name="group">Slash-delimited group path (e.g. "Aither/BodyGeometry"). Top-level segment maps to a section in the index.</param>
+/// <param name="group">
+///     Slash-delimited group path (e.g. "Aither/BodyGeometry"). Top-level segment maps to a section in the
+///     index.
+/// </param>
 /// <param name="title">Optional display title. Defaults to the component's folder name.</param>
 /// <param name="summary">Optional short description of the component.</param>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false)]
-public sealed class ComponentAttribute(string? group = null, string? title = null, string? summary = null) : Attribute
+public sealed class ComponentAttribute(string group = "", string title = "", string summary = "") : Attribute
 {
-    public string? Group { get; } = group;
-    public string? Title { get; } = title;
-    public string? Summary { get; } = summary;
-}
-
-/// <summary>Marks a static class as a component group for autodoc generation.</summary>
-/// <param name="summary">Optional short description of the group.</param>
-[AttributeUsage(AttributeTargets.Class, Inherited = false)]
-public sealed class GroupAttribute(string? summary = null) : Attribute
-{
-    public string? Summary { get; } = summary;
+    public string Group { get; } = group;
+    public string Title { get; } = title;
+    public string Summary { get; } = summary;
 }
 
 /// <summary>Documents a single simulation input field on a component struct.</summary>

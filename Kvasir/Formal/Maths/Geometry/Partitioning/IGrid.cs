@@ -5,6 +5,7 @@ namespace Kvasir.Formal.Maths.Geometry.Partitioning;
 ///     Cell identifiers are opaque <see cref="CellId" /> values.
 ///     All operations are deterministic and side effect free.
 /// </summary>
+[Module("Formal/Maths/Geometry/Partitioning", "Space partitioning contract over a discrete grid.")]
 public interface IGrid
 {
     #region Partition access

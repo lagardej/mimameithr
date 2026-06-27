@@ -1,0 +1,17 @@
+= IGrid
+
+xref:../../../../index.adoc[Kvasir] > xref:../../../index.adoc[Formal] > xref:../../index.adoc[Maths] > xref:../index.adoc[Geometry] > xref:index.adoc[Partitioning] > IGrid
+
+Space partitioning contract over a discrete grid.
+
+== Model
+
+Space partitioning contract over a discrete grid. Cell identifiers are opaque  values. All operations are deterministic and side effect free.
+
+== API
+
+[cols="1,2,2,3",options="header"]
+|===
+| Method | Parameters | Returns | Description
+_None declared._
+|===

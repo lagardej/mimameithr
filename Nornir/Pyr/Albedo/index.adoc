@@ -1,15 +1,15 @@
-= {{title}}
+= 
 
-{{breadcrumb}}
+xref:../../index.adoc[Nornir] > xref:../index.adoc[Pyr] > 
 
-{{summary}}
+Surface reflectivity of a cell.
 
 == Parameters
 
 [cols="1,1,3",options="header"]
 |===
 | Name | Unit | Purpose
-{{parameters}}
+_None declared._
 |===
 
 == States
@@ -17,7 +17,7 @@
 [cols="1,1,3",options="header"]
 |===
 | Name | Unit | Purpose
-{{states}}
+| Value | - | Fraction of incoming solar radiation reflected by this cell's surface.
 |===
 
 == Forcings
@@ -25,5 +25,5 @@
 [cols="1,3",options="header"]
 |===
 | Type | Summary
-{{forcings}}
+_None declared._
 |===

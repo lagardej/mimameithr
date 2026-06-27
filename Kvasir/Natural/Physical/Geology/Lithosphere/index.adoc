@@ -1,0 +1,17 @@
+= CrustalPhysics
+
+xref:../../../../index.adoc[Kvasir] > xref:../../../index.adoc[Natural] > xref:../../index.adoc[Physical] > xref:../index.adoc[Geology] > xref:index.adoc[Lithosphere] > CrustalPhysics
+
+Crustal thickness from composition, gravity, and heat flux via isostatic equilibrium.
+
+== Model
+
+Provides physics calculations for planetary crustal properties.
+
+== API
+
+[cols="1,2,2,3",options="header"]
+|===
+| Method | Parameters | Returns | Description
+| CrustalThickness | CrustComposition composition, Acceleration gravity, HeatFlux heatFlux | Length | Derives crustal thickness from composition, gravity, and asthenospheric heat flux. Based on isostatic equilibrium: thickness = heatFlux / (density × gravity × coolingRate). Composition determines density and radiogenic cooling rate.
+|===

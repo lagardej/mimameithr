@@ -3,6 +3,7 @@ using UnitsNet;
 namespace Kvasir.Natural.Physical.Astronomy;
 
 /// <summary>Rotation state functions for a planetary body.</summary>
+[Module("Natural/Physical/Astronomy", "Current rotation angle of a planetary body around its axis.")]
 public static class BodyRotation
 {
     /// <summary>

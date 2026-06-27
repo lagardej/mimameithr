@@ -1,0 +1,13 @@
+= Gaea
+
+xref:../index.adoc[Nornir] > Gaea
+
+Surface and subsurface processes.
+
+== Components
+
+[cols="1,3",options="header"]
+|===
+| Component | Summary
+| link:Tectonics/index.adoc[Tectonics] | Tectonic state of a surface cell.
+|===

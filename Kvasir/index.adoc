@@ -1,0 +1,101 @@
+= Kvasir — Science Reference
+:toc: left
+:toclevels: 5
+:toc-title: Domains
+
+[cols="1,3",options="header"]
+|===
+| Domain | Summary
+| <<_formal,Formal>> | -
+| <<_natural,Natural>> | -
+|===
+
+[[_formal]]
+== Formal
+
+[[_formal_maths]]
+=== Maths
+
+[cols="1,3",options="header"]
+|===
+| Module | Summary
+| link:Formal/Maths/index.adoc[Hashing] | Deterministic FNV-1a hashing for stable, seed-driven procedural generation.
+| link:Formal/Maths/index.adoc[Interpolation] | Linear interpolation over scalar values.
+|===
+
+[[_formal_maths_geometry]]
+==== Geometry
+
+[[_formal_maths_geometry_partitioning]]
+===== Partitioning
+
+[cols="1,3",options="header"]
+|===
+| Module | Summary
+| link:Formal/Maths/Geometry/Partitioning/index.adoc[CellId] | Opaque cell identifier for discrete grid partitioning.
+| link:Formal/Maths/Geometry/Partitioning/index.adoc[IGrid] | Space partitioning contract over a discrete grid.
+|===
+
+[[_natural]]
+== Natural
+
+[[_natural_physical]]
+=== Physical
+
+[[_natural_physical_astronomy]]
+==== Astronomy
+
+[cols="1,3",options="header"]
+|===
+| Module | Summary
+| link:Natural/Physical/Astronomy/index.adoc[BodyRotation] | Current rotation angle of a planetary body around its axis.
+|===
+
+[[_natural_physical_astronomy_orbitalmechanics]]
+===== OrbitalMechanics
+
+[cols="1,3",options="header"]
+|===
+| Module | Summary
+| link:Natural/Physical/Astronomy/OrbitalMechanics/index.adoc[KeplerOrbit] | Kepler orbit equations: mean/true anomaly conversion and orbital radius.
+|===
+
+[[_natural_physical_geology]]
+==== Geology
+
+[[_natural_physical_geology_lithosphere]]
+===== Lithosphere
+
+[cols="1,3",options="header"]
+|===
+| Module | Summary
+| link:Natural/Physical/Geology/Lithosphere/index.adoc[CrustalPhysics] | Crustal thickness from composition, gravity, and heat flux via isostatic equilibrium.
+|===
+
+[[_natural_physical_geology_lithosphere_tectonics]]
+====== Tectonics
+
+[cols="1,3",options="header"]
+|===
+| Module | Summary
+| link:Natural/Physical/Geology/Lithosphere/Tectonics/index.adoc[TectonicsSimulation] | Two-pass plate seeding and boundary classification for world-generation tectonic simulation.
+|===
+
+[[_natural_physical_geology_mantle]]
+===== Mantle
+
+[cols="1,3",options="header"]
+|===
+| Module | Summary
+| link:Natural/Physical/Geology/Mantle/index.adoc[MantlePhysics] | Asthenospheric heat flux from body mass, radius, and age.
+|===
+
+[[_natural_physical_physics]]
+==== Physics
+
+[cols="1,3",options="header"]
+|===
+| Module | Summary
+| link:Natural/Physical/Physics/index.adoc[Lambert] | Lambert cosine factor for surface irradiance.
+| link:Natural/Physical/Physics/index.adoc[SolarGeometry] | Sun direction, zenith angle, and insolation at a surface cell.
+|===

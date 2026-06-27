@@ -1,5 +1,5 @@
 = Autodoc
 
-Build-time documentation generator for Urd.
-It inspects `[Component]`-annotated classes in `Nornir` and emits a `README.adoc` at each component's folder root, using `component-template.adoc` as the document structure.
-Attributes such as `[Parameter]`, `[State]`, and `[Forcing]` are picked up automatically and rendered into structured reference pages.
+Build-time documentation generator for Mimameithr.
+It inspects `[Component]`-annotated classes in `Nornir` and emits a `index.adoc` at each component's folder root, using `component-template.adoc` as the document structure.
+Attributes such as `[Setting]`, `[State]`, and `[Forcing]` are picked up automatically and rendered into structured reference pages.

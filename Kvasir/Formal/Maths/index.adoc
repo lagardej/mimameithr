@@ -1,0 +1,17 @@
+= Interpolation
+
+xref:../../index.adoc[Kvasir] > xref:../index.adoc[Formal] > xref:index.adoc[Maths] > Interpolation
+
+Linear interpolation over scalar values.
+
+== Model
+
+Interpolation helpers for scalar values.
+
+== API
+
+[cols="1,2,2,3",options="header"]
+|===
+| Method | Parameters | Returns | Description
+| Lerp | Double a, Double b, Double t | Double | Linear interpolation between  and  for t in [0, 1].
+|===

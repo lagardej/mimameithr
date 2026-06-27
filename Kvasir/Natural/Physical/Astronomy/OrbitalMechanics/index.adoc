@@ -1,0 +1,20 @@
+= KeplerOrbit
+
+xref:../../../../index.adoc[Kvasir] > xref:../../../index.adoc[Natural] > xref:../../index.adoc[Physical] > xref:../index.adoc[Astronomy] > xref:index.adoc[OrbitalMechanics] > KeplerOrbit
+
+Kepler orbit equations: mean/true anomaly conversion and orbital radius.
+
+== Model
+
+Kepler orbit equations for elliptical orbits.
+
+== API
+
+[cols="1,2,2,3",options="header"]
+|===
+| Method | Parameters | Returns | Description
+| CurrentMeanAnomaly | Angle initialMeanAnomaly, Duration orbitalPeriod, Duration elapsedTime | Angle | Computes the current mean anomaly from an initial mean anomaly and elapsed time.
+| MeanToTrueAnomaly | Angle meanAnomaly, Double eccentricity | Angle | Solves Kepler's equation M = E − e·sin(E) for eccentric anomaly via Newton-Raphson, then converts to true anomaly.
+| RadiusAtTrueAnomaly | Length semiMajorAxis, Double eccentricity, Angle trueAnomaly | Length | Computes the instantaneous distance from the focus (star) to the orbiting body. Derived from the conic section equation in polar form: r = a(1 − e²) / (1 + e·cos θ) where the semi-latus rectum ℓ = a(1 − e²) is the orbit's half-width at the focus. At periapsis (θ = 0°) distance is minimum; at apoapsis (θ = 180°) it is maximum. For a circular orbit (e = 0) the result is constant and equal to .
+| TrueToMeanAnomaly | Angle trueAnomaly, Double eccentricity | Angle | Converts true anomaly to mean anomaly via eccentric anomaly.
+|===

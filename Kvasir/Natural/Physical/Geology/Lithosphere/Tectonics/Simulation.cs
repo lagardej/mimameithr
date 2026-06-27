@@ -30,6 +30,7 @@ namespace Kvasir.Natural.Physical.Geology.Lithosphere.Tectonics;
 ///         </item>
 ///     </list>
 /// </remarks>
+[Module("Natural/Physical/Geology/Lithosphere/Tectonics", "Two-pass plate seeding and boundary classification for world-generation tectonic simulation.")]
 public static class TectonicsSimulation
 {
     private static readonly Resolution s_boundaryResolution = new(2);

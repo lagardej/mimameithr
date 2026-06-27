@@ -1,0 +1,17 @@
+= {{title}}
+
+{{breadcrumb}}
+
+{{summary}}
+
+== Model
+
+{{model}}
+
+== API
+
+[cols="1,2,2,3",options="header"]
+|===
+| Method | Parameters | Returns | Description
+{{methods}}
+|===
