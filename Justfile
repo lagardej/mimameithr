@@ -1,51 +1,58 @@
-export PATH := "/snap/bin:" + env_var("PATH")
-export DOTNET_ROOT := "/snap/dotnet-sdk-100/current"
+#export PATH := "/snap/bin:" + env_var("PATH")
+#export DOTNET_ROOT := "/snap/dotnet-sdk-100/current"
 
 [private]
 default:
     @just --list
 
+[group('autodoc')]
 autodoc-nornir:
     dotnet run --project Volundr/Autodoc -- nornir .
 
+[group('autodoc')]
 autodoc-kvasir:
     dotnet run --project Volundr/Autodoc -- kvasir .
 
+[group('autodoc')]
 autodoc: autodoc-nornir autodoc-kvasir
 
-coverage:
-    dotnet test --collect:"XPlat Code Coverage" --results-directory ./coverage
-
+[group('code-quality')]
 format:
     dotnet format --no-restore
 
-report-open:
-    {{ if os() == "macos" { "open ./coverage/report/index.html" } else if os() == "linux" { "xdg-open ./coverage/report/index.html" } else { "start ./coverage/report/index.html" } }}
+[group('testing')]
+coverage:
+    dotnet test --collect:"XPlat Code Coverage" --results-directory ./coverage
 
+[group('testing')]
 report: coverage
     dotnet tool run reportgenerator -- -filefilters:-*LibraryImports.g.cs -reports:./coverage/**/coverage.cobertura.xml -targetdir:./coverage/report -reporttypes:Html
     just report-open
 
-[group('seidr')]
-seidr-build:
-    cd Seidr && cargo build --release
+[group('testing')]
+report-open:
+    {{ if os() == "macos" { "open ./coverage/report/index.html" } else if os() == "linux" { "xdg-open ./coverage/report/index.html" } else { "start ./coverage/report/index.html" } }}
 
-[group('seidr')]
-seidr-build-debug:
-    cd seidr && cargo build
-
-[group('seidr')]
-seidr-check:
-    cd seidr && cargo check
-
-[group('seidr')]
-seidr-clean:
-    cd seidr && cargo clean
-
-[group('seidr')]
-seidr-format:
-    cd seidr && cargo fmt
-
-[group('seidr')]
-seidr-lint:
-    cd seidr && cargo clippy -- -D warnings
+#[group('rustr')]
+#seidr-build:
+#    cd Seidr && cargo build --release
+#
+#[group('rustr')]
+#seidr-build-debug:
+#    cd Seidr && cargo build
+#
+#[group('rustr')]
+#seidr-check:
+#    cd Seidr && cargo check
+#
+#[group('rustr')]
+#seidr-clean:
+#    cd Seidr && cargo clean
+#
+#[group('rustr')]
+#seidr-format:
+#    cd Seidr && cargo fmt
+#
+#[group('rustr')]
+#seidr-lint:
+#    cd Seidr && cargo clippy -- -D warnings

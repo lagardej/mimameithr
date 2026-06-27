@@ -10,6 +10,7 @@ Solution file: `Mimameithr.slnx`
 ## Documentation
 
 ### Component properties
+
 XML doc summaries must describe what a property is, not how it will be used. Producers are not consumer-aware.
 
 Computed properties include a `<remarks>` block stating what they are computed from, using `<see cref>` references where possible.
@@ -19,10 +20,13 @@ No temporal or lifecycle qualifiers in property docs.
 ## Architecture
 
 ### Kvasir
+
 Simulations are stateless pure functions.
 
 ### Nornir
+
 Components hold both parameters and current state as separate properties.
+
 - `[Setting(unit, purpose)]` — externally supplied inputs (world gen, forcings, or runtime).
 - `[State(unit, purpose)]` — values computed by a system.
 

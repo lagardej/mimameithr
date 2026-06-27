@@ -1,6 +1,6 @@
-=
+= 
 
-xref:../../index.adoc[Nornir] > xref:../index.adoc[Aither] >
+xref:../../index.adoc[Nornir] > xref:../index.adoc[Aither] > 
 
 Radiative output of a star.
 
