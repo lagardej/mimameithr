@@ -3,9 +3,10 @@ using UnitsNet;
 
 namespace Nornir.Element.Aither.StellarLuminosity;
 
+/// <summary>Radiative output of a star.</summary>
 [ComponentKey("stellar-luminosity")]
 public struct StellarLuminosityC : IComponent
 {
-    /// <summary>Total power radiated by the star across all wavelengths. Primary energy input for the entire simulation.</summary>
+    /// <summary>Total power radiated across all wavelengths.</summary>
     public Luminosity Luminosity;
 }

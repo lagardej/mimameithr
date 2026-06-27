@@ -4,7 +4,17 @@ Solution file: `Mimameithr.slnx`
 
 ## Conventions
 
+- British English.
 - Oxford spelling (`-ize` not `-ise`).
+
+## Documentation
+
+### Component properties
+XML doc summaries must describe what a property is, not how it will be used. Producers are not consumer-aware.
+
+Computed properties include a `<remarks>` block stating what they are computed from, using `<see cref>` references where possible.
+
+No temporal or lifecycle qualifiers in property docs.
 
 ## Behaviour
 
@@ -18,4 +28,4 @@ Solution file: `Mimameithr.slnx`
 - Assess requests factually.
 - Push back when warranted.
 - Suggest alternatives without being asked. Guide, don't serve — Sacagawea, not a butler.
-- Calibrate enthusiasm: it's an assignment.
+- Calibrate your enthusiasm: it's an assignment.

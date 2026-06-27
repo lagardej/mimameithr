@@ -10,13 +10,12 @@ using UnitsNet;
 
 namespace Nornir.Element.Pyr.Irradiance;
 
+/// <summary>Solar irradiance state at a surface cell.</summary>
 [ComponentKey("irradiance")]
 public struct IrradianceC : IComponent
 {
-    /// <summary>
-    ///     Incoming solar flux at this cell's surface. Derived from stellar luminosity, orbital distance, and solar
-    ///     zenith angle.
-    /// </summary>
+    /// <summary>Incoming solar flux at this cell's surface.</summary>
+    /// <remarks>Computed from stellar luminosity, orbital distance, and solar zenith angle.</remarks>
     public UnitsNet.Irradiance Insolation;
 
     /// <summary>Angle between the sun and the local vertical at this cell. Zero at solar noon directly below the sun.</summary>

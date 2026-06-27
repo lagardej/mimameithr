@@ -6,22 +6,20 @@ using UnitsNet;
 
 namespace Nornir.Element.Gaea.Tectonics;
 
+/// <summary>Tectonic state of a surface cell.</summary>
 [ComponentKey("tectonics")]
 public struct TectonicsC : IComponent
 {
-    /// <summary>Dominant crust composition at this cell. Determines isostatic base elevation and volcanic character.</summary>
+    /// <summary>Dominant crust composition at this cell.</summary>
     public CrustComposition CrustComposition;
 
-    /// <summary>Thickness of the crust at this cell. Drives isostatic elevation via buoyancy in the mantle.</summary>
+    /// <summary>Thickness of the crust at this cell.</summary>
     public Length CrustalThickness;
 
-    /// <summary>
-    ///     Rate of vertical crustal displacement at this cell. Positive = uplift, negative = subsidence.
-    ///     Driven by boundary type and plate convergence rate.
-    /// </summary>
+    /// <summary>Rate of vertical crustal displacement at this cell. Positive = uplift, negative = subsidence.</summary>
     public Speed VerticalDisplacementRate;
 
-    /// <summary>Tectonic boundary type at this cell. Determines seismic and volcanic activity regime.</summary>
+    /// <summary>Tectonic boundary type at this cell.</summary>
     public BoundaryType BoundaryType;
 }
 

@@ -4,16 +4,15 @@ using UnitsNet;
 
 namespace Nornir.Element.Aither.BodyRotation;
 
+/// <summary>Rotational state of a planetary body.</summary>
 [ComponentKey("body-rotation")]
 public struct BodyRotationC : IComponent
 {
-    /// <summary>Rate at which the body completes a full rotation. Near-constant; set at world gen.</summary>
+    /// <summary>Rate at which the body completes a full rotation.</summary>
     public RotationalSpeed RotationRate;
 
-    /// <summary>
-    ///     Current rotation angle around the body's axis. Integrated from rotation rate each tick. Drives day/night state
-    ///     per cell.
-    /// </summary>
+    /// <summary>Current rotation angle around the body's axis.</summary>
+    /// <remarks>Computed from <see cref="RotationRate"/>. Wraps at 360°.</remarks>
     public Angle CurrentAngle;
 }
 
