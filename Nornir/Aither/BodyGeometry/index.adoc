@@ -1,6 +1,6 @@
-= 
+=
 
-xref:../../index.adoc[Nornir] > xref:../index.adoc[Aither] > 
+xref:../../index.adoc[Nornir] > xref:../index.adoc[Aither] >
 
 Physical geometry of a planetary body.
 

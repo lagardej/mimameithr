@@ -3,7 +3,8 @@ using UnitsNet;
 namespace Kvasir.Natural.Physical.Astronomy.OrbitalMechanics;
 
 /// <summary>Kepler orbit equations for elliptical orbits.</summary>
-[Module("Natural/Physical/Astronomy/OrbitalMechanics", "Kepler orbit equations: mean/true anomaly conversion and orbital radius.")]
+[Module("Natural/Physical/Astronomy/OrbitalMechanics",
+    "Kepler orbit equations: mean/true anomaly conversion and orbital radius.")]
 public static class KeplerOrbit
 {
     /// <summary>

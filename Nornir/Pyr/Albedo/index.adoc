@@ -1,6 +1,6 @@
-= 
+=
 
-xref:../../index.adoc[Nornir] > xref:../index.adoc[Pyr] > 
+xref:../../index.adoc[Nornir] > xref:../index.adoc[Pyr] >
 
 Surface reflectivity of a cell.
 

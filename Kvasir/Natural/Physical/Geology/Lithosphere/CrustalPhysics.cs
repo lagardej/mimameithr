@@ -3,7 +3,8 @@ using UnitsNet;
 namespace Kvasir.Natural.Physical.Geology.Lithosphere;
 
 /// <summary>Provides physics calculations for planetary crustal properties.</summary>
-[Module("Natural/Physical/Geology/Lithosphere", "Crustal thickness from composition, gravity, and heat flux via isostatic equilibrium.")]
+[Module("Natural/Physical/Geology/Lithosphere",
+    "Crustal thickness from composition, gravity, and heat flux via isostatic equilibrium.")]
 public static class CrustalPhysics
 {
     /// <summary>

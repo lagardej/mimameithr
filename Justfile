@@ -5,8 +5,13 @@ export DOTNET_ROOT := "/snap/dotnet-sdk-100/current"
 default:
     @just --list
 
-autodoc:
-    dotnet run --project Volundr/Autodoc .
+autodoc-nornir:
+    dotnet run --project Volundr/Autodoc -- nornir .
+
+autodoc-kvasir:
+    dotnet run --project Volundr/Autodoc -- kvasir .
+
+autodoc: autodoc-nornir autodoc-kvasir
 
 coverage:
     dotnet test --collect:"XPlat Code Coverage" --results-directory ./coverage

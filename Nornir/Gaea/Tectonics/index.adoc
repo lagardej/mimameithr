@@ -1,6 +1,6 @@
-= 
+=
 
-xref:../../index.adoc[Nornir] > xref:../index.adoc[Gaea] > 
+xref:../../index.adoc[Nornir] > xref:../index.adoc[Gaea] >
 
 Tectonic state of a surface cell.
 

@@ -1,6 +1,6 @@
-= 
+=
 
-xref:../../index.adoc[Nornir] > xref:../index.adoc[Aither] > 
+xref:../../index.adoc[Nornir] > xref:../index.adoc[Aither] >
 
 Keplerian orbital state of a planetary body around its parent star.
 
