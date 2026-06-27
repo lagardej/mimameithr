@@ -10,7 +10,7 @@ public sealed record TectonicsParameters
     public required TectonicsSettings Settings { get; init; }
 
     /// <summary>Physical properties derived from the parent body.</summary>
-    public required BoundaryCondition Body { get; init; }
+    public required BoundaryConditions BoundaryConditions { get; init; }
 }
 
 /// <summary>
@@ -30,7 +30,7 @@ public sealed record TectonicsSettings
     ///     </para>
     /// </summary>
     /// <remarks>Earth: 5.</remarks>
-    public required uint PlateCount { get; init; }
+    public required Setting10 PlateCount { get; init; }
 
     /// <summary>
     ///     <para>Plate fragmentation.</para>
@@ -41,7 +41,7 @@ public sealed record TectonicsSettings
     ///     </para>
     /// </summary>
     /// <remarks>Earth: 8.</remarks>
-    public required uint PlateFragmentation { get; init; }
+    public required Setting10 PlateFragmentation { get; init; }
 
     #endregion
 
@@ -56,7 +56,7 @@ public sealed record TectonicsSettings
     ///     </para>
     /// </summary>
     /// <remarks>Earth: 2.</remarks>
-    public required uint PlateStability { get; init; }
+    public required Setting10 PlateStability { get; init; }
 
     /// <summary>
     ///     <para>Degree to which activity concentrates along plate boundaries vs spreading diffusely across the interior.</para>
@@ -67,7 +67,7 @@ public sealed record TectonicsSettings
     ///     </para>
     /// </summary>
     /// <remarks>Earth: 7.</remarks>
-    public required uint BoundaryFocus { get; init; }
+    public required Setting10 BoundaryFocus { get; init; }
 
     #endregion
 
@@ -82,7 +82,7 @@ public sealed record TectonicsSettings
     ///     </para>
     /// </summary>
     /// <remarks>Earth: 5.</remarks>
-    public required uint CollisionDominance { get; init; }
+    public required Setting10 CollisionDominance { get; init; }
 
     /// <summary>
     ///     <para>Number and intensity of intraplate volcanic plumes.</para>
@@ -93,13 +93,13 @@ public sealed record TectonicsSettings
     ///     </para>
     /// </summary>
     /// <remarks>Earth: 3.</remarks>
-    public required uint HotSpotDensity { get; init; }
+    public required Setting10 HotSpotDensity { get; init; }
 
     #endregion
 }
 
 /// <summary>Physical properties of the parent body, passed into the tectonics simulation.</summary>
-public sealed record BoundaryCondition
+public sealed record BoundaryConditions
 {
     /// <summary>Random seed for reproducible world generation.</summary>
     public required int Seed { get; init; }

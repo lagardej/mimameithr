@@ -42,7 +42,7 @@ public static class TectonicsSimulation
     public static TectonicsResult Run(TectonicsParameters parameter)
     {
         var settings = parameter.Settings;
-        var conditions = parameter.Body;
+        var conditions = parameter.BoundaryConditions;
         var grid = conditions.Grid;
         var rng = new Random(conditions.Seed);
 
@@ -99,11 +99,11 @@ public static class TectonicsSimulation
         Random rng)
     {
         var totalCells = r0Cells.Length;
-        var plateCount = Math.Clamp((int) Math.Round(settings.PlateCount * totalCells / 10.0), 1, totalCells);
+        var plateCount = Math.Clamp((int) Math.Round(settings.PlateCount.Normalized * totalCells), 1, totalCells);
         var seeds = r0Cells.OrderBy(_ => rng.NextDouble()).Take(plateCount).ToArray();
 
         // Distribution: low = equal weights, high = exponential variance.
-        var distributionBias = settings.PlateFragmentation / 10.0;
+        var distributionBias = settings.PlateFragmentation.Normalized;
         var weights = seeds.ToDictionary(
             seed => seed,
             _ => Math.Pow(rng.NextDouble(), 1.0 - distributionBias + 0.01));
@@ -148,8 +148,8 @@ public static class TectonicsSimulation
         TectonicsSettings settings,
         Random rng)
     {
-        // CollisionDominance: 1 = mostly mafic (subducting), 10 = mostly felsic (colliding).
-        var felsicProbability = (settings.CollisionDominance - 1) / 9.0;
+        // CollisionDominance: min = mostly mafic (subducting), max = mostly felsic (colliding).
+        var felsicProbability = settings.CollisionDominance.Normalized;
 
         return plateMap.Values
             .Distinct()
@@ -184,13 +184,13 @@ public static class TectonicsSimulation
         if (neighbourPlates.All(p => p == ownPlate))
         {
             // Interior cell — check for hot spot.
-            return IsHotSpot(settings, rng) ? BoundaryType.HotSpot : BoundaryType.None;
+            return rng.NextDouble() < settings.HotSpotDensity.Normalized ? BoundaryType.HotSpot : BoundaryType.None;
         }
 
         // Boundary cell: CollisionDominance drives convergent probability.
         // Transform fills the remainder uniformly.
-        var convergentProbability = settings.CollisionDominance / 10.0;
-        var divergentProbability = (1.0 - convergentProbability) * (settings.BoundaryFocus / 10.0);
+        var convergentProbability = settings.CollisionDominance.Normalized;
+        var divergentProbability = (1.0 - convergentProbability) * settings.BoundaryFocus.Normalized;
         var roll = rng.NextDouble();
 
         return roll switch
@@ -200,9 +200,6 @@ public static class TectonicsSimulation
             _ => BoundaryType.Transform
         };
     }
-
-    private static bool IsHotSpot(TectonicsSettings settings, Random rng) =>
-        rng.NextDouble() < settings.HotSpotDensity / 100.0;
 
     /// <summary>
     ///     Derives vertical displacement rate from boundary type, composition, and physical body properties.
@@ -220,9 +217,7 @@ public static class TectonicsSimulation
         HeatFlux heatFlux)
     {
         // Crustal density by composition (kg/m³): felsic is buoyant, mafic is dense.
-        const double felsicDensity = 2700.0;
-        const double maficDensity = 3000.0;
-        var density = composition == CrustComposition.Felsic ? felsicDensity : maficDensity;
+        var density = composition.Density();
 
         // Convective velocity proxy: heatFlux / (density × gravity × thickness) [m/s].
         // Represents the rate at which mantle convection can drive vertical crustal motion.
@@ -233,9 +228,9 @@ public static class TectonicsSimulation
         var sign = boundaryType switch
         {
             BoundaryType.Convergent => composition == CrustComposition.Felsic
-                ? +(settings.CollisionDominance / 10.0) // uplift: buoyant crust crumples
-                : -(settings.CollisionDominance / 10.0), // subsidence: dense crust subducts
-            BoundaryType.Divergent => -(settings.PlateStability / 10.0), // subsidence: crust thins
+                ? +settings.CollisionDominance.Normalized // uplift: buoyant crust crumples
+                : -settings.CollisionDominance.Normalized, // subsidence: dense crust subducts
+            BoundaryType.Divergent => -settings.PlateStability.Normalized, // subsidence: crust thins
             BoundaryType.Transform => 0.0,
             _ => 0.0
         };
