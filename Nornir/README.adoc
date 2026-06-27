@@ -1,6 +1,15 @@
 = Components Index
+:toc: left
+:toc-title: Groups
 
+* <<_aither,Aither>> — Planetary body physical properties.
+* <<_gaea,Gaea>> — Surface and subsurface processes.
+* <<_pyr,Pyr>> — Radiative and thermal processes.
+
+[[_aither]]
 == Aither
+
+Planetary body physical properties.
 
 [cols="1,3",options="header"]
 |===
@@ -12,7 +21,10 @@
 | link:Element/Aither/StellarLuminosity/README.adoc[StellarLuminosity] | Radiative output of a star.
 |===
 
+[[_gaea]]
 == Gaea
+
+Surface and subsurface processes.
 
 [cols="1,3",options="header"]
 |===
@@ -20,7 +32,10 @@
 | link:Element/Gaea/Tectonics/README.adoc[Tectonics] | Tectonic state of a surface cell.
 |===
 
+[[_pyr]]
 == Pyr
+
+Radiative and thermal processes.
 
 [cols="1,3",options="header"]
 |===

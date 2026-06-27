@@ -1,3 +1,7 @@
 = Components Index
+:toc:
+:toc-title: Groups
+
+{{group_list}}
 
 {{components}}

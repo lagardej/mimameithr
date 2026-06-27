@@ -77,6 +77,13 @@ foreach (var componentType in componentTypes)
     Console.WriteLine($"Written: {outputPath}");
 }
 
+// Build group summary lookup from [Group]-annotated types
+var groupSummaries = assembly.GetTypes()
+    .Where(t => t.GetCustomAttribute<GroupAttribute>() is not null)
+    .ToDictionary(
+        t => t.Name,
+        t => t.GetCustomAttribute<GroupAttribute>()!.Summary);
+
 // Generate grouped components index
 var grouped = componentTypes
     .Select(t =>
@@ -99,10 +106,22 @@ var grouped = componentTypes
     .OrderBy(g => g.Key);
 
 var indexSections = new StringBuilder();
+var groupList = new StringBuilder();
 foreach (var g in grouped)
 {
+    var groupSummary = groupSummaries.GetValueOrDefault(g.Key + "Group");
+    var anchor = $"_{g.Key.ToLowerInvariant()}";
+    groupList.AppendLine(groupSummary is not null
+        ? $"* <<{anchor},{g.Key}>> — {groupSummary}"
+        : $"* <<{anchor},{g.Key}>>");
+    indexSections.AppendLine($"[[{anchor}]]");
     indexSections.AppendLine($"== {g.Key}");
     indexSections.AppendLine();
+    if (groupSummary is not null)
+    {
+        indexSections.AppendLine(groupSummary);
+        indexSections.AppendLine();
+    }
     indexSections.AppendLine("[cols=\"1,3\",options=\"header\"]");
     indexSections.AppendLine("|===");
     indexSections.AppendLine("| Component | Summary");
@@ -119,7 +138,9 @@ foreach (var g in grouped)
     indexSections.AppendLine();
 }
 
-var indexDoc = indexTemplate.Replace("{{components}}", indexSections.ToString().TrimEnd());
+var indexDoc = indexTemplate
+    .Replace("{{group_list}}", groupList.ToString().TrimEnd())
+    .Replace("{{components}}", indexSections.ToString().TrimEnd());
 File.WriteAllText(Path.Combine(sourceRoot, "README.adoc"), indexDoc);
 Console.WriteLine($"Written: {Path.Combine(sourceRoot, "README.adoc")}");
 
