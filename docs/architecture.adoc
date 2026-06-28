@@ -8,15 +8,20 @@ The engine operates in two distinct phases with different execution paradigms.
 Both phases call the same stateless Kvasir simulation functions.
 The orchestration layer differs.
 
-== Generation phase
+== Urth — Generation phase
 
-The generation phase is driven by the player, not by time.
-It uses an evaluation graph, not a tick loop.
+`Urth` is the generation phase. The name is taken from Urðr, the Norn of the past — the world before sentient civilisation begins.
 
-=== GenerationEngine
+`Urth` lives in Nornir.
 
-`GenerationEngine` lives in Nornir.
+=== Urth engine
+
+The `Urth` engine drives the generation phase.
 It owns the dependency graph between components and is responsible for propagating changes.
+It is fully operable without Godot — tests can drive it directly in C#.
+
+Urth is driven by the player, not by time.
+It uses an evaluation graph, not a tick loop.
 
 When the player modifies a setting on a body:
 
@@ -27,6 +32,25 @@ When the player modifies a setting on a body:
 
 There is no tick, no elapsed time, and no compression during this phase.
 Modifications are applied and propagated immediately.
+
+=== API contract
+
+The engine exposes a CQRS interface.
+
+*Commands* — one per system.
+Each command takes an `EntityId` and the complete settings block for that system.
+Settings are always replaced in full; partial updates are not supported.
+A command triggers invalidation and re-evaluation of all downstream nodes.
+
+Examples:
+----
+ConfigureTectonics(EntityId, TectonicsSettings)
+ConfigureOrogeny(EntityId, OrogenicSettings)
+----
+
+*Queries* — return the current computed state of a component for a given `EntityId`.
+Queries have no side effects.
+Results are readable directly from C# without any presentation layer.
 
 === Static inputs
 
@@ -48,18 +72,52 @@ This declaration is the simulation epoch — the reference point from which all 
 
 At this point:
 
-* The state produced by the generation phase becomes the initial ECS state.
-* The ECS tick loop starts.
+* The state produced by Urth becomes the initial ECS state.
+* The Verdandi tick loop starts.
 * Orbit and BodyRotation become active systems.
 * All bodies in the system advance on a shared timeline.
 
-== Active phase
+== Verdandi — Active phase
 
-The active phase runs a standard ECS tick loop.
+=== Verdandi engine
+
+The `Verdandi` engine drives the active phase.
+It runs a standard ECS tick loop.
 Each tick, systems read component settings and current state, call Kvasir, and write updated state back.
 Time is the driver.
 
 Temporal compression is available but constrained to ranges appropriate for sentient history — tens of thousands of years at most.
+
+== System development sequence
+
+Systems are ordered by timescale and dependency.
+One-shot systems produce a fixed substrate evaluated once during generation.
+Iterative systems require multiple passes to converge; the number of passes is left to the player.
+
+=== Priority 1 — Substrate (one-shot, Myr+)
+
+Tectonics → Orogeny → Elevation → Geology → Basin → Sedimentation → Geothermal → Dynamics
+
+Evaluated once. Serve as fixed inputs for all subsequent systems.
+
+=== Priority 2 — Energy
+
+Irradiance → Albedo → Surface Temperature → Thermal Redistribution
+
+=== Priority 3 — Atmosphere, water, and ice
+
+Circulation → Precipitation → Sea Level → Ocean Circulation → River Network → Groundwater → Ice Sheet → Glacier → Sea Ice
+
+These systems form a closed loop via the Albedo feedback: Flora and ice cover modify Albedo, which modifies Thermal Redistribution, which propagates through the entire chain.
+Layers 2 and 3 must converge before the biosphere is stable.
+
+=== Priority 4 — Biosphere
+
+Biome → Flora → Soil → Fauna → Disease
+
+=== Priority 5 — Mann
+
+Conceptual. Deferred.
 
 == Project boundaries
 
@@ -68,6 +126,6 @@ Temporal compression is available but constrained to ranges appropriate for sent
 |Project |Role
 
 |Kvasir |Stateless pure simulation functions. No ECS, no time, no orchestration.
-|Nornir |ECS components, systems, and the `GenerationEngine`. Stateful orchestration layer.
-|Brunnr |Shared framework tooling. May absorb `GenerationEngine` abstractions if they generalise.
+|Nornir |ECS components, systems, and the `Urth` and `Verdandi` engines. Stateful orchestration layer.
+|Brunnr |Shared framework tooling. May absorb engine abstractions if they generalise.
 |===

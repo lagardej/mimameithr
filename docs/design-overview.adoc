@@ -25,12 +25,12 @@ They exist to accelerate the configuration phase, not to constrain it.
 
 == Phases
 
-=== Generation phase
+=== Urth — Generation phase
 
-The generation phase is the setup stage.
+The Urth phase is the setup stage.
 It proceeds in two steps.
 
-==== Planetary step
+==== Urth planetary step
 
 The player configures the star and the planetary system: number and type of bodies, orbits, rotation, and so on.
 
@@ -42,7 +42,7 @@ Bodies in the same system may be at different geological maturities.
 This is physically plausible: formation timing, body size, orbital position, tidal forcing, and late impacts all produce bodies at very different stages of evolution within a single system.
 Geological maturity is therefore a per-body configuration parameter, not a global system constraint.
 
-==== Component step
+==== Urth component step
 
 For a given body, the player adds and configures components: tectonics, elevation, geology, sea level, civilisation, and so on.
 
@@ -50,7 +50,7 @@ Components do not all operate on the same timescale and depend on one another.
 Modifying one component triggers recomputation of dependent components.
 During this step, modifications are applied immediately.
 
-Time during the generation phase is local to each body.
+Time during Urth is local to each body.
 The player can configure a body freely without affecting the simulation state of other bodies in the system.
 This is analogous to the city management model in SimCity 4.
 
@@ -62,7 +62,7 @@ Two compression regimes are expected:
 
 The appropriate range for each regime will be determined once the majority of systems are implemented.
 
-=== Active phase
+=== Active phase — Verdandi
 
 The active phase begins when the player declares the planetary system ready.
 This declaration is the simulation epoch — the reference point from which all subsequent time is measured.
@@ -74,3 +74,10 @@ The player may embody any body in the system and interact with it directly.
 
 NOTE: The active phase, including the nature and characteristics of sentient inhabitants, is currently conceptual.
 The generation phase is the immediate focus, as it defines the physical constraints within which any civilisation will emerge.
+
+=== Skuld — Narrative engine
+
+Skuld is the Norn of the future — she who cuts the thread.
+The concept is a narrative engine that generates story arcs for the player to experience during the active phase, while steering the world toward an inevitable end — its Ragnarök.
+
+How this would be implemented is unknown. The idea is noted here for future consideration.

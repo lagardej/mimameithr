@@ -3,16 +3,16 @@
 
 NOTE: All physical quantities via UnitsNet — no raw `double` for science values.
 
-NOTE: Elements are named after the Greek classical elements — a deliberate nod to alchemy. The irony of using alchemical terminology for hard-science simulation is intentional. See also: Seidr.
+NOTE: Elements are named after Old Norse terms. See `glossary.adoc` for the full list with original forms and descriptions.
 
 NOTE: Boundary processes (energy or matter transfer between two elements) are assigned to the *receiver*, not the emitter.
-Example: surface-to-air heat transfer belongs to Aer, not Gaea.
+Example: surface-to-air heat transfer belongs to Lopt, not Hlothyn.
 
 NOTE: Element boundaries are organizational, not hard constraints.
 Concerns may be split, merged, or reassigned as implementation reveals better boundaries.
 The element a concern belongs to reflects current understanding, not a permanent contract.
 
-== Aither
+== Geimr
 
 Celestial mechanics at body scale.
 Covers the astronomical properties of space bodies — their geometry, orbital dynamics, and rotation.
@@ -22,7 +22,7 @@ Forms the root dependency layer for all other elements.
 [mermaid]
 ....
 flowchart TB
-    subgraph Aither
+    subgraph Geimr
         StellarLuminosity([Stellar luminosity])
         BodyGeometry([Body geometry])
         Orbit([Orbit])
@@ -106,17 +106,17 @@ _To be filled when consumers are designed._
 * Computed state, ticks every step.
 * Rotation rate is stable; angle is derived from rate × elapsed time.
 
-== Pyr
+== Eldr
 
 Surface energy input at cell scale.
 Covers how energy from the star arrives at and is absorbed by each surface cell.
 Concerns here operate on R0 cell entities.
-Forms the thermal foundation for Aer and Hydor.
+Forms the thermal foundation for Lopt and Logr.
 
 [mermaid]
 ....
 flowchart TB
-    subgraph Pyr
+    subgraph Eldr
         Irradiance([Irradiance])
         Albedo([Albedo])
     end
@@ -172,7 +172,7 @@ _Nothing, external driver for now. Will read surface composition when designed._
 
 _To be filled when consumers are designed._
 
-== Gaea
+== Hlothyn
 
 Solid earth at cell scale.
 Covers tectonic processes, terrain formation, soil composition, and geological timescales.
@@ -181,7 +181,7 @@ The physical substrate on which all other cell-scale elements operate.
 [mermaid]
 ....
 flowchart TB
-    subgraph Gaea
+    subgraph Hlothyn
         Tectonics([Tectonics])
         Orogeny([Orogeny])
         Elevation([Elevation])
@@ -375,16 +375,16 @@ _To be filled when consumers are designed._
 
 _To be filled when consumers are designed._
 
-== Hydor
+== Logr
 
 Water at cell and body scale.
 Covers ocean currents, freshwater distribution, and river drainage.
-Driven by Pyr energy input, Aer precipitation, and Gaea terrain.
+Driven by Eldr energy input, Lopt precipitation, and Hlothyn terrain.
 
 [mermaid]
 ....
 flowchart TB
-    subgraph Hydor
+    subgraph Logr
         SeaLevel([Sea level])
         Basin([Basin])
         OceanCirculation([Ocean circulation])
@@ -414,16 +414,16 @@ flowchart TB
 === River Network
 === Groundwater
 
-== Kryos
+== Hrim
 
 Ice and permafrost at cell scale.
 Covers ice sheets, glaciers, sea ice, and frozen ground.
-Modifies albedo, sea level, and river flux; feeds back into Aer and Hydor.
+Modifies albedo, sea level, and river flux; feeds back into Lopt and Logr.
 
 [mermaid]
 ....
 flowchart TB
-    subgraph Kryos
+    subgraph Hrim
         IceSheet([Ice sheet])
         Glacier([Glacier])
         SeaIce([Sea ice])
@@ -460,16 +460,16 @@ flowchart TB
 === Sea Ice
 === Permafrost
 
-== Aer
+== Lopt
 
 Atmospheric dynamics at cell scale.
 Covers air temperature, pressure, wind circulation, and weather patterns.
-Bridges Pyr energy input and Hydor water movement.
+Bridges Eldr energy input and Logr water movement.
 
 [mermaid]
 ....
 flowchart TB
-    subgraph Aer
+    subgraph Lopt
         ThermalRedistribution([Thermal redistribution])
         Circulation([Circulation])
         Composition([Composition])
@@ -494,16 +494,16 @@ flowchart TB
 === Composition
 === Precipitation
 
-== Bios
+== Ithunn
 
 Living systems at cell scale.
 Covers vegetation, fauna, soil biology, and disease vectors.
-Constrained by Gaea, Hydor, Aer, and Kryos conditions.
+Constrained by Hlothyn, Logr, Lopt, and Hrim conditions.
 
 [mermaid]
 ....
 flowchart TB
-    subgraph Bios
+    subgraph Ithunn
         Biome([Biome])
         Flora([Flora])
         Soil([Soil])
@@ -549,9 +549,9 @@ flowchart TB
 === Fauna
 === Disease
 
-== Anthropos
+== Mann
 
-Human civilization at cell and network scale.
+Sentient civilisation at cell and network scale.
 Covers settlement, resource extraction, infrastructure, and cultural dynamics.
 Emerges from and is constrained by all other elements.
 
@@ -565,26 +565,26 @@ Do not belong to any element.
 
 Aggregates per-cell surface composition from all elements that expose a surface state.
 Single consumer: Albedo.
-Fed by: Kryos (Ice Sheet, Sea Ice), Bios (Flora), Hydor (Ocean), Gaea (terrain) — as those elements are designed.
+Fed by: Hrim (Ice Sheet, Sea Ice), Ithunn (Flora), Logr (Ocean), Hlothyn (terrain) — as those elements are designed.
 
 == Full dependency graph
 
 [mermaid]
 ....
 flowchart TB
-    subgraph Aither
+    subgraph Geimr
         StellarLuminosity([Stellar luminosity])
         BodyGeometry([Body geometry])
         Orbit([Orbit])
         BodyRotation([BodyRotation])
     end
 
-    subgraph Pyr
+    subgraph Eldr
         Irradiance([Irradiance])
         Albedo([Albedo])
     end
 
-    subgraph Gaea
+    subgraph Hlothyn
         Tectonics([Tectonics])
         Orogeny([Orogeny])
         Elevation([Elevation])
@@ -595,7 +595,7 @@ flowchart TB
         SurfaceTemperature([Surface temperature])
     end
 
-    subgraph Hydor
+    subgraph Logr
         SeaLevel([Sea level])
         Basin([Basin])
         OceanCirculation([Ocean circulation])
@@ -603,21 +603,21 @@ flowchart TB
         Groundwater([Groundwater])
     end
 
-    subgraph Kryos
+    subgraph Hrim
         IceSheet([Ice sheet])
         Glacier([Glacier])
         SeaIce([Sea ice])
         Permafrost([Permafrost])
     end
 
-    subgraph Aer
+    subgraph Lopt
         ThermalRedistribution([Thermal redistribution])
         Circulation([Circulation])
         Composition([Composition])
         Precipitation([Precipitation])
     end
 
-    subgraph Bios
+    subgraph Ithunn
         Biome([Biome])
         Flora([Flora])
         Soil([Soil])
