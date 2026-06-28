@@ -1,0 +1,14 @@
+= Bifröst
+
+The rainbow bridge between worlds.
+Bifröst is the C#/Rust interop layer for Mimameithr.
+It exposes native Rust crates from `Rustr` to the C# simulation stack via P/Invoke bindings.
+
+== Projects
+
+[cols="1,3"]
+|===
+|Directory |Purpose
+
+|link:Kart/README.adoc[`Kart`] |C#/Rust bridge to `Rustr.Kart` — geodesic grid operations
+|===

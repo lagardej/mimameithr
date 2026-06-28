@@ -1,6 +1,11 @@
 = Rustr
 
-Rust workspace for Mimameithr. Contains crates that provide native performance where C# is insufficient.
+Old Norse _rustr_ — rust.
+Rustr is the Rust workspace for Mimameithr.
+It contains crates that provide native performance where C# is insufficient.
+Crates are exposed to the C# stack via C FFI, bridged through `Bifröst`.
+
+== Crates
 
 [cols="1,3"]
 |===

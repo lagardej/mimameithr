@@ -9,14 +9,14 @@ Old Norse terms used in the project, with their original form and C# identifier.
 |===
 |Name |Description
 
-|Mimameithr |Another name for Yggdrasil, the cosmic tree connecting the nine worlds. The root project.
+|Bifröst |The rainbow bridge between worlds. C#/Rust interop layer.
 |Bragi |Bragi Boddason, the first skald — the one who tells the story. Rendering layer and third-party adapters (Godot).
 |Brunnr |Urtharbrunnr, the spring beneath the roots of Yggdrasil. Simulation framework — topology, scheduling, validation. A nod to Spring Framework.
 |Kvasir |The being of wisdom whose blood becomes the mead of poetry. Science simulations — stateless pure functions.
-|Nornir |The three Norns who weave fate. Domain models — tectonics, climate, civilisation.
+|Mimameithr |Another name for Yggdrasil, the cosmic tree connecting the nine worlds. The root project.
+|Nornir |The three Norns who weave fate. Domain models — tectonics, climate, civilization.
 |Rustr |Old Norse _rustr_ — rust. Rust workspace — native performance crates.
-|Bifröst |The rainbow bridge between worlds. C#/Rust interop layer.
-|Völundr |The elven smith, craftsman of the gods. Developer toolbox (Autodoc, …).
+|Völundr |The elven smith, craftsman of the gods. Developer toolbox (Gler, …).
 |===
 
 === Rustr
@@ -38,13 +38,22 @@ Old Norse terms used in the project, with their original form and C# identifier.
 |Kart |C#/Rust bridge to `Rustr.Kart`. Exposes geodesic grid operations to the rest of the C# project.
 |===
 
+=== Völundr
+
+[cols="1,2"]
+|===
+|Name |Description
+
+|Gler |Old Norse for _mirror_ — a surface that reflects what stands before it. Build-time documentation generator; a play on .NET Reflection.
+|===
+
 == Engines and phases
 
 [cols="1,1,2"]
 |===
 |Old Norse |Filename |Description
 
-|Urðr |Urth.cs |The Norn of the past. Name of the generation phase — the world before sentient civilisation begins.
+|Urðr |Urth.cs |The Norn of the past. Name of the generation phase — the world before sentient civilization begins.
 |Verðandi |Verthandi.cs |The Norn of the present. Name of the active phase engine — the world as it unfolds.
 |Skuld |Skuld.cs |The Norn of the future. Concept for a narrative engine that generates story arcs toward an inevitable end — the world's Ragnarök.
 |===
@@ -55,22 +64,22 @@ Old Norse terms used in the project, with their original form and C# identifier.
 |===
 |Old Norse |Filesystem |Description
 
-|Geimr |Geimr/ |The vast cosmic space, the ether. Celestial mechanics at body scale — geometry, orbit, rotation.
 |Eldr |Eldr/ |Fire. Surface energy — irradiance and albedo at cell scale.
+|Geimr |Geimr/ |The vast cosmic space, the ether. Celestial mechanics at body scale — geometry, orbit, rotation.
 |Hlóðyn |Hlothyn/ |Goddess of solid earth, mother of Thor. Solid earth — tectonics, elevation, geology, at Myr timescale.
-|Løgr |Logr/ |Water in motion, a poetic and cosmic term. Hydrology — oceans, rivers, basins, groundwater.
-|Lopt |Lopt/ |Air as an atmospheric mass. Atmospheric dynamics — circulation, precipitation, composition.
 |Hrim |Hrim/ |The primordial frost. Cryosphere — ice sheets, glaciers, sea ice, permafrost.
 |Iðunn |Ithunn/ |Guardian of the apples of youth, vital force. Living systems — biomes, flora, fauna, soil, disease.
-|Mann |Mann/ |The thinking being (Proto-Germanic root of _man_). Sentient civilisation — settlement, resources, infrastructure, culture.
+|Lopt |Lopt/ |Air as an atmospheric mass. Atmospheric dynamics — circulation, precipitation, composition.
+|Løgr |Logr/ |Water in motion, a poetic and cosmic term. Hydrology — oceans, rivers, basins, groundwater.
+|Mann |Mann/ |The thinking being (Proto-Germanic root of _man_). Sentient civilization — settlement, resources, infrastructure, culture.
 |===
 
 == Naming convention
 
 C# identifiers use the original Old Norse form with Unicode characters.
-Filenames and directories use an ASCII romanisation to avoid filesystem issues.
+Filenames and directories use an ASCII romanization to avoid filesystem issues.
 
-Romanisation rules for filenames:
+Romanization rules for filenames:
 
 * `ð` (eth) → `th`
 * `þ` (thorn) → `th`
@@ -82,8 +91,8 @@ Examples:
 |===
 |C# identifier |Filename
 
-|Urðr |Urth.cs
-|Verðandi |Verthandi.cs
 |Hlóðyn |Hlothyn/
 |Iðunn |Ithunn/
+|Urðr |Urth.cs
+|Verðandi |Verthandi.cs
 |===

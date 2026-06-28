@@ -17,7 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Brunnr\Brunnr.csproj"/>
     <ProjectReference Include="..\Kvasir\Kvasir.csproj"/>
-    <ProjectReference Include="..\Volundr\Autodoc\Autodoc.csproj" ReferenceOutputAssembly="false" SkipGetTargetFrameworkProperties="true"/>
+    <ProjectReference Include="..\Volundr\Gler\Gler.csproj" ReferenceOutputAssembly="false" SkipGetTargetFrameworkProperties="true"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -25,9 +25,5 @@
     <PackageReference Include="Tomlyn" Version="0.17.0"/>
     <PackageReference Include="UnitsNet" Version="5.75.0"/>
   </ItemGroup>
-
-  <Target Name="RunAutodoc" AfterTargets="Build">
-    <Exec Command="dotnet $(MSBuildThisFileDirectory)../Volundr/Autodoc/bin/$(Configuration)/net10.0/Autodoc.dll nornir $(MSBuildThisFileDirectory)../"/>
-  </Target>
 
 </Project>

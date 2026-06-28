@@ -1,1 +1,17 @@
 = Nornir
+
+The Norns sit beneath Yggdrasil and weave the threads of fate — Urðr shapes the past, Verðandi the present, Skuld the future.
+Nornir is the domain model layer for Mimameithr.
+It holds ECS components, systems, and the engines that drive each phase of the simulation.
+It calls `Kvasir` for all science computations and `Brunnr` for framework infrastructure.
+
+== Engines
+
+[cols="1,3"]
+|===
+|Directory |Purpose
+
+|link:Urth/[`Urth`] |Generation phase engine — evaluation graph, CQRS interface
+|link:Verthandi/[`Verthandi`] |Active phase engine — ECS tick loop
+|link:Skuld/[`Skuld`] |Narrative engine — conceptual, deferred
+|===

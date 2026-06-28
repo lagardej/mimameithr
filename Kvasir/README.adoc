@@ -1,1 +1,20 @@
 = Kvasir
+
+Kvasir was a being of supreme wisdom, created from the combined knowledge of the gods.
+He was slain and his blood mixed with honey to produce the mead of poetry — the source of all wisdom and knowledge.
+Kvasir is the science knowledge layer for Mimameithr.
+
+All simulations in Kvasir are *stateless pure functions*.
+They take parameters and return results.
+They have no dependency on ECS, time, or orchestration.
+
+== Layout
+
+[cols="1,3"]
+|===
+|Directory |Purpose
+
+|`Formal/` |Mathematical and geometric foundations
+|`Natural/` |Physical and natural science simulations
+|`Social/` |Social and civilisational models
+|===

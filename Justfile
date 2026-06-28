@@ -1,17 +1,14 @@
-#export PATH := "/snap/bin:" + env_var("PATH")
-#export DOTNET_ROOT := "/snap/dotnet-sdk-100/current"
-
 [private]
 default:
     @just --list
 
 [group('autodoc')]
-autodoc-nornir:
-    dotnet run --project Volundr/Autodoc -- nornir .
+autodoc-kvasir:
+    dotnet run --project Volundr/Gler -- kvasir .
 
 [group('autodoc')]
-autodoc-kvasir:
-    dotnet run --project Volundr/Autodoc -- kvasir .
+autodoc-nornir:
+    dotnet run --project Volundr/Gler -- nornir .
 
 [group('autodoc')]
 autodoc: autodoc-nornir autodoc-kvasir

@@ -2,9 +2,10 @@ using Brunnr.Engine.Cell;
 using Kvasir;
 using Kvasir.Formal.Maths.Geometry.Partitioning;
 using Kvasir.Natural.Physical.Geodesy;
-using Nornir.Aither.BodyGeometry;
-using Nornir.Aither.BodyPhysics;
-using Nornir.Gaea.Tectonics;
+using Nornir.Verthandi;
+using Nornir.Verthandi.Geimr.BodyGeometry;
+using Nornir.Verthandi.Geimr.BodyPhysics;
+using Nornir.Verthandi.Hlothyn.Tectonics;
 using UnitsNet;
 using Xunit;
 
@@ -43,7 +44,7 @@ public sealed class TectonicsSystemTests
     [Fact]
     public void Advance_PopulatesTectonicsComponent_OnCellEntity()
     {
-        var engine = new Nornir();
+        var engine = new Verðandi();
         var grid = TectonicsStubGrid.Instance;
         const int seed = 42;
 

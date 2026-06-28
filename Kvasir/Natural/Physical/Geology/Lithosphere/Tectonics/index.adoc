@@ -6,7 +6,8 @@ Two-pass plate seeding and boundary classification for world-generation tectonic
 
 == Model
 
-One-shot tectonic world-generation simulation. Produces a  per grid cell from .
+One-shot tectonic world-generation simulation.
+Produces a per grid cell from .
 
 == API
 

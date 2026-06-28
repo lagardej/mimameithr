@@ -1,6 +1,7 @@
-= Volundr
+= Völundr
 
-Developer toolbox for Mimameithr.
+Völundr was the master elven smith — the craftsman of the gods.
+Völundr is the developer toolbox for Mimameithr.
 
 == Projects
 
@@ -8,5 +9,5 @@ Developer toolbox for Mimameithr.
 |===
 |Directory |Purpose
 
-|link:Autodoc/README.adoc[`Autodoc`] |Build-time documentation generator
+|link:Gler/README.adoc[`Gler`] |Build-time documentation generator — reads code attributes via reflection and produces documentation fragments
 |===
