@@ -3,7 +3,6 @@
 Old Norse: _map_.
 
 Rust crate exposing geodesic grid operations via C FFI, backed by the https://github.com/HydroniumLabs/h3o[h3o] library.
-Consumed by `GeodesicGridH3O` in Bifrost via P/Invoke.
 
 == Modules
 

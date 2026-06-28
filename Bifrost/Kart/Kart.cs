@@ -153,61 +153,63 @@ public sealed partial class Kart : IGeodesicGrid
 
     #region P/Invoke
 
-    [LibraryImport("seidr")]
+    private const string KartLib = "kart";
+
+    [LibraryImport(KartLib)]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial ulong geogrid_cell_at(double lat, double lng, uint res);
 
-    [LibraryImport("seidr")]
+    [LibraryImport(KartLib)]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial uint geogrid_resolution_of(ulong cell);
 
-    [LibraryImport("seidr")]
+    [LibraryImport(KartLib)]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static partial bool geogrid_is_valid(ulong cell);
 
-    [LibraryImport("seidr")]
+    [LibraryImport(KartLib)]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static partial bool geogrid_center_of(ulong cell, out double lat, out double lng);
 
-    [LibraryImport("seidr")]
+    [LibraryImport(KartLib)]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial int geogrid_boundary_of(ulong cell, [Out] double[] outBuffer);
 
-    [LibraryImport("seidr")]
+    [LibraryImport(KartLib)]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial ulong geogrid_parent_of(ulong cell, uint parentRes);
 
-    [LibraryImport("seidr")]
+    [LibraryImport(KartLib)]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial int geogrid_children_len(ulong cell, uint childRes);
 
-    [LibraryImport("seidr")]
+    [LibraryImport(KartLib)]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial int geogrid_children_of(ulong cell, uint childRes, [Out] ulong[] outBuffer, int len);
 
-    [LibraryImport("seidr")]
+    [LibraryImport(KartLib)]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial int geogrid_root_cells_len();
 
-    [LibraryImport("seidr")]
+    [LibraryImport(KartLib)]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial void geogrid_root_cells([Out] ulong[] outBuffer, int len);
 
-    [LibraryImport("seidr")]
+    [LibraryImport(KartLib)]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial int geogrid_cells_at_resolution_len(uint res);
 
-    [LibraryImport("seidr")]
+    [LibraryImport(KartLib)]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial int geogrid_cells_at_resolution(uint res, [Out] ulong[] outBuffer, int len);
 
-    [LibraryImport("seidr")]
+    [LibraryImport(KartLib)]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial int geogrid_disk_len(ulong cell, int k);
 
-    [LibraryImport("seidr")]
+    [LibraryImport(KartLib)]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial int geogrid_disk(ulong cell, int k, [Out] ulong[] outBuffer, int len);
 

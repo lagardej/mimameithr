@@ -1,0 +1,6 @@
+= Kart (Bifröst)
+
+C#/Rust bridge to `Rustr.Kart`.
+Implements `IGeodesicGrid` backed by the h3o Rust library, exposed via P/Invoke into the `kart` native library.
+
+Consumers interact with `IGeodesicGrid` only — the Rust backing is an implementation detail.
