@@ -1,7 +1,8 @@
+.agents/
+_autodoc/
 bin/
 obj/
 target/
-_autodoc/
 tmp/
 
 # NuGet
