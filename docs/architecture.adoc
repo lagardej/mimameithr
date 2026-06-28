@@ -1,0 +1,73 @@
+= Mimameithr — Architecture
+:toc: left
+:toclevels: 3
+
+== Execution model
+
+The engine operates in two distinct phases with different execution paradigms.
+Both phases call the same stateless Kvasir simulation functions.
+The orchestration layer differs.
+
+== Generation phase
+
+The generation phase is driven by the player, not by time.
+It uses an evaluation graph, not a tick loop.
+
+=== GenerationEngine
+
+`GenerationEngine` lives in Nornir.
+It owns the dependency graph between components and is responsible for propagating changes.
+
+When the player modifies a setting on a body:
+
+. The engine invalidates all nodes downstream of that setting in the dependency graph.
+. It re-evaluates invalidated nodes in topological order.
+. Each node calls the relevant Kvasir function directly with the current settings as input.
+. The result is written back to the component state.
+
+There is no tick, no elapsed time, and no compression during this phase.
+Modifications are applied and propagated immediately.
+
+=== Static inputs
+
+Orbit and BodyRotation are configuration values during generation, not active systems.
+Their settings are present as inputs to downstream computations but are not evaluated as systems.
+They become active only when the phase transition occurs.
+
+=== Iterative systems
+
+Some future systems (orogeny, erosion, climate) may require multiple passes to converge.
+When that is the case, temporal compression will apply within the generation phase for those passes.
+The compression range for iterative geological passes will differ from the range used during the active phase.
+Exact ranges are deferred until the relevant systems are implemented.
+
+== Phase transition
+
+The player declares the planetary system ready.
+This declaration is the simulation epoch — the reference point from which all subsequent time is measured.
+
+At this point:
+
+* The state produced by the generation phase becomes the initial ECS state.
+* The ECS tick loop starts.
+* Orbit and BodyRotation become active systems.
+* All bodies in the system advance on a shared timeline.
+
+== Active phase
+
+The active phase runs a standard ECS tick loop.
+Each tick, systems read component settings and current state, call Kvasir, and write updated state back.
+Time is the driver.
+
+Temporal compression is available but constrained to ranges appropriate for sentient history — tens of thousands of years at most.
+
+== Project boundaries
+
+[cols="1,3"]
+|===
+|Project |Role
+
+|Kvasir |Stateless pure simulation functions. No ECS, no time, no orchestration.
+|Nornir |ECS components, systems, and the `GenerationEngine`. Stateful orchestration layer.
+|Brunnr |Shared framework tooling. May absorb `GenerationEngine` abstractions if they generalise.
+|===
