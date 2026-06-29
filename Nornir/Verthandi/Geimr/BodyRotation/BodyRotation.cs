@@ -7,7 +7,7 @@ namespace Nornir.Verthandi.Geimr.BodyRotation;
 
 /// <summary>Rotational state of a planetary body.</summary>
 [ComponentKey("body-rotation")]
-[Component("Aither/BodyRotation")]
+[Component("Geimr/BodyRotation")]
 public struct BodyRotationC : IComponent
 {
     /// <summary>Rate at which the body completes a full rotation.</summary>

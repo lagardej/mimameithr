@@ -15,7 +15,7 @@ namespace Nornir.Verthandi.Hlothyn.Tectonics;
 
 /// <summary>Designer-facing world-gen knobs for the tectonics simulation.</summary>
 [ComponentKey("tectonics-settings")]
-[Component("Gaea/Tectonics")]
+[Component("Hlothyn/Tectonics")]
 public struct TectonicsSettingsC : IComponent
 {
     /// <summary>Number of tectonic plates seeded at world gen. Range: 1–10.</summary>
@@ -45,7 +45,7 @@ public struct TectonicsSettingsC : IComponent
 
 /// <summary>Tectonic state of a surface cell.</summary>
 [ComponentKey("tectonics-state")]
-[Component("Gaea/Tectonics")]
+[Component("Hlothyn/Tectonics")]
 public struct TectonicsC : IComponent
 {
     /// <summary>Dominant crust composition at this cell.</summary>

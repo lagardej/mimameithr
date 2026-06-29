@@ -14,7 +14,7 @@ namespace Nornir.Verthandi.Eldr.Irradiance;
 
 /// <summary>Solar irradiance state at a surface cell.</summary>
 [ComponentKey("irradiance")]
-[Component("Pyr/Irradiance")]
+[Component("Eldr/Irradiance")]
 public struct IrradianceC : IComponent
 {
     /// <summary>Incoming solar flux at this cell's surface.</summary>

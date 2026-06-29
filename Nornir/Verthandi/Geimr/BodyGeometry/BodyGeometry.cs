@@ -6,7 +6,7 @@ namespace Nornir.Verthandi.Geimr.BodyGeometry;
 
 /// <summary>Physical geometry of a planetary body.</summary>
 [ComponentKey("body-geometry")]
-[Component("Aither/BodyGeometry")]
+[Component("Geimr/BodyGeometry")]
 public struct BodyGeometryC : IComponent
 {
     /// <summary>Mean radius of the body.</summary>

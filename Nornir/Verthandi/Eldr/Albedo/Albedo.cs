@@ -6,7 +6,7 @@ namespace Nornir.Verthandi.Eldr.Albedo;
 
 /// <summary>Surface reflectivity of a cell.</summary>
 [ComponentKey("albedo")]
-[Component("Pyr/Albedo")]
+[Component("Eldr/Albedo")]
 public struct AlbedoC : IComponent
 {
     /// <summary>

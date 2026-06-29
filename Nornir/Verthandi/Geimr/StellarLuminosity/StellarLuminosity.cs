@@ -6,7 +6,7 @@ namespace Nornir.Verthandi.Geimr.StellarLuminosity;
 
 /// <summary>Radiative output of a star.</summary>
 [ComponentKey("stellar-luminosity")]
-[Component("Aither/StellarLuminosity")]
+[Component("Geimr/StellarLuminosity")]
 public struct StellarLuminosityC : IComponent
 {
     /// <summary>Total power radiated across all wavelengths.</summary>

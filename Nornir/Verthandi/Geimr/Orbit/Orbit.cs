@@ -8,7 +8,7 @@ namespace Nornir.Verthandi.Geimr.Orbit;
 
 /// <summary>Keplerian orbital state of a planetary body around its parent star.</summary>
 [ComponentKey("orbit")]
-[Component("Aither/Orbit")]
+[Component("Geimr/Orbit")]
 public struct OrbitC : IComponent
 {
     /// <summary>Semi-major axis of the orbit.</summary>

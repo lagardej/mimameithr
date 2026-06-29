@@ -13,7 +13,7 @@ public sealed class GroupAttribute(string summary = "") : Attribute
 ///     The generator will produce a reference document at the component's folder root.
 /// </summary>
 /// <param name="group">
-///     Slash-delimited group path (e.g. "Aither/BodyGeometry"). Top-level segment maps to a section in the
+///     Slash-delimited group path (e.g. "Geimr/BodyGeometry"). Top-level segment maps to a section in the
 ///     index.
 /// </param>
 /// <param name="title">Optional display title. Defaults to the component's folder name.</param>

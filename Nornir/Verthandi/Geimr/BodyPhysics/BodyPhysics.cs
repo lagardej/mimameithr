@@ -7,7 +7,7 @@ namespace Nornir.Verthandi.Geimr.BodyPhysics;
 
 /// <summary>Physical properties of a planetary body.</summary>
 [ComponentKey("body-physics")]
-[Component("Aither/BodyPhysics")]
+[Component("Geimr/BodyPhysics")]
 public struct BodyPhysicsC : IComponent
 {
     /// <summary>Total mass of the body.</summary>
