@@ -12,10 +12,9 @@ The simulation runs headless.
 |===
 |Directory |Purpose
 
-|link:Kjarni/README.adoc[`Kjarni`] |Simulation core — framework, science, and domain models
-|link:Brunnr/README.adoc[`Brunnr`] |Simulation framework — topology, scheduling, validation
-|link:Kvasir/README.adoc[`Kvasir`] |Science simulations — stateless pure functions
-|link:Nornir/README.adoc[`Nornir`] |Domain models — tectonics, climate, civilization
+|link:Kjarni/Brunnr/README.adoc[`Brunnr`] |Simulation framework — topology, scheduling, validation
+|link:Kjarni/Kvasir/README.adoc[`Kvasir`] |Science simulations — stateless pure functions
+|link:Kjarni/Nornir/README.adoc[`Nornir`] |Domain models — tectonics, climate, civilization
 |===
 
 == Bifrost — Interop
@@ -24,8 +23,7 @@ The simulation runs headless.
 |===
 |Directory |Purpose
 
-|link:Bifrost/README.adoc[`Bifrost`] |C#/Rust interop layer
-|link:Bifrost/Kart/README.adoc[`Bifrost/Kart`] |C#/Rust bridge to `Rustr.Kart` — geodesic grid operations
+|link:Bifrost/Kart/README.adoc[`Kart`] |C#/Rust bridge to `Rustr.Kart` — geodesic grid operations
 |===
 
 == Rustr — Native performance
@@ -34,9 +32,8 @@ The simulation runs headless.
 |===
 |Directory |Purpose
 
-|link:Rustr/README.adoc[`Rustr`] |Rust workspace — native performance crates
-|link:Rustr/Kart/README.adoc[`Rustr/Kart`] |Geodesic grid — H3/h3o cell operations exposed via C FFI
-|link:Rustr/Seidr/README.adoc[`Rustr/Seidr`] |Heavy math — numerical and scientific computation
+|link:Rustr/Kart/README.adoc[`Kart`] |Geodesic grid — H3/h3o cell operations exposed via C FFI
+|link:Rustr/Seidr/README.adoc[`Seidr`] |Heavy math — numerical and scientific computation
 |===
 
 == Skald — Rendering
@@ -45,8 +42,7 @@ The simulation runs headless.
 |===
 |Directory |Purpose
 
-|link:Skald/README.adoc[`Skald`] |Parent directory for rendering layers
-|link:Skald/Bithot/README.adoc[`Skald/Bithot`] |Godot 4 rendering layer
+|link:Skald/Bithot/README.adoc[`Bithot`] |Godot 4 rendering layer
 |===
 
 == Völundr — Developer toolbox
@@ -55,8 +51,7 @@ The simulation runs headless.
 |===
 |Directory |Purpose
 
-|link:Volundr/README.adoc[`Volundr`] |Developer toolbox
-|link:Volundr/Gler/README.adoc[`Volundr/Gler`] |Build-time documentation generator
+|link:Volundr/Gler/README.adoc[`Gler`] |Build-time documentation generator
 |===
 
 == Other
