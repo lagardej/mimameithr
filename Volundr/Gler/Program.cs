@@ -1,4 +1,4 @@
-using Gler;
+using Volundr.Gler;
 
 const string outputFileName = "index.adoc";
 

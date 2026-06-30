@@ -1,9 +1,9 @@
-using Kvasir;
+using Kjarni.Kvasir;
 using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
 
-namespace Gler;
+namespace Volundr.Gler;
 
 internal static class KvasirAutodoc
 {

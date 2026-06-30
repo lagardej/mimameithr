@@ -1,8 +1,8 @@
-using Brunnr.Autodoc;
+using Kjarni.Brunnr.Autodoc;
 using System.Reflection;
 using System.Text;
 
-namespace Gler;
+namespace Volundr.Gler;
 
 internal static class NornirAutodoc
 {

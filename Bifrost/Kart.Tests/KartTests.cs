@@ -1,11 +1,11 @@
-using Kvasir.Formal.Maths.Geometry.Partitioning;
+using Kjarni.Kvasir.Formal.Maths.Geometry.Partitioning;
 using Xunit;
 
 namespace GeogridH3o.Tests;
 
 public sealed class KartTests
 {
-    private readonly Kart.Kart _grid = new();
+    private readonly Bifrost.Kart.Kart _grid = new();
 
     // Paris, R3
     private readonly Resolution _res = new(3);

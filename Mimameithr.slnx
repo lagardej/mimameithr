@@ -1,11 +1,11 @@
 <Solution>
-    <Project Path="Bifrost\Kart.Tests\Kart.Tests.csproj"/>
-    <Project Path="Bifrost\Kart\Kart.csproj"/>
-    <Project Path="Bragi\Bragi.csproj"/>
-    <Project Path="Brunnr.Tests\Brunnr.Tests.csproj"/>
-    <Project Path="Brunnr\Brunnr.csproj"/>
-    <Project Path="Kvasir\Kvasir.csproj"/>
-    <Project Path="Nornir.Tests\Nornir.Tests.csproj"/>
-    <Project Path="Nornir\Nornir.csproj"/>
-    <Project Path="Volundr\Gler\Gler.csproj"/>
+    <Project Path="Bifrost\Kart.Tests\Kart.Tests.csproj" />
+    <Project Path="Bifrost\Kart\Kart.csproj" />
+    <Project Path="Kjarni\Brunnr.Tests\Brunnr.Tests.csproj" />
+    <Project Path="Kjarni\Brunnr\Brunnr.csproj" />
+    <Project Path="Kjarni\Kvasir\Kvasir.csproj" />
+    <Project Path="Kjarni\Nornir.Tests\Nornir.Tests.csproj" />
+    <Project Path="Kjarni\Nornir\Nornir.csproj" />
+    <Project Path="Skald\Bithot\Bithot.csproj" />
+    <Project Path="Volundr\Gler\Gler.csproj" />
 </Solution>

@@ -1,0 +1,7 @@
+= Bithot
+
+From Old Norse _bið_ (to wait), named after "Waiting for Godot" — perpetually awaiting the next feature.
+Bithot is the Godot 4 rendering layer for Mimameithr.
+It consumes simulation state produced by `Nornir` and presents it to the player.
+It glues the engine together by pulling in adapters from `Bifrost` (C#/Rust interop, platform integration, etc.).
+It has no simulation logic of its own.

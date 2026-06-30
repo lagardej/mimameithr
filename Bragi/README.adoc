@@ -1,6 +1,0 @@
-= Bragi
-
-Bragi Boddason was the first skald — the one who tells the story.
-Bragi is the rendering layer and platform adapter for Mimameithr, built on Godot 4.
-It consumes simulation state produced by `Nornir` and presents it to the player.
-It has no simulation logic of its own.

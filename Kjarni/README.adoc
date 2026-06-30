@@ -1,0 +1,16 @@
+= Kjarni
+
+Old Norse for _kernel/core/seed_.
+Kjarni is the simulation core of Mimameithr — the unseen foundation from which everything else grows.
+It groups the framework, the science knowledge base, and the domain models that together make the simulation possible.
+
+== Projects
+
+[cols="1,3"]
+|===
+|Directory |Purpose
+
+|link:../Brunnr/README.adoc[`Brunnr`] |Simulation framework — topology, scheduling, validation
+|link:../Kvasir/README.adoc[`Kvasir`] |Science simulations — stateless pure functions
+|link:../Nornir/README.adoc[`Nornir`] |Domain models — tectonics, climate, civilization
+|===

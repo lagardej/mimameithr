@@ -1,8 +1,11 @@
 = Bifröst
 
 The rainbow bridge between worlds.
-Bifröst is the C#/Rust interop layer for Mimameithr.
-It exposes native Rust crates from `Rustr` to the C# simulation stack via P/Invoke bindings.
+Bifröst is the home for all third-party adapters and integrations for Mimameithr, whatever the language.
+It hosts the interop layers that connect the core simulation engine (`Nornir`, `Kvasir`, `Brunnr`) to external systems and platforms.
+
+Adapters in Bifröst may handle C#/Rust interop, Godot integration, or connections to other languages and frameworks.
+They are consumed by higher-level layers like `Bragi` (the Godot rendering layer), which glues the engine to the player-facing presentation.
 
 == Projects
 

@@ -5,11 +5,11 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <RootNamespace>Gler</RootNamespace>
+    <RootNamespace>Volundr.Gler</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Brunnr\Brunnr.csproj"/>
+    <ProjectReference Include="..\..\Kjarni\Brunnr\Brunnr.csproj"/>
   </ItemGroup>
 
 </Project>

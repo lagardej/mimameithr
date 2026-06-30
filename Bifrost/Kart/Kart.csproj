@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <RootNamespace>Kart</RootNamespace>
+    <RootNamespace>Bifrost.Kart</RootNamespace>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Kvasir\Kvasir.csproj"/>
+    <ProjectReference Include="..\..\Kjarni\Kvasir\Kvasir.csproj"/>
   </ItemGroup>
 
   <Target Name="BuildRustLib" BeforeTargets="Build">

@@ -1,77 +1,96 @@
 = Glossary
 :toc: left
 
-Old Norse terms used in the project, with their original form and C# identifier.
+Old Norse terms used in the project, with their original form and romanized identifier.
 
-== Projects
+== Bifröst
 
-[cols="1,2"]
+The rainbow bridge between worlds.
+C#/Rust interop layer.
+
+[cols="1,1,3"]
 |===
-|Name |Description
+|Original |Romanized |Description
 
-|Bifröst |The rainbow bridge between worlds. C#/Rust interop layer.
-|Bragi |Bragi Boddason, the first skald — the one who tells the story. Rendering layer and third-party adapters (Godot).
-|Brunnr |Urtharbrunnr, the spring beneath the roots of Yggdrasil. Simulation framework — topology, scheduling, validation. A nod to Spring Framework.
-|Kvasir |The being of wisdom whose blood becomes the mead of poetry. Science simulations — stateless pure functions.
-|Mimameithr |Another name for Yggdrasil, the cosmic tree connecting the nine worlds. The root project.
-|Nornir |The three Norns who weave fate. Domain models — tectonics, climate, civilization.
-|Rustr |Old Norse _rustr_ — rust. Rust workspace — native performance crates.
-|Völundr |The elven smith, craftsman of the gods. Developer toolbox (Gler, …).
+|Kort |Kart |C#/Rust bridge to `Rustr.Kart`. Exposes geodesic grid operations to the rest of the C# project.
 |===
 
-=== Rustr
+== Kjarni
 
-[cols="1,2"]
+Old Norse for _kernel/core/seed_.
+The simulation core — framework, science, and domain models.
+
+[cols="1,1,3"]
 |===
-|Name |Description
+|Original |Romanized |Description
 
-|Kart |From Old Norse _kart_ (map). Geodesic grid — H3/h3o cell operations exposed via C FFI.
-|Seidr |Old Norse magic. Heavy math — numerical and scientific computation. After Arthur C. Clarke: _"Any sufficiently advanced technology is indistinguishable from magic."_
-|===
-
-=== Bifröst
-
-[cols="1,2"]
-|===
-|Name |Description
-
-|Kart |C#/Rust bridge to `Rustr.Kart`. Exposes geodesic grid operations to the rest of the C# project.
+|Brunnr |Brunnr |Urðarbrunnr, the spring beneath the roots of Yggdrasil. Simulation framework — topology, scheduling, validation. A nod to Spring Framework.
+|Kvasir |Kvasir |The being of wisdom whose blood becomes the mead of poetry. Science simulations — stateless pure functions.
+|Nornir |Nornir |The three Norns who weave fate. Domain models — tectonics, climate, civilization.
 |===
 
-=== Völundr
+=== Engines and phases
 
-[cols="1,2"]
+[cols="1,1,1,3"]
 |===
-|Name |Description
+|Original |Romanized |Filename |Description
 
-|Gler |Old Norse for _mirror_ — a surface that reflects what stands before it. Build-time documentation generator; a play on .NET Reflection.
-|===
-
-== Engines and phases
-
-[cols="1,1,2"]
-|===
-|Old Norse |Filename |Description
-
-|Urðr |Urth.cs |The Norn of the past. Name of the generation phase — the world before sentient civilization begins.
-|Verðandi |Verthandi.cs |The Norn of the present. Name of the active phase engine — the world as it unfolds.
-|Skuld |Skuld.cs |The Norn of the future. Concept for a narrative engine that generates story arcs toward an inevitable end — the world's Ragnarök.
+|Urðr |Urth |Urth.cs |The Norn of the past. Name of the generation phase — the world before sentient civilization begins.
+|Verðandi |Verthandi |Verthandi.cs |The Norn of the present. Name of the active phase engine — the world as it unfolds.
+|Skuld |Skuld |Skuld.cs |The Norn of the future. Concept for a narrative engine that generates story arcs toward an inevitable end — the world's Ragnarök.
 |===
 
-== Elements
+=== Elements
 
-[cols="1,1,2"]
+[cols="1,1,1,3"]
 |===
-|Old Norse |Filesystem |Description
+|Original |Romanized |Filesystem |Description
 
-|Eldr |Eldr/ |Fire. Surface energy — irradiance and albedo at cell scale.
-|Geimr |Geimr/ |The vast cosmic space, the ether. Celestial mechanics at body scale — geometry, orbit, rotation.
-|Hlóðyn |Hlothyn/ |Goddess of solid earth, mother of Thor. Solid earth — tectonics, elevation, geology, at Myr timescale.
-|Hrim |Hrim/ |The primordial frost. Cryosphere — ice sheets, glaciers, sea ice, permafrost.
-|Iðunn |Ithunn/ |Guardian of the apples of youth, vital force. Living systems — biomes, flora, fauna, soil, disease.
-|Lopt |Lopt/ |Air as an atmospheric mass. Atmospheric dynamics — circulation, precipitation, composition.
-|Løgr |Logr/ |Water in motion, a poetic and cosmic term. Hydrology — oceans, rivers, basins, groundwater.
-|Mann |Mann/ |The thinking being (Proto-Germanic root of _man_). Sentient civilization — settlement, resources, infrastructure, culture.
+|Eldur |Eldr |Eldr/ |Fire. Surface energy — irradiance and albedo at cell scale.
+|Geirr |Geimr |Geimr/ |The vast cosmic space, the ether. Celestial mechanics at body scale — geometry, orbit, rotation.
+|Hlóðyn |Hlothyn |Hlothyn/ |Goddess of solid earth, mother of Thor. Solid earth — tectonics, elevation, geology, at Myr timescale.
+|Hrím |Hrim |Hrim/ |The primordial frost. Cryosphere — ice sheets, glaciers, sea ice, permafrost.
+|Iðunn |Ithunn |Ithunn/ |Guardian of the apples of youth, vital force. Living systems — biomes, flora, fauna, soil, disease.
+|Lopt |Lopt |Lopt/ |Air as an atmospheric mass. Atmospheric dynamics — circulation, precipitation, composition.
+|Lögur |Logr |Logr/ |Water in motion, a poetic and cosmic term. Hydrology — oceans, rivers, basins, groundwater.
+|Maðr |Mann |Mann/ |The thinking being (Proto-Germanic root of _man_). Sentient civilization — settlement, resources, infrastructure, culture.
+|===
+
+== Rústr
+
+Old Norse _rústr_ — rust.
+Rust workspace — native performance crates.
+
+[cols="1,1,3"]
+|===
+|Original |Romanized |Description
+
+|Kort |Kart |From Old Norse _kort_ (map). Geodesic grid — H3/h3o cell operations exposed via C FFI.
+|Seiðr |Seidr |Old Norse magic. Heavy math — numerical and scientific computation. After Arthur C. Clarke: _"Any sufficiently advanced technology is indistinguishable from magic."_
+|===
+
+== Skáld
+
+Poet/storyteller.
+Parent directory for rendering layers (Bithot, Einir, …).
+
+[cols="1,1,3"]
+|===
+|Original |Romanized |Description
+
+|Biðot |Bithot |Godot 4 rendering layer. From Old Norse _bið_ (to wait).
+|===
+
+== Völundr
+
+The elven smith, craftsman of the gods.
+Developer toolbox (Gler, …).
+
+[cols="1,1,3"]
+|===
+|Original |Romanized |Description
+
+|Glerr |Gler |Old Norse for _mirror_ — a surface that reflects what stands before it. Build-time documentation generator; a play on .NET Reflection.
 |===
 
 == Naming convention
@@ -79,20 +98,25 @@ Old Norse terms used in the project, with their original form and C# identifier.
 C# identifiers use the original Old Norse form with Unicode characters.
 Filenames and directories use an ASCII romanization to avoid filesystem issues.
 
-Romanization rules for filenames:
+Romanization rules:
 
 * `ð` (eth) → `th`
 * `þ` (thorn) → `th`
-* Accented vowels (`ö`, `í`, `á`, `ø`) are dropped or replaced by their unaccented equivalent.
+* `ö`, `ø` → `o`
+* `á`, `à` → `a`
+* `í`, `ì` → `i`
+* `ú`, `ù` → `u`
+* Trailing accents dropped where the character is already romanized.
 
 Examples:
 
 [cols="1,1"]
 |===
-|C# identifier |Filename
+|C# identifier |Romanized
 
-|Hlóðyn |Hlothyn/
-|Iðunn |Ithunn/
-|Urðr |Urth.cs
-|Verðandi |Verthandi.cs
+|Biðot |Bith
+|Hlóðyn |Hlothyn
+|Iðunn |Ithunn
+|Urðr |Urth
+|Verðandi |Verthandi
 |===

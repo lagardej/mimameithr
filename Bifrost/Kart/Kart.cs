@@ -1,9 +1,9 @@
-using Kvasir.Formal.Maths.Geometry.Partitioning;
-using Kvasir.Natural.Physical.Geodesy;
+using Kjarni.Kvasir.Formal.Maths.Geometry.Partitioning;
+using Kjarni.Kvasir.Natural.Physical.Geodesy;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace Kart;
+namespace Bifrost.Kart;
 
 /// <summary>
 ///     <see cref="IGeodesicGrid" /> implementation backed by the h3o Rust library via P/Invoke.

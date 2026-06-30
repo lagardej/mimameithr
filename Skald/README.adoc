@@ -1,0 +1,14 @@
+= Skald
+
+Old Norse _skáld_ — poet, storyteller.
+Skald is the parent directory for rendering layers in Mimameithr.
+Each layer consumes simulation state produced by the core engines and presents it to the player in a specific platform or game engine.
+
+== Layers
+
+[cols="1,3"]
+|===
+|Directory |Purpose
+
+|link:Bithot/README.adoc[`Bithot`] |Godot 4 rendering layer
+|===
