@@ -6,6 +6,15 @@ Models physical and civilizational processes over a 10 000-year horizon — tect
 Godot 4 is the rendering layer.
 The simulation runs headless.
 
+== Bifrost — Interop
+
+[cols="1,3"]
+|===
+|Directory |Purpose
+
+|link:Bifrost/Kart/README.adoc[`Kart`] |C#/Rust bridge to `Rustr.Kart` — geodesic grid operations
+|===
+
 == Kjarni — Simulation core
 
 [cols="1,3"]
@@ -15,15 +24,6 @@ The simulation runs headless.
 |link:Kjarni/Brunnr/README.adoc[`Brunnr`] |Simulation framework — topology, scheduling, validation
 |link:Kjarni/Kvasir/README.adoc[`Kvasir`] |Science simulations — stateless pure functions
 |link:Kjarni/Nornir/README.adoc[`Nornir`] |Domain models — tectonics, climate, civilization
-|===
-
-== Bifrost — Interop
-
-[cols="1,3"]
-|===
-|Directory |Purpose
-
-|link:Bifrost/Kart/README.adoc[`Kart`] |C#/Rust bridge to `Rustr.Kart` — geodesic grid operations
 |===
 
 == Rustr — Native performance

@@ -1,16 +1,17 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <RootNamespace>Kjarni.Nornir.Tests</RootNamespace>
-    <TargetFramework>net10.0</TargetFramework>
+    <ActualSolutionDir Condition="'$(SolutionDir)' != ''">$(SolutionDir)</ActualSolutionDir>
+    <ActualSolutionDir Condition="'$(SolutionDir)' == ''">$(MSBuildThisFileDirectory)..\..\</ActualSolutionDir>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Kjarni.Brunnr.Tests</RootNamespace>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Brunnr\Brunnr.csproj"/>
-    <ProjectReference Include="..\Nornir\Nornir.csproj"/>
+    <ProjectReference Include="..\Brunnr\Kjarni.Brunnr.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -8,7 +8,7 @@ namespace Bifrost.Kart;
 /// <summary>
 ///     <see cref="IGeodesicGrid" /> implementation backed by the h3o Rust library via P/Invoke.
 /// </summary>
-public sealed partial class Kart : IGeodesicGrid
+public sealed partial class BifrostKart : IGeodesicGrid
 {
     #region Helpers
 
@@ -153,7 +153,7 @@ public sealed partial class Kart : IGeodesicGrid
 
     #region P/Invoke
 
-    private const string KartLib = "kart";
+    private const string KartLib = "rustr_kart";
 
     [LibraryImport(KartLib)]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]

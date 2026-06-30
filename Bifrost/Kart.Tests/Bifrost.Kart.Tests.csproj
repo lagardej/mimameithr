@@ -1,15 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <RootNamespace>GeogridH3o.Tests</RootNamespace>
-    <TargetFramework>net10.0</TargetFramework>
+    <ActualSolutionDir Condition="'$(SolutionDir)' != ''">$(SolutionDir)</ActualSolutionDir>
+    <ActualSolutionDir Condition="'$(SolutionDir)' == ''">$(MSBuildThisFileDirectory)..\..\</ActualSolutionDir>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Bifrost.Kart.Tests</RootNamespace>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Kart\Kart.csproj"/>
+    <ProjectReference Include="..\Kart\Bifrost.Kart.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,19 +24,19 @@
   </ItemGroup>
 
   <Target Name="BuildRustLib" BeforeTargets="Build">
-    <Exec Command="cargo build --release" WorkingDirectory="..\..\Rustr\Kart"/>
+    <Exec Command="cargo build --release" WorkingDirectory="$(SolutionDir)Rustr\Kart"/>
   </Target>
 
   <Target Name="CopyRustLibWindows" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('Windows'))">
-    <Copy SourceFiles="..\..\Rustr\Kart\target\release\kart.dll" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
+    <Copy SourceFiles="$(SolutionDir)Rustr\Kart\target\release\rustr_kart.dll" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
   </Target>
 
   <Target Name="CopyRustLibLinux" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('Linux'))">
-    <Copy SourceFiles="..\..\Rustr\Kart\target\release\libkart.so" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
+    <Copy SourceFiles="$(SolutionDir)Rustr\Kart\target\release\librustr_kart.so" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
   </Target>
 
   <Target Name="CopyRustLibMac" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('OSX'))">
-    <Copy SourceFiles="..\..\Rustr\Kart\target\release\libkart.dylib" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
+    <Copy SourceFiles="$(SolutionDir)Rustr\Kart\target\release\librustr_kart.dylib" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
   </Target>
 
 </Project>

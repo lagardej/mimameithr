@@ -10,7 +10,7 @@ using Kjarni.Nornir.Verthandi.Hlothyn.Tectonics;
 namespace Kjarni.Nornir.Verthandi;
 
 /// <summary>
-///     Builds the <see cref="SystemRoot" /> for the Nornir simulation.
+///     Builds the <see cref="SystemRoot" /> for the Kjarni.Nornir simulation.
 ///     Systems are registered in execution order — dependencies must run before dependents.
 /// </summary>
 public static class VerðandiSystems

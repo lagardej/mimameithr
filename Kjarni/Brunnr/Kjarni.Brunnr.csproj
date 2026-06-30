@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <ActualSolutionDir Condition="'$(SolutionDir)' != ''">$(SolutionDir)</ActualSolutionDir>
+    <ActualSolutionDir Condition="'$(SolutionDir)' == ''">$(MSBuildThisFileDirectory)..\..\</ActualSolutionDir>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Kjarni.Brunnr</RootNamespace>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="$(SolutionDir)Kjarni\Kvasir\Kjarni.Kvasir.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Friflo.Engine.ECS" Version="3.6.0"/>
+    <PackageReference Include="UnitsNet" Version="5.75.0"/>
+  </ItemGroup>
+
+</Project>

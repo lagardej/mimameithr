@@ -1,0 +1,18 @@
+<Project Sdk="Godot.NET.Sdk/4.6.3">
+
+    <PropertyGroup>
+        <ActualSolutionDir Condition="'$(SolutionDir)' != ''">$(SolutionDir)</ActualSolutionDir>
+        <ActualSolutionDir Condition="'$(SolutionDir)' == ''">$(MSBuildThisFileDirectory)..\..\</ActualSolutionDir>
+        <EnableDynamicLoading>true</EnableDynamicLoading>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>Skald.Bithot</RootNamespace>
+        <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Kjarni\Nornir\Kjarni.Nornir.csproj" />
+    </ItemGroup>
+
+</Project>
