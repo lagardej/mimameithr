@@ -30,15 +30,11 @@ namespace Kjarni.Kvasir.Natural.Physical.Geology.Lithosphere.Tectonics;
 ///         </item>
 ///     </list>
 /// </remarks>
-[Module("Natural/Physical/Geology/Lithosphere/Tectonics",
-    "Two-pass plate seeding and boundary classification for world-generation tectonic simulation.")]
 public static class TectonicsSimulation
 {
     private static readonly Resolution s_boundaryResolution = new(2);
 
-    /// <summary>
-    ///     Runs the tectonic simulation and returns the per-cell tectonic state.
-    /// </summary>
+    /// <summary>Runs the tectonic simulation and returns the per-cell tectonic state.</summary>
     /// <param name="parameter">Designer parameters and physical body properties.</param>
     /// <returns>Tectonic state for every R2 cell in the grid.</returns>
     public static TectonicsResult Run(TectonicsParameters parameter)

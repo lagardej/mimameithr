@@ -10,9 +10,7 @@ public sealed class StableRandom(uint seed)
 {
     private uint _state = seed == 0 ? 0x9E3779B9u : seed;
 
-    /// <summary>
-    ///     Advances the internal state and returns the next value in [0, 1].
-    /// </summary>
+    /// <summary>Advances the internal state and returns the next value in [0, 1].</summary>
     public double NextDouble()
     {
         _state ^= _state << 13;

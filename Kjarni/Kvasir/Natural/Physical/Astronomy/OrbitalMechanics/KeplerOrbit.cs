@@ -3,13 +3,9 @@ using UnitsNet;
 namespace Kjarni.Kvasir.Natural.Physical.Astronomy.OrbitalMechanics;
 
 /// <summary>Kepler orbit equations for elliptical orbits.</summary>
-[Module("Natural/Physical/Astronomy/OrbitalMechanics",
-    "Kepler orbit equations: mean/true anomaly conversion and orbital radius.")]
 public static class KeplerOrbit
 {
-    /// <summary>
-    ///     Converts true anomaly to mean anomaly via eccentric anomaly.
-    /// </summary>
+    /// <summary>Converts true anomaly to mean anomaly via eccentric anomaly.</summary>
     /// <param name="trueAnomaly">True anomaly.</param>
     /// <param name="eccentricity">Orbital eccentricity (0 = circular, &lt;1 = elliptical).</param>
     /// <returns>Mean anomaly.</returns>
@@ -41,9 +37,7 @@ public static class KeplerOrbit
             Math.Sqrt(1.0 - eccentricity) * Math.Cos(e / 2.0)));
     }
 
-    /// <summary>
-    ///     Computes the current mean anomaly from an initial mean anomaly and elapsed time.
-    /// </summary>
+    /// <summary>Computes the current mean anomaly from an initial mean anomaly and elapsed time.</summary>
     /// <param name="initialMeanAnomaly">Mean anomaly at epoch (t = 0).</param>
     /// <param name="orbitalPeriod">Sidereal orbital period.</param>
     /// <param name="elapsedTime">Total elapsed time since epoch.</param>

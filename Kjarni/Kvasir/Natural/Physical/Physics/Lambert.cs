@@ -3,7 +3,6 @@ using Kjarni.Kvasir.Formal.Maths.Geometry;
 namespace Kjarni.Kvasir.Natural.Physical.Physics;
 
 /// <summary>Lambert's cosine law: irradiance on a surface scales with the cosine of the angle of incidence.</summary>
-[Module("Natural/Physical/Physics", "Lambert cosine factor for surface irradiance.")]
 public static class Lambert
 {
     /// <summary>

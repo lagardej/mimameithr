@@ -1,0 +1,56 @@
+= Radius Scale Reference
+
+The `Radius` parameter uses a 1–100 scale that maps exponentially from 1 km to 10⁹ km.
+`1 + 11 * log10(radius in km)` is the formula used to convert from km to the scale.
+The following table provides a reference for common celestial bodies and their corresponding radius scale values.
+
+[cols=">,>,<"]
+|===
+|Score |Radius (km) |Body
+
+|*1* |*1* |*1 km*
+|11 |8.4 |https://en.wikipedia.org/wiki/433_Eros[433 Eros]
+|12 |6.2 |https://en.wikipedia.org/wiki/Deimos_(moon)[Deimos]
+|*12* |*10* |*10 km*
+|13 |11.3 |https://en.wikipedia.org/wiki/Phobos_(moon)[Phobos]
+|14 |15.7 |https://en.wikipedia.org/wiki/243_Ida[243 Ida]
+|*23* |*100* |*100 km*
+|26 |198.2 |https://en.wikipedia.org/wiki/Mimas[Mimas]
+|27 |217 |https://en.wikipedia.org/wiki/10_Hygiea[10 Hygiea]
+|27 |256 |https://en.wikipedia.org/wiki/2_Pallas[2 Pallas]
+|28 |263 |https://en.wikipedia.org/wiki/4_Vesta[4 Vesta]
+|30 |469.7 |https://en.wikipedia.org/wiki/Ceres_(dwarf_planet)[Ceres]
+|*34* |*1,000* |*1,000 km*
+|34 |606 |https://en.wikipedia.org/wiki/Charon_(moon)[Charon]
+|35 |1,163 |https://en.wikipedia.org/wiki/Eris_(dwarf_planet)[Eris]
+|35 |1,188 |https://en.wikipedia.org/wiki/Pluto[Pluto]
+|37 |1,737 |https://en.wikipedia.org/wiki/Moon[Moon]
+|38 |2,440 |https://en.wikipedia.org/wiki/Mercury_(planet)[Mercury]
+|40 |3,390 |https://en.wikipedia.org/wiki/Mars[Mars]
+|43 |6,052 |https://en.wikipedia.org/wiki/Venus[Venus]
+|43 |6,371 |https://en.wikipedia.org/wiki/Earth[Earth]
+|*45* |*10,000* |*10,000 km*
+|50 |24,622 |https://en.wikipedia.org/wiki/Neptune[Neptune]
+|50 |25,362 |https://en.wikipedia.org/wiki/Uranus[Uranus]
+|53 |58,232 |https://en.wikipedia.org/wiki/Saturn[Saturn]
+|54 |69,911 |https://en.wikipedia.org/wiki/Jupiter[Jupiter]
+|55 |84,200 |https://en.wikipedia.org/wiki/TRAPPIST-1[TRAPPIST-1]
+|*56* |*100,000* |*100,000 km*
+|56 |107,000 |https://en.wikipedia.org/wiki/Proxima_Centauri[Proxima Centauri]
+|57 |137,000 |https://en.wikipedia.org/wiki/Barnard%27s_Star[Barnard's Star]
+|65 |696,340 |https://en.wikipedia.org/wiki/Sun[Sun]
+|*67* |*1,000,000* |*1 million km*
+|76 |6,300,000 |https://en.wikipedia.org/wiki/Pollux_(star)[Pollux]
+|77 |8,490,000 |https://en.wikipedia.org/wiki/Capella[Capella]
+|*78* |*10,000,000* |*10 million km*
+|80 |17,671,000 |https://en.wikipedia.org/wiki/Arcturus[Arcturus]
+|82 |31,400,000 |https://en.wikipedia.org/wiki/Aldebaran[Aldebaran]
+|*89* |*100,000,000* |*100 million km*
+|96 |473,500,000 |https://en.wikipedia.org/wiki/Antares[Antares]
+|97 |532,000,000 |https://en.wikipedia.org/wiki/Betelgeuse[Betelgeuse]
+|99 |836,000,000 |https://en.wikipedia.org/wiki/Westerlund_1-26[Westerlund 1-26]
+|100 |988,800,000 |https://en.wikipedia.org/wiki/VY_Canis_Majoris[VY Canis Majoris]
+|*100* |*1,000,000,000* |*1 billion km*
+|101 |1,189,300,000 |https://en.wikipedia.org/wiki/UY_Scuti[UY Scuti]
+|102 |1,497,000,000 |https://en.wikipedia.org/wiki/Stephenson_2_DFK_1[Stephenson 2-18]
+|===

@@ -1,7 +1,6 @@
 namespace Kjarni.Kvasir.Formal.Maths;
 
 /// <summary>Deterministic hashing utilities for stable, seed-driven value generation.</summary>
-[Module("Formal/Maths", "Deterministic FNV-1a hashing for stable, seed-driven procedural generation.")]
 public static class Hashing
 {
     /// <summary>

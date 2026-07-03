@@ -3,7 +3,6 @@ using UnitsNet;
 namespace Kjarni.Kvasir.Natural.Physical.Geology.Mantle;
 
 /// <summary>Provides physics calculations for planetary mantle properties.</summary>
-[Module("Natural/Physical/Geology/Mantle", "Asthenospheric heat flux from body mass, radius, and age.")]
 public static class MantlePhysics
 {
     /// <summary>

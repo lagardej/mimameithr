@@ -5,7 +5,6 @@ using UnitsNet;
 namespace Kjarni.Kvasir.Natural.Physical.Physics;
 
 /// <summary>Solar geometry functions for computing sun position and flux at a surface cell.</summary>
-[Module("Natural/Physical/Physics", "Sun direction, zenith angle, and insolation at a surface cell.")]
 public static class SolarGeometry
 {
     /// <summary>
@@ -45,10 +44,7 @@ public static class SolarGeometry
         return Angle.FromRadians(Math.Acos(Math.Clamp(cosTheta, -1.0, 1.0)));
     }
 
-    /// <summary>
-    ///     Computes the solar flux at a surface cell.
-    ///     Returns zero on the night side.
-    /// </summary>
+    /// <summary>Computes the solar flux at a surface cell. Returns zero on the night side.</summary>
     /// <param name="luminosity">Total power radiated by the star across all wavelengths.</param>
     /// <param name="distanceFromStar">Distance between the body and its parent star.</param>
     /// <param name="zenithAngle">Solar zenith angle at the cell.</param>

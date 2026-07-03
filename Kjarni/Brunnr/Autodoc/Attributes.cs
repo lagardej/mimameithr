@@ -25,23 +25,23 @@ public sealed class ComponentAttribute(string group = "", string title = "") : A
 }
 
 /// <summary>Documents a single simulation input field on a component struct.</summary>
-/// <param name="unit">Physical unit (e.g. "K", "m/s", "Pa"). Use "-" for dimensionless.</param>
+/// <param name="unit">Optional physical unit (e.g. "K", "m/s", "Pa").</param>
 /// <param name="purpose">Short description of what this parameter controls.</param>
-[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-public sealed class SettingAttribute(string unit, string purpose) : Attribute
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
+public sealed class SettingAttribute(string purpose, string unit = "") : Attribute
 {
-    public string Unit { get; } = unit;
     public string Purpose { get; } = purpose;
+    public string Unit { get; } = unit;
 }
 
 /// <summary>Documents a single exposed state field on a component struct.</summary>
-/// <param name="unit">Physical unit (e.g. "K", "m/s", "Pa"). Use "-" for dimensionless.</param>
+/// <param name="unit">Optional physical unit (e.g. "K", "m/s", "Pa").</param>
 /// <param name="purpose">Short description of what this value represents.</param>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-public sealed class StateAttribute(string unit, string purpose) : Attribute
+public sealed class StateAttribute(string purpose, string unit = "") : Attribute
 {
-    public string Unit { get; } = unit;
     public string Purpose { get; } = purpose;
+    public string Unit { get; } = unit;
 }
 
 /// <summary>

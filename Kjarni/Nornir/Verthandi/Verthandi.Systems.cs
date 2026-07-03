@@ -1,11 +1,9 @@
 using Friflo.Engine.ECS;
 using Friflo.Engine.ECS.Systems;
 using Kjarni.Brunnr.System;
-using Kjarni.Kvasir.Natural.Physical.Geodesy;
-using Kjarni.Nornir.Verthandi.Eldr.Irradiance;
-using Kjarni.Nornir.Verthandi.Geimr.BodyRotation;
-using Kjarni.Nornir.Verthandi.Geimr.Orbit;
-using Kjarni.Nornir.Verthandi.Hlothyn.Tectonics;
+using Kjarni.Nornir.Verthandi.Eldr;
+using Kjarni.Nornir.Verthandi.Geimr;
+using Kjarni.Nornir.Verthandi.Hlothyn;
 
 namespace Kjarni.Nornir.Verthandi;
 
@@ -22,14 +20,11 @@ public static class VerðandiSystems
     ///     Creates and returns a configured <see cref="SystemRoot" /> bound to the given <paramref name="store" />.
     /// </summary>
     /// <param name="store">Entity store to bind the system root to.</param>
-    /// <param name="grid">Geodesic grid. Injected until a singleton story is settled.</param>
-    /// <param name="seed">World generation seed. Injected until a universe-entity or global seed store exists.</param>
-    public static SystemRoot Build(EntityStore store, IGeodesicGrid grid, int seed) =>
-        new(store) { StaggeredAt10S(grid, seed) };
+    public static SystemRoot Build(EntityStore store) => new(store) { StaggeredAt10S() };
 
-    private static StaggeredSystemGroup StaggeredAt10S(IGeodesicGrid grid, int seed) =>
+    private static StaggeredSystemGroup StaggeredAt10S() =>
         new("10s staggered systems", SimSecond * 10, StaggerOffset)
         {
-            new BodyRotationSystem(), new OrbitSystem(), new IrradianceSystem(), new TectonicsSystem(grid, seed)
+            new RotationSystem(), new OrbitSystem(), new IrradianceSystem(), new TectonicsSystem()
         };
 }

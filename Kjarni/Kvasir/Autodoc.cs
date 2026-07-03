@@ -13,8 +13,8 @@ namespace Kjarni.Kvasir;
 public sealed class ModuleAttribute(string domain, string summary = "") : Attribute
 {
     /// <summary>
-    ///     Slash-delimited domain path (e.g. "Natural/Physical/Geology"). Each segment maps to a nested section in the
-    ///     Kvasir index.
+    ///     Slash-delimited domain path (e.g. "Natural/Physical/Geology").
+    ///     Each segment maps to a nested section in the Kvasir index.
     /// </summary>
     public string Domain { get; } = domain;
 

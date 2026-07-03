@@ -16,5 +16,5 @@ They have no dependency on ECS, time, or orchestration.
 
 |`Formal/` |Mathematical and geometric foundations
 |`Natural/` |Physical and natural science simulations
-|`Social/` |Social and civilisational models
+|`Social/` |Social and civilizational models
 |===

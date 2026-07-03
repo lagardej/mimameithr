@@ -1,42 +1,54 @@
 using Friflo.Engine.ECS;
+using Kjarni.Brunnr.Command;
 using Kjarni.Brunnr.Engine.Data.Validation;
-using Kjarni.Nornir.Urth.Geimr.BodyGeometry;
-using Kjarni.Nornir.Urth.Geimr.BodyOrbit;
-using Kjarni.Nornir.Urth.Geimr.BodyPhysics;
-using Kjarni.Nornir.Urth.Geimr.BodyRotation;
-using Kjarni.Nornir.Urth.Geimr.StellarLuminosity;
+using Kjarni.Nornir.Urth.Geimr;
+using Kjarni.Nornir.Urth.Ginnungagap;
+using Kjarni.Nornir.Urth.Hlothyn;
 
 namespace Kjarni.Nornir.Urth;
 
 /// <summary>Generation phase engine. Routes commands to registered endpoints.</summary>
-public class Urth(EntityStore store)
+public class Urðr(EntityStore store)
 {
     private readonly Dictionary<Type, ICommandHandler> _handlers = Register(store);
+
+    private static Dictionary<Type, ICommandHandler> Register(EntityStore store) => new()
+    {
+        { SetGeometryHandler.CommandType, new SetGeometryHandler(store) },
+        { SetLuminosityHandler.CommandType, new SetLuminosityHandler(store) },
+        { SetOrbitHandler.CommandType, new SetOrbitHandler(store) },
+        { SetPhysicsHandler.CommandType, new SetPhysicsHandler(store) },
+        { SetRotationHandler.CommandType, new SetRotationHandler(store) },
+        { SetSeedHandler.CommandType, new SetSeedHandler(store) },
+        { SetTectonicsHandler.CommandType, new SetTectonicsHandler(store) }
+    };
+
+    #region Commands
 
     /// <summary>Creates a new entity and returns its id.</summary>
     public int CreateEntity() => store.CreateEntity().Id;
 
-    /// <summary>
-    ///     Validates and routes a command to the endpoint registered for <typeparamref name="T" />.
-    /// </summary>
-    /// <exception cref="System.ComponentModel.DataAnnotations.ValidationException">
-    ///     Thrown when the command fails validation.
-    /// </exception>
-    /// <exception cref="InvalidOperationException">Thrown when no endpoint is registered for <typeparamref name="T" />.</exception>
-    public void Configure<T>(int id, T command) where T : notnull
+    /// <summary>Validates and routes a command to the endpoint registered for <typeparamref name="TCommand" />.</summary>
+    /// <exception cref="System.ComponentModel.DataAnnotations.ValidationException">Thrown when the command validation fails.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when no endpoint is registered for <typeparamref name="TCommand" />.</exception>
+    public void Handle<TCommand>(TCommand command) where TCommand : ICommand
     {
         Validator.Validate(command);
 
-        if (!_handlers.TryGetValue(typeof(T), out var handler))
+        if (!_handlers.TryGetValue(typeof(TCommand), out var handler))
         {
-            throw new InvalidOperationException($"No handler registered for command type {typeof(T).Name}.");
+            throw new InvalidOperationException($"No handler registered for command type {typeof(TCommand).Name}.");
         }
 
-        handler.Handle(id, command);
+        handler.Handle(command);
     }
 
+    #endregion
+
+    #region Queries
+
     /// <summary>Returns all components attached to the entity with the given <paramref name="id" />.</summary>
-    public EntityComponents GetAll(int id) => store.GetEntityById(id).Components;
+    public EntityComponents GetComponents(int id) => store.GetEntityById(id).Components;
 
     /// <summary>
     ///     Returns the component of type <typeparamref name="T" /> attached to the entity with the given
@@ -44,12 +56,5 @@ public class Urth(EntityStore store)
     /// </summary>
     public T GetComponent<T>(int id) where T : struct, IComponent => store.GetEntityById(id).GetComponent<T>();
 
-    private static Dictionary<Type, ICommandHandler> Register(EntityStore store) => new()
-    {
-        { BodyGeometryHandler.CommandType, new BodyGeometryHandler(store) },
-        { BodyPhysicsHandler.CommandType, new BodyPhysicsHandler(store) },
-        { BodyRotationHandler.CommandType, new BodyRotationHandler(store) },
-        { BodyOrbitHandler.CommandType, new BodyOrbitHandler(store) },
-        { StellarLuminosityHandler.CommandType, new StellarLuminosityHandler(store) }
-    };
+    #endregion
 }
