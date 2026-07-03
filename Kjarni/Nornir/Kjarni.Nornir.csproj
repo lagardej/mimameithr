@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Brunnr\Kjarni.Brunnr.csproj" />
-    <ProjectReference Include="..\Kvasir\Kjarni.Kvasir.csproj" />
+    <ProjectReference Include="$(SolutionDir)Kjarni\Brunnr\Kjarni.Brunnr.csproj"/>
+    <ProjectReference Include="$(SolutionDir)Kjarni\Kvasir\Kjarni.Kvasir.csproj"/>
   </ItemGroup>
 
   <ItemGroup>

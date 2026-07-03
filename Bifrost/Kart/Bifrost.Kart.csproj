@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Kjarni\Kvasir\Kjarni.Kvasir.csproj" />
+    <ProjectReference Include="$(SolutionDir)Kjarni\Kvasir\Kjarni.Kvasir.csproj"/>
   </ItemGroup>
 
   <Target Name="BuildRustLib" BeforeTargets="Build">

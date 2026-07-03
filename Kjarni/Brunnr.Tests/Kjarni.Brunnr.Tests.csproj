@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Brunnr\Kjarni.Brunnr.csproj" />
+    <ProjectReference Include="$(SolutionDir)Kjarni\Brunnr\Kjarni.Brunnr.csproj"/>
   </ItemGroup>
 
   <ItemGroup>

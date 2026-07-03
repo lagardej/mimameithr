@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Kjarni\Brunnr\Kjarni.Brunnr.csproj"/>
+    <ProjectReference Include="$(SolutionDir)Kjarni\Brunnr\Kjarni.Brunnr.csproj"/>
   </ItemGroup>
 
 </Project>
