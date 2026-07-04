@@ -3,6 +3,7 @@ using Kjarni.Brunnr.Command;
 using Kjarni.Nornir.Wyrd.Geimr;
 using System.ComponentModel.DataAnnotations;
 using UnitsNet;
+using static Kjarni.Kvasir.Formal.Maths.Scaling;
 
 namespace Kjarni.Nornir.Urth.Geimr;
 
@@ -10,20 +11,6 @@ namespace Kjarni.Nornir.Urth.Geimr;
 /// <param name="Id">The entity id.</param>
 /// <param name="Luminosity">Luminosity on a 1–100 scale mapping 10⁻³ L☉ to 10³ L☉ exponentially.</param>
 /// <remarks>
-///     <list type="table">
-///         <listheader>
-///             <term>Scale</term>
-///             <description>Luminosity (L☉)</description>
-///         </listheader>
-///         <item>
-///             <term>1</term>
-///             <description>0.001</description>
-///         </item>
-///         <item>
-///             <term>100</term>
-///             <description>1,000</description>
-///         </item>
-///     </list>
 ///     <see href="../../../../docs/Nornir/Geimr/Luminosity-scale.adoc">Full scale reference</see>
 /// </remarks>
 public record SetLuminosity(
@@ -43,15 +30,8 @@ public class SetLuminosityHandler(EntityStore store) : ICommandHandler<SetLumino
     public void Handle(SetLuminosity command)
     {
         var entity = store.GetEntityById(command.Id);
-        var luminositySolar = ScaleToSolar(command.Luminosity);
-        entity.AddComponent(new LuminosityC
-        {
-            Luminosity = Luminosity.FromWatts(luminositySolar * SolarLuminosityWatts)
-        });
-    }
+        var luminosity = Range100.ExponentialScale(command.Luminosity, 1e-3, 1e3) * SolarLuminosityWatts;
 
-    /// <summary>Converts a 1–100 scale value to L☉ using exponential mapping: 10⁻³ to 10³.</summary>
-    /// <param name="scale">Scale value in range [1, 100].</param>
-    /// <returns>Luminosity in L☉.</returns>
-    private static double ScaleToSolar(uint scale) => Math.Pow(10, -3 + 6.0 * (scale - 1) / 99.0);
+        entity.AddComponent(new LuminosityC { Luminosity = Luminosity.FromWatts(luminosity) });
+    }
 }

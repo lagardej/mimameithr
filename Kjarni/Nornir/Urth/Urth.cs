@@ -4,15 +4,16 @@ using Kjarni.Brunnr.Engine.Data.Validation;
 using Kjarni.Nornir.Urth.Geimr;
 using Kjarni.Nornir.Urth.Ginnungagap;
 using Kjarni.Nornir.Urth.Hlothyn;
+using Kjarni.Nornir.Wyrd.Ginnungagap;
 
 namespace Kjarni.Nornir.Urth;
 
 /// <summary>Generation phase engine. Routes commands to registered endpoints.</summary>
 public class Urðr(EntityStore store)
 {
-    private readonly Dictionary<Type, ICommandHandler> _handlers = Register(store);
+    private readonly Dictionary<Type, ICommandHandler> _handlers = RegisterHandlers(store);
 
-    private static Dictionary<Type, ICommandHandler> Register(EntityStore store) => new()
+    private static Dictionary<Type, ICommandHandler> RegisterHandlers(EntityStore store) => new()
     {
         { SetGeometryHandler.CommandType, new SetGeometryHandler(store) },
         { SetLuminosityHandler.CommandType, new SetLuminosityHandler(store) },
@@ -27,6 +28,15 @@ public class Urðr(EntityStore store)
 
     /// <summary>Creates a new entity and returns its id.</summary>
     public int CreateEntity() => store.CreateEntity().Id;
+
+    /// <summary>Creates the universe entity and sets its seed. Only one universe entity may exist per store.</summary>
+    public int CreateUniverse(uint seed)
+    {
+        var entity = store.CreateEntity();
+        entity.AddComponent(new UniqueEntity(SeedC.Uid));
+        Handle(new SetSeed(entity.Id, seed));
+        return entity.Id;
+    }
 
     /// <summary>Validates and routes a command to the endpoint registered for <typeparamref name="TCommand" />.</summary>
     /// <exception cref="System.ComponentModel.DataAnnotations.ValidationException">Thrown when the command validation fails.</exception>

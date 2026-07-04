@@ -1,4 +1,5 @@
 using Friflo.Engine.ECS;
+using Kjarni.Kvasir.Formal.Maths.Geometry.Partitioning;
 using Kjarni.Kvasir.Natural.Physical.Geology.Lithosphere;
 using Kjarni.Kvasir.Natural.Physical.Geology.Lithosphere.Tectonics;
 using UnitsNet;
@@ -9,33 +10,18 @@ namespace Kjarni.Nornir.Wyrd.Hlothyn;
 [ComponentKey("hlothyn-tectonics")]
 public struct TectonicsC : IComponent
 {
-    /// <summary> Number of tectonic plates seeded at world gen.</summary>
-    public uint PlateCount;
+    /// <summary>Tectonic boundary type at this cell. Determines seismic and volcanic activity regime.</summary>
+    public BoundaryType BoundaryType;
 
-    /// <summary> Plate size distribution.</summary>
-    public uint PlateFragmentation;
-
-    /// <summary> Rate at which plates reorganize over time. </summary>
-    public uint PlateStability;
-
-    /// <summary> Degree to which activity concentrates along plate boundaries.</summary>
-    public uint BoundaryFocus;
-
-    /// <summary> Bias toward convergent boundaries.</summary>
-    public uint CollisionDominance;
-
-    /// <summary> Number and intensity of intraplate volcanic plumes.</summary>
-    public uint HotSpotDensity;
-
-    /// <summary>Dominant crust composition at this cell.</summary>
+    /// <summary>Dominant crust composition at this cell. Determines isostatic base elevation and volcanic character.</summary>
     public CrustComposition CrustComposition;
 
-    /// <summary>Thickness of the crust at this cell.</summary>
+    /// <summary>Thickness of the crust at this cell. Drives isostatic elevation via buoyancy in the mantle.</summary>
     public Length CrustalThickness;
+
+    /// <summary>The R0 cell that seeded this plate. Stable identity across all cells belonging to the same plate.</summary>
+    public CellId SeedCellId;
 
     /// <summary>Rate of vertical crustal displacement at this cell. Positive = uplift, negative = subsidence.</summary>
     public Speed VerticalDisplacementRate;
-
-    /// <summary>Tectonic boundary type at this cell.</summary>
-    public BoundaryType BoundaryType;
 }

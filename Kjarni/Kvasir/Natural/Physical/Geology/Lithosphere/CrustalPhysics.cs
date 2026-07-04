@@ -10,7 +10,7 @@ public static class CrustalPhysics
     ///     Based on isostatic equilibrium: thickness = heatFlux / (density × gravity × coolingRate).
     ///     Composition determines density and radiogenic cooling rate.
     /// </summary>
-    public static Length CrustalThickness(CrustComposition composition, Acceleration gravity, HeatFlux heatFlux)
+    public static Length CrustThickness(CrustComposition composition, Acceleration gravity, HeatFlux heatFlux)
     {
         // Crustal density by composition (kg/m³).
         const double felsicDensity = 2700.0;
