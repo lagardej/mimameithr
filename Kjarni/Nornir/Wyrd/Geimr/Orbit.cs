@@ -27,3 +27,14 @@ public struct OrbitC : IComponent
     /// <summary>Semi-major axis of the orbit.</summary>
     public Length SemiMajorAxis;
 }
+
+/// <summary>Links an orbited entity to its parent entity.</summary>
+[ComponentKey("geimr-orbit-parent-ref")]
+public struct OrbitParentC : ILinkComponent
+{
+    /// <summary>The entity this body orbits around.</summary>
+    public Entity Parent;
+
+    /// <inheritdoc />
+    public Entity GetIndexedValue() => Parent;
+}
