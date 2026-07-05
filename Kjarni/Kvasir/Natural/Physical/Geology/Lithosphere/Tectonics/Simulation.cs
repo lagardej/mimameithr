@@ -1,13 +1,14 @@
 using Kjarni.Kvasir.Formal.Maths.Geometry.Partitioning;
 using UnitsNet;
 using static Kjarni.Kvasir.Natural.Physical.Geology.Lithosphere.CrustalPhysics;
+using static Kjarni.Kvasir.Natural.Physical.Geology.Lithosphere.Tectonics.BoundaryType;
 using static Kjarni.Kvasir.Natural.Physical.Geology.Mantle.MantlePhysics;
 
 namespace Kjarni.Kvasir.Natural.Physical.Geology.Lithosphere.Tectonics;
 
 /// <summary>
 ///     One-shot tectonic world-generation simulation.
-///     Produces a <see cref="TectonicsCell" /> per grid cell from <see cref="TectonicsParameters" />.
+///     Produces a <see cref="Tectonics.TectonicsCell" /> per grid cell from <see cref="TectonicsParameters" />.
 /// </summary>
 /// <remarks>
 ///     <para>Two-pass algorithm:</para>
@@ -41,16 +42,16 @@ public static class TectonicsSimulation
         var grid = parameters.Grid;
         var rng = new Random((int) parameters.Seed);
 
-        #region Pass 1: plate seeding at R0
-
+        //
+        // Pass 1: plate seeding at R0
+        //
         var r0Cells = grid.RootCells();
         var plateMap = SeedPlates(r0Cells, parameters, rng);
         var plateComps = AssignCompositions(plateMap, parameters, rng);
 
-        #endregion
-
-        #region Pass 2: boundary classification at R2
-
+        //
+        // Pass 2: boundary classification at R2
+        //
         var heatFlux = AsthenosphericHeatFlux(parameters.BodyAge, parameters.BodyMass, parameters.BodyRadius);
         var result = new Dictionary<CellId, TectonicsCell>();
 
@@ -60,11 +61,9 @@ public static class TectonicsSimulation
             var seedCellId = plateMap[plate];
             var crustComposition = plateComps[seedCellId];
             var crustThickness = CrustThickness(crustComposition, parameters.BodySurfaceGravity, heatFlux);
-
             var boundaryType = ClassifyBoundary(r2Cell, plate, grid, plateMap, parameters, rng);
-            var verticalDisplacement = VerticalDisplacementRate(boundaryType, crustComposition, crustThickness,
-                parameters,
-                parameters.BodySurfaceGravity, heatFlux);
+            var verticalDisplacement =
+                VerticalDisplacementRate(boundaryType, crustComposition, crustThickness, parameters, heatFlux);
 
             result[r2Cell] = new TectonicsCell
             {
@@ -77,11 +76,7 @@ public static class TectonicsSimulation
         }
 
         return new TectonicsResult(result);
-
-        #endregion
     }
-
-    #region Plate seeding
 
     /// <summary>
     ///     Maps each R0 cell to a plate seed (another R0 CellId) via weighted flood fill.
@@ -106,7 +101,7 @@ public static class TectonicsSimulation
 
         // Flood fill: each seed expands into unclaimed neighbours.
         // Expansion order is weighted — high-weight seeds grab more cells.
-        var map = seeds.ToDictionary(seed => seed, seed => seed);
+        var plateMap = seeds.ToDictionary(seed => seed, seed => seed);
         var frontier = new PriorityQueue<(CellId cell, CellId plate), double>();
 
         foreach (var seed in seeds)
@@ -122,16 +117,16 @@ public static class TectonicsSimulation
         while (frontier.Count > 0)
         {
             var (candidate, plate) = frontier.Dequeue();
-            map.TryAdd(candidate, plate);
+            plateMap.TryAdd(candidate, plate);
         }
 
         // Any remaining unclaimed cells fall back to the closest seed by index.
         foreach (var cell in r0Cells)
         {
-            map.TryAdd(cell, seeds[0]);
+            plateMap.TryAdd(cell, seeds[0]);
         }
 
-        return map;
+        return plateMap;
     }
 
     /// <summary>
@@ -147,16 +142,10 @@ public static class TectonicsSimulation
         // CollisionDominance: min = mostly mafic (subducting), max = mostly felsic (colliding).
         var felsicProbability = parameters.CollisionDominance.DecimalFractions;
 
-        return plateMap.Values
-            .Distinct()
-            .ToDictionary(
-                seed => seed,
-                _ => rng.NextDouble() < felsicProbability ? CrustComposition.Felsic : CrustComposition.Mafic);
+        return plateMap.Values.Distinct().ToDictionary(
+            seed => seed,
+            _ => rng.NextDouble() < felsicProbability ? CrustComposition.Felsic : CrustComposition.Mafic);
     }
-
-    #endregion
-
-    #region Per-cell derivations
 
     /// <summary>
     ///     Classifies the boundary type of R2 cell.
@@ -181,8 +170,8 @@ public static class TectonicsSimulation
         {
             // Interior cell — check for hot spot.
             return rng.NextDouble() < parameters.HotSpotDensity.DecimalFractions
-                ? BoundaryType.HotSpot
-                : BoundaryType.None;
+                ? HotSpot
+                : None;
         }
 
         // Boundary cell: CollisionDominance drives convergent probability.
@@ -193,9 +182,9 @@ public static class TectonicsSimulation
 
         return roll switch
         {
-            _ when roll < convergentProbability => BoundaryType.Convergent,
-            _ when roll < convergentProbability + divergentProbability => BoundaryType.Divergent,
-            _ => BoundaryType.Transform
+            _ when roll < convergentProbability => Convergent,
+            _ when roll < convergentProbability + divergentProbability => Divergent,
+            _ => Transform
         };
     }
 
@@ -211,7 +200,6 @@ public static class TectonicsSimulation
         CrustComposition composition,
         Length crustalThickness,
         TectonicsParameters parameters,
-        Acceleration surfaceGravity,
         HeatFlux heatFlux)
     {
         // Crustal density by composition (kg/m³): felsic is buoyant, mafic is dense.
@@ -220,21 +208,19 @@ public static class TectonicsSimulation
         // Convective velocity proxy: heatFlux / (density × gravity × thickness) [m/s].
         // Represents the rate at which mantle convection can drive vertical crustal motion.
         var baseRate = heatFlux.WattsPerSquareMeter /
-                       (density * surfaceGravity.MetersPerSecondSquared * crustalThickness.Meters);
+                       (density * parameters.BodySurfaceGravity.MetersPerSecondSquared * crustalThickness.Meters);
 
         // Sign and designer-knob modulation by boundary type.
         var sign = boundaryType switch
         {
-            BoundaryType.Convergent => composition == CrustComposition.Felsic
+            Convergent => composition == CrustComposition.Felsic
                 ? +parameters.CollisionDominance.DecimalFractions // uplift: buoyant crust crumples
                 : -parameters.CollisionDominance.DecimalFractions, // subsidence: dense crust subducts
-            BoundaryType.Divergent => -parameters.PlateStability.DecimalFractions, // subsidence: crust thins
-            BoundaryType.Transform => 0.0,
+            Divergent => -parameters.PlateStability.DecimalFractions, // subsidence: crust thins
+            Transform => 0.0,
             _ => 0.0
         };
 
         return Speed.FromMetersPerSecond(baseRate * sign);
     }
-
-    #endregion
 }
