@@ -1,7 +1,7 @@
 using Friflo.Engine.ECS;
-using Kjarni.Kvasir.Formal.Maths.Geometry.Partitioning;
-using Kjarni.Kvasir.Natural.Physical.Geology.Lithosphere;
-using Kjarni.Kvasir.Natural.Physical.Geology.Lithosphere.Tectonics;
+using Kjarni.Kvasir.Foundation;
+using Kjarni.Kvasir.Hlothyn.Lithosphere;
+using Kjarni.Kvasir.Hlothyn.Tectonics;
 using UnitsNet;
 
 namespace Kjarni.Nornir.Wyrd.Hlothyn;

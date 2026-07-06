@@ -1,5 +1,5 @@
 using Friflo.Engine.ECS;
-using Kjarni.Kvasir.Formal.Maths.Geometry.Partitioning;
+using Kjarni.Kvasir.Foundation;
 
 namespace Kjarni.Brunnr.Engine.Cell;
 

@@ -4,7 +4,7 @@ using Kjarni.Brunnr.Grid;
 using Kjarni.Nornir.Wyrd.Geimr;
 using System.ComponentModel.DataAnnotations;
 using UnitsNet;
-using static Kjarni.Kvasir.Formal.Maths.Scaling;
+using static Kjarni.Kvasir.Foundation.Scaling;
 
 namespace Kjarni.Nornir.Urth.Geimr;
 

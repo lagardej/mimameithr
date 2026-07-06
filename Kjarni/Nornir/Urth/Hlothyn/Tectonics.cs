@@ -2,14 +2,14 @@ using Friflo.Engine.ECS;
 using Kjarni.Brunnr.Command;
 using Kjarni.Brunnr.Engine.Cell;
 using Kjarni.Brunnr.Grid;
-using Kjarni.Kvasir.Formal.Maths;
-using Kjarni.Kvasir.Natural.Physical.Geology.Lithosphere.Tectonics;
+using Kjarni.Kvasir.Foundation;
+using Kjarni.Kvasir.Hlothyn.Tectonics;
 using Kjarni.Nornir.Wyrd.Geimr;
 using Kjarni.Nornir.Wyrd.Ginnungagap;
 using Kjarni.Nornir.Wyrd.Hlothyn;
 using System.ComponentModel.DataAnnotations;
 using UnitsNet;
-using static Kjarni.Kvasir.Formal.Maths.Scaling;
+using static Kjarni.Kvasir.Foundation.Scaling;
 
 namespace Kjarni.Nornir.Urth.Hlothyn;
 

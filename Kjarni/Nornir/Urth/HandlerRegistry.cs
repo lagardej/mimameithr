@@ -1,5 +1,6 @@
 using Friflo.Engine.ECS;
 using Kjarni.Brunnr.Command;
+using Kjarni.Nornir.Urth.Eldr;
 using Kjarni.Nornir.Urth.Geimr;
 using Kjarni.Nornir.Urth.Ginnungagap;
 using Kjarni.Nornir.Urth.Hlothyn;

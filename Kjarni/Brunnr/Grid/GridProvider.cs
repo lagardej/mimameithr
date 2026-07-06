@@ -1,4 +1,4 @@
-using Kjarni.Kvasir.Formal.Maths.Geometry.Partitioning;
+using Kjarni.Kvasir.Foundation;
 
 namespace Kjarni.Brunnr.Grid;
 

@@ -1,5 +1,4 @@
-using Kjarni.Kvasir.Formal.Maths.Geometry.Partitioning;
-using Kjarni.Kvasir.Natural.Physical.Geodesy;
+using Kjarni.Kvasir.Foundation;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 

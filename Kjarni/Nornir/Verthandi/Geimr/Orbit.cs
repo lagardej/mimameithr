@@ -1,5 +1,5 @@
 using Friflo.Engine.ECS.Systems;
-using Kjarni.Kvasir.Natural.Physical.Astronomy.OrbitalMechanics;
+using Kjarni.Kvasir.Geimr;
 using Kjarni.Nornir.Wyrd.Geimr;
 using UnitsNet;
 
