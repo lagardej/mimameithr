@@ -11,22 +11,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(SolutionDir)Kjarni\Kvasir\Kjarni.Kvasir.csproj"/>
+    <ProjectReference Include="$(ActualSolutionDir)Kjarni\Kvasir\Kjarni.Kvasir.csproj"/>
   </ItemGroup>
 
   <Target Name="BuildRustLib" BeforeTargets="Build">
-    <Exec Command="cargo build --release" WorkingDirectory="$(SolutionDir)Rustr\Kart"/>
+    <Exec Command="cargo build --release" WorkingDirectory="$(ActualSolutionDir)Rustr\Kart"/>
   </Target>
 
   <Target Name="CopyRustLibWindows" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('Windows'))">
-    <Copy SourceFiles="$(SolutionDir)Rustr\Kart\target\release\rustr_kart.dll" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
+    <Copy SourceFiles="$(ActualSolutionDir)Rustr\Kart\target\release\rustr_kart.dll" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
   </Target>
 
   <Target Name="CopyRustLibLinux" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('Linux'))">
-    <Copy SourceFiles="$(SolutionDir)Rustr\Kart\target\release\librustr_kart.so" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
+    <Copy SourceFiles="$(ActualSolutionDir)Rustr\Kart\target\release\librustr_kart.so" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
   </Target>
   <Target Name="CopyRustLibMac" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('OSX'))">
-    <Copy SourceFiles="$(SolutionDir)Rustr\Kart\target\release\librustr_kart.dylib" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
+    <Copy SourceFiles="$(ActualSolutionDir)Rustr\Kart\target\release\librustr_kart.dylib" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
   </Target>
 
 </Project>

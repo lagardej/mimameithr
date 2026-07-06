@@ -1,6 +1,4 @@
 using Friflo.Engine.ECS;
-using Kjarni.Nornir.Urth;
-using Kjarni.Nornir.Verthandi;
 
 namespace Kjarni.Nornir;
 

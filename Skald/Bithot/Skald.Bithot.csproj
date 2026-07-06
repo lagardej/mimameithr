@@ -12,7 +12,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="$(SolutionDir)Kjarni\Nornir\Kjarni.Nornir.csproj"/>
+        <ProjectReference Include="$(ActualSolutionDir)Kjarni\Nornir\Kjarni.Nornir.csproj"/>
     </ItemGroup>
 
 </Project>

@@ -11,7 +11,7 @@ namespace Kjarni.Brunnr.Engine.Data.Validation;
 ///     <code>
 ///         [QuantityRange(0, 180, AngleUnit.Degree)]
 ///         public required Angle Obliquity { get; init; }
-///
+/// 
 ///         [QuantityRange(0, 1, RatioUnit.DecimalFraction, RangeBounds.ExclusiveMax)]
 ///         public required Ratio OrbitalEccentricity { get; init; }
 ///     </code>
