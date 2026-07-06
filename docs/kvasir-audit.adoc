@@ -1,0 +1,108 @@
+= Kvasir audit
+:toc: left
+
+Audit of `Kjarni/Kvasir` against two criteria:
+
+1. XML doc completeness — every public member must be usable as a black box; implementation must never need to be read.
+2. Directory nomenclature — should follow recognized branches of science (https://en.wikipedia.org/wiki/Branches_of_science).
+
+== Documentation gaps
+
+=== Formal/Maths
+
+[cols="2,3"]
+|===
+|Member |Gap
+
+|`Interpolation.Lerp` |Summary says "for t in [0, 1]" but implementation clamps `t` outside that range. Contract doesn't state clamping — reader must open the body to know behaviour at t < 0 or t > 1.
+|`Scaling.LinearScale` |No `<param>` docs. Doesn't state that `value` is clamped to the source range, or that `range` is the source domain and `min`/`max` the target domain (names collide conceptually: `range.Min`/`range.Max` vs. parameter `min`/`max`).
+|`Scaling.ExponentialScale` |Same gaps as `LinearScale`, plus an undocumented precondition: `min` must be > 0 (it's a ratio base — zero or negative breaks `Math.Pow`/produces nonsensical results).
+|`IGrid.InferResolution` |"first cell in the dictionary" — `Dictionary<TKey,TValue>` enumeration order isn't a documented .NET contract. Doc should either say "an arbitrary cell" or state the actual guarantee.
+|===
+
+=== Natural/Physical/Astronomy
+
+[cols="2,3"]
+|===
+|Member |Gap
+
+|`BodyRotation.CurrentAngle` |Claims result is "wrapped to [0°, 360°)". C#'s `%` on a negative dividend returns a negative result — if `epochAngle.Degrees + rate*time` is negative, the returned angle is negative, not in [0°, 360°). Contract doesn't match implementation.
+|`KeplerOrbit.CurrentMeanAnomaly` |Same negative-modulo gap as above.
+|`KeplerOrbit.MeanToTrueAnomaly` |Uses a fixed 10-iteration Newton-Raphson solve with no convergence check. Accuracy/behaviour at high eccentricity isn't documented — a black-box caller can't know the precision guarantee.
+|===
+
+=== Natural/Physical/Geodesy
+
+[cols="2,3"]
+|===
+|Member |Gap
+
+|`LatLng.ToUnitVector` |Doesn't document the axis convention (here: Z is the polar axis, X is the lat=0/lng=0 meridian). Other code (`StellarGeometry`) depends on this convention lining up with orbital-plane and axial-tilt axes — should be explicit since it's foundational.
+|===
+
+=== Natural/Physical/Geology
+
+[cols="2,3"]
+|===
+|Member |Gap
+
+|`CrustalPhysics.CrustThickness` |Duplicates density constants (2700/3000 kg/m³) that already exist in `CrustComposition.Density()`. Two sources of truth for the same physical constant — `TectonicsSimulation.VerticalDisplacementRate` uses `composition.Density()` while `CrustThickness` recomputes its own. Risk of divergence, not just a doc gap.
+|`CrustalPhysics.CrustThickness` |No `<param>` docs.
+|===
+
+=== Natural/Physical/Geology/Lithosphere/Tectonics — parameter/behaviour mismatches
+
+These are the most significant findings: the XML doc on `TectonicsParameters` states an intended effect that the implementation doesn't produce.
+
+[cols="2,3,3"]
+|===
+|Parameter |Documented effect |Actual effect
+
+|`BoundaryFocus` |"Degree to which activity concentrates along plate boundaries vs spreading diffusely across the interior." |Only used inside `ClassifyBoundary` to split *boundary* cells between Divergent and Transform (`divergentProbability = (1 - convergentProbability) * BoundaryFocus`). It has no effect on interior vs. boundary concentration at all.
+|`PlateStability` |"Rate at which plates reorganize: split, merge, or change direction over time." |Tectonics is a one-shot generation-phase simulation — there is no time evolution. The value is actually used as a static magnitude multiplier on divergent-boundary subsidence in `VerticalDisplacementRate`.
+|`HotSpotDensity` |"Number and intensity of intraplate volcanic plumes." |Only drives a boolean roll (`HotSpot` vs. `None`) per interior cell. No intensity value is produced anywhere.
+|===
+
+Also: `TectonicsSimulation`'s class-level remarks state the two-pass algorithm "guarantees contiguous plates," but `SeedPlates` has an inline code comment admitting the flood fill uses *all* R0 cells as candidate neighbours rather than true grid adjacency ("approximate here ... replaced when grid exposes R0 adjacency"). The documented guarantee doesn't hold against the current implementation, and this caveat is buried in a private method rather than surfaced on the public `Run` contract.
+
+=== Natural/Physical/Physics
+
+[cols="2,3"]
+|===
+|Member |Gap
+
+|`StellarGeometry.Insolation` |No documented behaviour for `distanceFromStar` = 0 (division by zero → `Infinity`, not an exception).
+|`StellarGeometry.EclipseFraction` |No documented precondition that both angular radii must be > 0 (zero radius causes division by zero inside the intersection-area branch).
+|===
+
+=== Clean (no gaps found)
+
+`Coords2D`, `Coords3D`, `CellId`, `Resolution`, `Vector2D`, `Vector3D`, `Hashing`, `Random` (`StableRandom`), `KeplerOrbit.TrueToMeanAnomaly`, `KeplerOrbit.RadiusAtTrueAnomaly`, `StellarPhotometry` (both members), `IGeodesicGrid`, `CrustComposition`, `BoundaryType`, `Simulation.Parameters` (aside from the three mismatches above), `Simulation.Result`, `MantlePhysics.AsthenosphericHeatFlux`, `Lambert.CosineFactor`, `IDiscGrid`, `Autodoc.ModuleAttribute`, `Setting`/`Setting10`/`Setting100`.
+
+== Directory nomenclature
+
+Current structure:
+
+....
+Formal/
+  Maths/
+    Geometry/ (+ Partitioning/)
+    Hashing.cs, Interpolation.cs, Random.cs, Scaling.cs
+Natural/
+  Physical/
+    Astronomy/ (+ OrbitalMechanics/)
+    Geodesy/
+    Geology/ (Lithosphere/ + Mantle/)
+    Physics/
+    Planimetry/
+....
+
+`Formal` and `Natural/Physical` correctly track the top-level branches (Formal sciences; Natural sciences → Physical science). Three points don't fit cleanly:
+
+1. **`Physics` is a catch-all, not a branch.** It currently holds `Lambert` (generic radiometric/optics law) and `StellarGeometry` (positional astronomy — orbital plane, axial tilt, zenith angle, eclipses). `StellarGeometry` belongs beside `BodyRotation`/`KeplerOrbit`/`StellarPhotometry` in `Astronomy`, not in a generic `Physics` bucket. What's left (`Lambert`) is a single generic law with no natural home yet — fine to leave as `Physics` for now, but it shouldn't keep absorbing anything vaguely physical by default.
+
+2. **`Geology` and `Geodesy` are both Earth science.** Wikipedia's branches diagram nests Earth science under Physical science as a sibling to Astronomy/Physics/Chemistry — same level `Geology` and `Geodesy` sit at today. Consider grouping them under an explicit `EarthScience/` segment (`EarthScience/Geology/Lithosphere`, `EarthScience/Geology/Mantle`, `EarthScience/Geodesy`) so the branch name is visible in the path rather than implied.
+
+3. **`Planimetry` doesn't correspond to a science branch.** It's a bare coordinate-system abstraction for flat worlds (`IDiscGrid`), with no physical law attached — same nature as `Formal/Maths/Geometry/Partitioning/IGrid`. `Geodesy`'s `IGeodesicGrid` arguably earns its place in `Natural` because geodesy is itself the science of measuring a real body's shape; `Planimetry` has no equivalent real-world referent. Candidate: move `IDiscGrid` to `Formal/Maths/Geometry/Partitioning` beside `IGrid`, or confirm `Planimetry` is meant as a placeholder for a future flat-world physical model.
+
+None of the above applied — flagging for a decision before moving files.

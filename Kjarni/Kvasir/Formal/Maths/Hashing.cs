@@ -4,7 +4,7 @@ namespace Kjarni.Kvasir.Formal.Maths;
 public static class Hashing
 {
     /// <summary>
-    ///     FNV-1a inspired hash over four <see cref="ulong" /> inputs with avalanche finalisation.
+    ///     FNV-1a inspired hash over four <see cref="ulong" /> inputs with avalanche finalization.
     ///     Deterministic for any given combination of inputs; suitable for seeded procedural generation.
     /// </summary>
     /// <param name="seed">Top-level seed, typically the simulation seed.</param>

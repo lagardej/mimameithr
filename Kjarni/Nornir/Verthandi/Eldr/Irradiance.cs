@@ -17,7 +17,7 @@ public sealed class IrradianceSystem : QuerySystem<IrradianceC, CellIdentityC, C
             // var geometry = planet.GetComponent<GeometryC>();
             // var luminosity = planet.GetComponent<LuminosityC>();
             //
-            // var zenith = SolarGeometry.SolarZenithAngle(
+            // var zenith = StellarGeometry.StellarZenithAngle(
             //     GeoGrid.Instance.CenterOf(identity.Id),
             //     orbit.OrbitalAngle,
             //     rotation.CurrentAngle,
@@ -25,6 +25,6 @@ public sealed class IrradianceSystem : QuerySystem<IrradianceC, CellIdentityC, C
             //
             // irradiance.ZenithAngle = zenith;
             // irradiance.IsDaytime = zenith.Degrees < 90.0;
-            // irradiance.Insolation = SolarGeometry.Insolation(luminosity.Luminosity, orbit.DistanceFromStar, zenith);
+            // irradiance.Insolation = StellarGeometry.Insolation(luminosity.Luminosity, orbit.DistanceFromStar, zenith);
         });
 }
