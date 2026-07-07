@@ -1,21 +1,16 @@
-﻿using Friflo.Engine.ECS;
-using Kjarni.Brunnr.Command;
+﻿using Kjarni.Brunnr.Command;
 
 namespace Kjarni.Nornir.Ginnungagap.Seed;
 
 /// <summary>
-///     Handles <see cref="SetSeed" /> commands against the entity store.
+///     Handles <see cref="SetSeed" /> commands against <see cref="RandomProvider" />.
 /// </summary>
-/// <param name="store"></param>
-public class SetSeedHandler(EntityStore store) : ICommandHandler<SetSeed>
+/// <param name="provider">Random provider.</param>
+public class SetSeedHandler(RandomProvider provider) : ICommandHandler<SetSeed>
 {
     /// <summary>The command type</summary>
     public static Type CommandType => typeof(SetSeed);
 
     /// <inheritdoc />
-    public void Handle(SetSeed command)
-    {
-        var entity = store.GetEntityById(command.Id);
-        entity.AddComponent(new SeedC { Seed = command.Seed });
-    }
+    public void Handle(SetSeed command) => provider.SetSeed(command.Seed);
 }

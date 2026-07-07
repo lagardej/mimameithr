@@ -1,3 +1,4 @@
+using Kjarni.Kvasir.Foundation;
 using Kjarni.Kvasir.Foundation.Grid;
 using Kjarni.Nornir.Hlothyn.Lithosphere;
 using UnitsNet;
@@ -37,11 +38,11 @@ public static class Simulation
 
     /// <summary>Runs the tectonic simulation and returns the per-cell tectonic state.</summary>
     /// <param name="parameters">Simulation parameters.</param>
+    /// <param name="rng">Deterministic random stream.</param>
     /// <returns>Tectonic state for every R2 cell in the grid.</returns>
-    public static Result Run(Parameters parameters)
+    public static Result Run(Parameters parameters, StableRandom rng)
     {
         var grid = parameters.Grid;
-        var rng = new Random((int) parameters.Seed);
 
         //
         // Pass 1: plate seeding at R0
@@ -88,7 +89,7 @@ public static class Simulation
     private static Dictionary<CellId, CellId> SeedPlates(
         CellId[] r0Cells,
         Parameters parameters,
-        Random rng)
+        StableRandom rng)
     {
         var totalCells = r0Cells.Length;
         var plateCount = Math.Clamp(parameters.PlateCount, 1, totalCells);
@@ -138,7 +139,7 @@ public static class Simulation
     private static Dictionary<CellId, CrustComposition> AssignCompositions(
         Dictionary<CellId, CellId> plateMap,
         Parameters parameters,
-        Random rng)
+        StableRandom rng)
     {
         // CollisionDominance: min = mostly mafic (subducting), max = mostly felsic (colliding).
         var felsicProbability = parameters.CollisionDominance.DecimalFractions;
@@ -159,7 +160,7 @@ public static class Simulation
         IGrid grid,
         Dictionary<CellId, CellId> plateMap,
         Parameters parameters,
-        Random rng)
+        StableRandom rng)
     {
         var neighbours = grid.Disk(r2Cell, 1).Where(n => n != r2Cell);
         var neighbourPlates = neighbours

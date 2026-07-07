@@ -30,9 +30,6 @@ public sealed record Parameters
     /// <remarks>Earth: ~0.22.</remarks>
     public required Ratio HotSpotDensity { get; init; }
 
-    /// <summary>Random seed for reproducible world generation.</summary>
-    public required uint Seed { get; init; }
-
     /// <summary>Grid to operate on.</summary>
     public required IGrid Grid { get; init; }
 

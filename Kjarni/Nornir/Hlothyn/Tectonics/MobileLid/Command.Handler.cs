@@ -12,7 +12,7 @@ using static Kjarni.Kvasir.Foundation.Scaling;
 namespace Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
 
 /// <summary>Handles <see cref="SetTectonicsMobileLid" /> commands against the entity store.</summary>
-public class SetTectonicsMobileLidHandler(EntityStore store) : ICommandHandler<SetTectonicsMobileLid>
+public class SetTectonicsMobileLidHandler(EntityStore store, RandomProvider randomProvider) : ICommandHandler<SetTectonicsMobileLid>
 {
     /// <summary>The command type</summary>
     public static Type CommandType => typeof(SetTectonicsMobileLid);
@@ -25,11 +25,10 @@ public class SetTectonicsMobileLidHandler(EntityStore store) : ICommandHandler<S
         entity.AddComponent(new TectonicsRegimeC { Regime = Regime.MobileLid });
         var geometry = entity.GetComponent<GeometryC>();
         var physics = entity.GetComponent<PhysicsC>();
-        var seed = store.GetUniqueEntity(SeedC.Uid).GetComponent<SeedC>().Seed;
-        var hash = Hashing.StableHash(seed, (ulong) command.Id, 0, 0);
+        var rng = randomProvider.CreateStream((ulong) command.Id);
 
-        var parameters = command.ToParameters(physics, geometry, hash);
-        var result = Simulation.Run(parameters);
+        var parameters = command.ToParameters(physics, geometry);
+        var result = Simulation.Run(parameters, rng);
 
         store.Query<CellIdentityC, CellParentRefC>().ForEachEntity((ref identity, ref parentRef, cellEntity) =>
         {
@@ -47,7 +46,7 @@ internal static class Extensions
 {
     extension(SetTectonicsMobileLid command)
     {
-        public Parameters ToParameters(PhysicsC physics, GeometryC geometry, uint seed) => new()
+        public Parameters ToParameters(PhysicsC physics, GeometryC geometry) => new()
         {
             BodyAge = physics.Age,
             BodyMass = physics.Mass,
@@ -60,7 +59,6 @@ internal static class Extensions
             PlateCount = (int) Math.Round(Range10.LinearScale(command.PlateCount, 4, 50)),
             PlateFragmentation = Ratio.FromDecimalFractions(Range10.LinearScale(command.PlateFragmentation, 0, 1)),
             PlateStability = Ratio.FromDecimalFractions(Range10.LinearScale(command.PlateStability, 0, 1)),
-            Seed = seed
         };
     }
 

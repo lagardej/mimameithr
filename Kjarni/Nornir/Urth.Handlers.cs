@@ -11,19 +11,19 @@ using Kjarni.Nornir.Hlothyn.Tectonics.StagnantLid;
 
 namespace Kjarni.Nornir;
 
-internal class HandlerRegistry(EntityStore store)
+internal class HandlerRegistry(EntityStore store, RandomProvider randomProvider)
 {
-    private readonly Dictionary<Type, ICommandHandler> _handlers = RegisterHandlers(store);
+    private readonly Dictionary<Type, ICommandHandler> _handlers = RegisterHandlers(store, randomProvider);
 
-    private static Dictionary<Type, ICommandHandler> RegisterHandlers(EntityStore store) => new()
+    private static Dictionary<Type, ICommandHandler> RegisterHandlers(EntityStore store, RandomProvider randomProvider) => new()
     {
         { SetGeometryHandler.CommandType, new SetGeometryHandler(store) },
         { SetLuminosityHandler.CommandType, new SetLuminosityHandler(store) },
         { SetOrbitHandler.CommandType, new SetOrbitHandler(store) },
         { SetPhysicsHandler.CommandType, new SetPhysicsHandler(store) },
         { SetRotationHandler.CommandType, new SetRotationHandler(store) },
-        { SetSeedHandler.CommandType, new SetSeedHandler(store) },
-        { SetTectonicsMobileLidHandler.CommandType, new SetTectonicsMobileLidHandler(store) },
+        { SetSeedHandler.CommandType, new SetSeedHandler(randomProvider) },
+        { SetTectonicsMobileLidHandler.CommandType, new SetTectonicsMobileLidHandler(store, randomProvider) },
         { SetTectonicsStagnantLidHandler.CommandType, new SetTectonicsStagnantLidHandler(store) }
     };
 

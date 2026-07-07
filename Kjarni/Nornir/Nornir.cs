@@ -1,4 +1,5 @@
 using Friflo.Engine.ECS;
+using Kjarni.Nornir.Ginnungagap.Seed;
 
 namespace Kjarni.Nornir;
 
@@ -6,19 +7,20 @@ namespace Kjarni.Nornir;
 public class Nornir
 {
     private readonly EntityStore _store = new();
+    private readonly RandomProvider _randomProvider = new();
+
+    /// <summary>The Norn of the past. Name of the generation phase — the world before sentient civilization begins.</summary>
+    private readonly Urðr Urðr;
+
+    /// <summary>The Norn of the present. Name of the active phase engine — the world as it unfolds.</summary>
+    private readonly Verðandi Verðandi;
 
     /// <summary>Constructor</summary>
     public Nornir()
     {
-        Urðr = new Urðr(_store);
+        Urðr = new Urðr(_store, _randomProvider);
         Verðandi = new Verðandi(_store);
     }
-
-    /// <summary>The Norn of the past. Name of the generation phase — the world before sentient civilization begins.</summary>
-    public Urðr Urðr { get; }
-
-    /// <summary>The Norn of the present. Name of the active phase engine — the world as it unfolds.</summary>
-    public Verðandi Verðandi { get; }
 
     #region Queries
 
