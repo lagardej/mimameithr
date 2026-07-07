@@ -1,4 +1,5 @@
 using Kjarni.Kvasir.Foundation;
+using Kjarni.Kvasir.Foundation.Grid;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 

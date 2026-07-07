@@ -4,7 +4,6 @@ using Kjarni.Brunnr.System;
 using Kjarni.Nornir.Eldr.Irradiance;
 using Kjarni.Nornir.Geimr.Orbit;
 using Kjarni.Nornir.Geimr.Rotation;
-using Kjarni.Nornir.Hlothyn.Tectonics;
 
 namespace Kjarni.Nornir;
 
@@ -26,6 +25,6 @@ public static class VerðandiSystems
     private static StaggeredSystemGroup StaggeredAt10S() =>
         new("10s staggered systems", SimSecond * 10, StaggerOffset)
         {
-            new RotationSystem(), new OrbitSystem(), new IrradianceSystem(), new TectonicsSystem()
+            new RotationSystem(), new OrbitSystem(), new IrradianceSystem()
         };
 }

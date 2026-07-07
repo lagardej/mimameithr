@@ -1,4 +1,4 @@
-using Kjarni.Kvasir.Foundation;
+using Kjarni.Kvasir.Foundation.Grid;
 
 namespace Kjarni.Brunnr.Grid;
 

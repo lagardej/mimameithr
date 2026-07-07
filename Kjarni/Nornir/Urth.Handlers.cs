@@ -6,7 +6,8 @@ using Kjarni.Nornir.Geimr.Orbit;
 using Kjarni.Nornir.Geimr.Physics;
 using Kjarni.Nornir.Geimr.Rotation;
 using Kjarni.Nornir.Ginnungagap.Seed;
-using Kjarni.Nornir.Hlothyn.Tectonics;
+using Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
+using Kjarni.Nornir.Hlothyn.Tectonics.StagnantLid;
 
 namespace Kjarni.Nornir;
 
@@ -22,7 +23,8 @@ internal class HandlerRegistry(EntityStore store)
         { SetPhysicsHandler.CommandType, new SetPhysicsHandler(store) },
         { SetRotationHandler.CommandType, new SetRotationHandler(store) },
         { SetSeedHandler.CommandType, new SetSeedHandler(store) },
-        { SetTectonicsHandler.CommandType, new SetTectonicsHandler(store) }
+        { SetTectonicsMobileLidHandler.CommandType, new SetTectonicsMobileLidHandler(store) },
+        { SetTectonicsStagnantLidHandler.CommandType, new SetTectonicsStagnantLidHandler(store) }
     };
 
     internal void Dispatch<TCommand>(TCommand command) where TCommand : ICommand
