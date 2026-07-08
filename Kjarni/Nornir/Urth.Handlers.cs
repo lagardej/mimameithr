@@ -1,31 +1,44 @@
 using Friflo.Engine.ECS;
 using Kjarni.Brunnr.Command;
-using Kjarni.Nornir.Eldr.Luminosity;
-using Kjarni.Nornir.Geimr.Geometry;
-using Kjarni.Nornir.Geimr.Orbit;
-using Kjarni.Nornir.Geimr.Physics;
-using Kjarni.Nornir.Geimr.Rotation;
 using Kjarni.Nornir.Ginnungagap.Seed;
-using Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
-using Kjarni.Nornir.Hlothyn.Tectonics.StagnantLid;
+using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace Kjarni.Nornir;
 
-internal class HandlerRegistry(EntityStore store, RandomProvider randomProvider)
+internal class HandlerRegistry
 {
-    private readonly Dictionary<Type, ICommandHandler> _handlers = RegisterHandlers(store, randomProvider);
+    private readonly Dictionary<Type, ICommandHandler> _handlers;
 
-    private static Dictionary<Type, ICommandHandler> RegisterHandlers(EntityStore store, RandomProvider randomProvider) => new()
+    internal HandlerRegistry(EntityStore store, RandomProvider randomProvider)
     {
-        { SetGeometryHandler.CommandType, new SetGeometryHandler(store) },
-        { SetLuminosityHandler.CommandType, new SetLuminosityHandler(store) },
-        { SetOrbitHandler.CommandType, new SetOrbitHandler(store) },
-        { SetPhysicsHandler.CommandType, new SetPhysicsHandler(store) },
-        { SetRotationHandler.CommandType, new SetRotationHandler(store) },
-        { SetSeedHandler.CommandType, new SetSeedHandler(randomProvider) },
-        { SetTectonicsMobileLidHandler.CommandType, new SetTectonicsMobileLidHandler(store, randomProvider) },
-        { SetTectonicsStagnantLidHandler.CommandType, new SetTectonicsStagnantLidHandler(store) }
-    };
+        var services = new ServiceCollection();
+        services.AddSingleton(store);
+        services.AddSingleton(randomProvider);
+
+        var handlerTypes = Assembly.GetExecutingAssembly()
+            .GetTypes()
+            .Where(t => t is { IsClass: true, IsAbstract: false })
+            .Select(t => new { Type = t, CommandType = GetCommandType(t) })
+            .Where(x => x.CommandType is not null)
+            .ToList();
+
+        foreach (var handlerType in handlerTypes)
+        {
+            services.AddSingleton(handlerType.Type);
+        }
+
+        var provider = services.BuildServiceProvider();
+
+        _handlers = handlerTypes.ToDictionary(
+            x => x.CommandType!,
+            x => (ICommandHandler) provider.GetRequiredService(x.Type));
+    }
+
+    private static Type? GetCommandType(Type handlerType) => handlerType
+        .GetInterfaces()
+        .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommandHandler<>))
+        ?.GetGenericArguments()[0];
 
     internal void Dispatch<TCommand>(TCommand command) where TCommand : ICommand
     {

@@ -8,9 +8,6 @@ namespace Kjarni.Nornir.Geimr.Geometry;
 /// <summary>Handles <see cref="SetGeometry" /> commands against the entity store.</summary>
 public class SetGeometryHandler(EntityStore store) : ICommandHandler<SetGeometry>
 {
-    /// <summary>The command type</summary>
-    public static Type CommandType => typeof(SetGeometry);
-
     /// <inheritdoc />
     public void Handle(SetGeometry command)
     {

@@ -8,9 +8,6 @@ namespace Kjarni.Nornir.Ginnungagap.Seed;
 /// <param name="provider">Random provider.</param>
 public class SetSeedHandler(RandomProvider provider) : ICommandHandler<SetSeed>
 {
-    /// <summary>The command type</summary>
-    public static Type CommandType => typeof(SetSeed);
-
     /// <inheritdoc />
     public void Handle(SetSeed command) => provider.SetSeed(command.Seed);
 }

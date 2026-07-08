@@ -9,9 +9,6 @@ public class SetLuminosityHandler(EntityStore store) : ICommandHandler<SetLumino
 {
     private const double SolarLuminosityWatts = 3.828e26;
 
-    /// <summary>The command type</summary>
-    public static Type CommandType => typeof(SetLuminosity);
-
     /// <inheritdoc />
     public void Handle(SetLuminosity command)
     {

@@ -2,7 +2,6 @@
 using Kjarni.Brunnr.Command;
 using Kjarni.Brunnr.Engine.Cell;
 using Kjarni.Brunnr.Grid;
-using Kjarni.Kvasir.Foundation;
 using Kjarni.Nornir.Geimr.Geometry;
 using Kjarni.Nornir.Geimr.Physics;
 using Kjarni.Nornir.Ginnungagap.Seed;
@@ -12,11 +11,9 @@ using static Kjarni.Kvasir.Foundation.Scaling;
 namespace Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
 
 /// <summary>Handles <see cref="SetTectonicsMobileLid" /> commands against the entity store.</summary>
-public class SetTectonicsMobileLidHandler(EntityStore store, RandomProvider randomProvider) : ICommandHandler<SetTectonicsMobileLid>
+public class SetTectonicsMobileLidHandler(EntityStore store, RandomProvider randomProvider)
+    : ICommandHandler<SetTectonicsMobileLid>
 {
-    /// <summary>The command type</summary>
-    public static Type CommandType => typeof(SetTectonicsMobileLid);
-
     /// <inheritdoc />
     public void Handle(SetTectonicsMobileLid command)
     {
@@ -58,7 +55,7 @@ internal static class Extensions
             HotSpotDensity = Ratio.FromDecimalFractions(Range10.LinearScale(command.HotSpotDensity, 0, 1)),
             PlateCount = (int) Math.Round(Range10.LinearScale(command.PlateCount, 4, 50)),
             PlateFragmentation = Ratio.FromDecimalFractions(Range10.LinearScale(command.PlateFragmentation, 0, 1)),
-            PlateStability = Ratio.FromDecimalFractions(Range10.LinearScale(command.PlateStability, 0, 1)),
+            PlateStability = Ratio.FromDecimalFractions(Range10.LinearScale(command.PlateStability, 0, 1))
         };
     }
 

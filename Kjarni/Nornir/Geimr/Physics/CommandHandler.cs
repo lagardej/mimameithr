@@ -8,9 +8,6 @@ namespace Kjarni.Nornir.Geimr.Physics;
 /// <summary>Handles <see cref="SetPhysics" /> commands against the entity store.</summary>
 public class SetPhysicsHandler(EntityStore store) : ICommandHandler<SetPhysics>
 {
-    /// <summary>The command type</summary>
-    public static Type CommandType => typeof(SetPhysics);
-
     /// <inheritdoc />
     public void Handle(SetPhysics command)
     {

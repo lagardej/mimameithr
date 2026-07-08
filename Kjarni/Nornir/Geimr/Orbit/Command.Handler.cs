@@ -8,9 +8,6 @@ namespace Kjarni.Nornir.Geimr.Orbit;
 /// <summary>Handles <see cref="SetOrbit" /> commands against the entity store.</summary>
 public class SetOrbitHandler(EntityStore store) : ICommandHandler<SetOrbit>
 {
-    /// <summary>The command type</summary>
-    public static Type CommandType => typeof(SetOrbit);
-
     /// <inheritdoc />
     public void Handle(SetOrbit command)
     {

@@ -8,9 +8,6 @@ namespace Kjarni.Nornir.Geimr.Rotation;
 /// <summary>Handles <see cref="SetRotation" /> commands against the entity store.</summary>
 public class SetRotationHandler(EntityStore store) : ICommandHandler<SetRotation>
 {
-    /// <summary>The command type</summary>
-    public static Type CommandType => typeof(SetRotation);
-
     /// <inheritdoc />
     public void Handle(SetRotation command)
     {

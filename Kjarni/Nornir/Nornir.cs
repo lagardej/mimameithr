@@ -6,8 +6,8 @@ namespace Kjarni.Nornir;
 /// <summary>Front engine. Owns the shared <see cref="EntityStore" /> and instantiates the phase engines.</summary>
 public class Nornir
 {
-    private readonly EntityStore _store = new();
     private readonly RandomProvider _randomProvider = new();
+    private readonly EntityStore _store = new();
 
     /// <summary>The Norn of the past. Name of the generation phase — the world before sentient civilization begins.</summary>
     private readonly Urðr Urðr;

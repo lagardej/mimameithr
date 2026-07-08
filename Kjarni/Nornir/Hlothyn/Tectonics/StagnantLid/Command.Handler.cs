@@ -7,9 +7,6 @@ namespace Kjarni.Nornir.Hlothyn.Tectonics.StagnantLid;
 /// <summary>Handles <see cref="SetTectonicsStagnantLid" /> commands against the entity store.</summary>
 public class SetTectonicsStagnantLidHandler(EntityStore store) : ICommandHandler<SetTectonicsStagnantLid>
 {
-    /// <summary>The command type</summary>
-    public static Type CommandType => typeof(SetTectonicsStagnantLid);
-
     /// <inheritdoc />
     public void Handle(SetTectonicsStagnantLid command)
     {
