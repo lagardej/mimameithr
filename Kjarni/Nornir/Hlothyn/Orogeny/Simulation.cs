@@ -28,7 +28,8 @@ public static class Simulation
     /// <param name="tectonics">Per-cell tectonic state, keyed by cell identifier.</param>
     /// <param name="rng">Deterministic random stream.</param>
     /// <returns>Orogenic state for every cell belonging to a convergent-boundary belt.</returns>
-    public static Result Run(Parameters parameters, IReadOnlyDictionary<CellId, TectonicsMobileLidC> tectonics, StableRandom rng)
+    public static Result Run(Parameters parameters, IReadOnlyDictionary<CellId, TectonicsMobileLidC> tectonics,
+        StableRandom rng)
     {
         var convergentCells = tectonics
             .Where(kv => kv.Value.BoundaryType == BoundaryType.Convergent)
@@ -56,9 +57,7 @@ public static class Simulation
 
                 result[cellId] = new OrogenyCell
                 {
-                    OrogenicAge = age,
-                    AccumulatedCrustalShortening = shortening,
-                    ReliefPotential = relief
+                    OrogenicAge = age, AccumulatedCrustalShortening = shortening, ReliefPotential = relief
                 };
             }
         }

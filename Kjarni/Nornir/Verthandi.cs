@@ -12,13 +12,13 @@ public class Verðandi(EntityStore store)
     private readonly MonotonicClock _clock = new();
     private readonly SystemRoot _root = VerðandiSystems.Build(store);
 
-    /// <summary>Current time compression factor. Defaults to <see cref="TimeCompression.RealTime" />.</summary>
-    public TimeCompression Compression { get; set; } = TimeCompression.RealTime;
-
-    /// <summary>Advances the simulation by <paramref name="deltaTime" /> real seconds, scaled by <see cref="Compression" />.</summary>
-    public void Advance(float deltaTime)
+    /// <summary>
+    ///     Advances the simulation by <paramref name="deltaTime" /> real seconds, scaled by
+    ///     <see cref="TimeCompression" />.
+    /// </summary>
+    public void Advance(float deltaTime, TimeCompression compression)
     {
-        var simDelta = deltaTime * (int) Compression;
+        var simDelta = deltaTime * (int) compression;
         _clock.Advance(simDelta);
         _root.Update(new UpdateTick(simDelta, _clock.ElapsedSeconds));
     }

@@ -27,8 +27,8 @@ public class SetOrogenyHandler(EntityStore store, RandomProvider randomProvider)
         var tectonics = new Dictionary<CellId, TectonicsMobileLidC>();
         var cellEntities = new Dictionary<CellId, Entity>();
 
-        store.Query<CellIdentityC, CellParentRefC, TectonicsMobileLidC>().ForEachEntity(
-            (ref identity, ref parentRef, ref cellTectonics, cellEntity) =>
+        store.Query<CellIdentityC, CellParentRefC, TectonicsMobileLidC>()
+            .ForEachEntity((ref identity, ref parentRef, ref cellTectonics, cellEntity) =>
             {
                 if (parentRef.Parent != entity)
                 {
