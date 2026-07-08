@@ -5,12 +5,33 @@ using System.Runtime.InteropServices;
 
 namespace Bifrost.Kart;
 
+#pragma warning disable CA2255
+
 /// <summary>
 ///     <see cref="IGeodesicGrid" /> implementation backed by the h3o Rust library via P/Invoke.
 /// </summary>
 public sealed partial class BifrostKart : IGeodesicGrid
 {
-    #region Helpers
+    [ModuleInitializer]
+    internal static void RegisterDllImportResolver() =>
+        NativeLibrary.SetDllImportResolver(typeof(BifrostKart).Assembly, ResolveKartLib);
+
+    private static IntPtr ResolveKartLib(string libraryName, System.Reflection.Assembly assembly,
+        DllImportSearchPath? searchPath)
+    {
+        if (libraryName != KartLib)
+        {
+            return IntPtr.Zero;
+        }
+
+        var fileName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            ? $"{KartLib}.dll"
+            : RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+                ? $"lib{KartLib}.dylib"
+                : $"lib{KartLib}.so";
+
+        return NativeLibrary.Load(Path.Combine(AppContext.BaseDirectory, fileName));
+    }
 
     private void GuardResolution(Resolution resolution)
     {
@@ -24,8 +45,6 @@ public sealed partial class BifrostKart : IGeodesicGrid
             resolution.Value,
             $"Resolution {resolution.Value} exceeds the maximum supported level ({MaxResolution.Value}).");
     }
-
-    #endregion
 
     #region IGeodesicGrid
 

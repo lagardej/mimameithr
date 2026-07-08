@@ -13,6 +13,19 @@
 
     <ItemGroup>
         <ProjectReference Include="$(ActualSolutionDir)Kjarni\Nornir\Kjarni.Nornir.csproj"/>
+        <ProjectReference Include="$(ActualSolutionDir)Bifrost\Kart\Bifrost.Kart.csproj"/>
     </ItemGroup>
+
+    <Target Name="CopyRustLibWindows" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+        <Copy SourceFiles="$(ActualSolutionDir)Rustr\Kart\target\release\rustr_kart.dll" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
+    </Target>
+
+    <Target Name="CopyRustLibLinux" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+        <Copy SourceFiles="$(ActualSolutionDir)Rustr\Kart\target\release\librustr_kart.so" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
+    </Target>
+
+    <Target Name="CopyRustLibMac" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+        <Copy SourceFiles="$(ActualSolutionDir)Rustr\Kart\target\release\librustr_kart.dylib" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
+    </Target>
 
 </Project>
