@@ -168,8 +168,8 @@ public partial class BootTest : Node3D
 		GD.Print($"Grid: {tectonicCells.Count} cells at resolution 2");
 		GD.Print($"Plates: {tectonicCells.Values.Select(c => c.PlateSeedCellId).Distinct().Count()} unique plate seeds");
 
-		AddChild(CreateInstance(BuildPlateMesh(grid, tectonicCells, visualRadius), Colors.White, true));
-		// AddChild(CreateInstance(BuildBoundaryMesh(grid, tectonicCells, visualRadius), Colors.White, true));
+		//AddChild(CreateInstance(BuildPlateMesh(grid, tectonicCells, visualRadius), Colors.White, true));
+		 AddChild(CreateInstance(BuildBoundaryMesh(grid, tectonicCells, visualRadius), Colors.White, true));
 		// AddChild(CreateInstance(BuildEdgeMesh(grid, tectonicCells, visualRadius), new Color(0.95f, 0.95f, 0.95f)));
 		AddChild(CreateInstance(BuildGuideMesh(visualRadius), new Color(1f, 0.9f, 0.2f)));
 	}

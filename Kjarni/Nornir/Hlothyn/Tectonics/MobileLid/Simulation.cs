@@ -92,6 +92,7 @@ public static class Simulation
         Parameters parameters,
         StableRandom rng)
     {
+        var grid = parameters.Grid;
         var totalCells = r0Cells.Length;
         var plateCount = Math.Clamp(parameters.PlateCount, 1, totalCells);
         var seeds = r0Cells.OrderBy(_ => rng.NextDouble()).Take(plateCount).ToArray();
@@ -102,31 +103,45 @@ public static class Simulation
             seed => seed,
             _ => Math.Pow(rng.NextDouble(), 1.0 - distributionBias + 0.01));
 
-        // Flood fill: each seed expands into unclaimed neighbours.
-        // Expansion order is weighted — high-weight seeds grab more cells.
+        // Flood fill: each seed expands into unclaimed *grid-adjacent* neighbours only.
+        // Priority is cumulative cost from the seed (weighted Dijkstra), not an independent
+        // random roll per edge — a cell is claimed by whichever plate has the cheapest *path*
+        // to it, so growth is monotonic outward and can't leave gaps that later fill from the
+        // wrong side (which produced islands / plate-in-plate artefacts).
         var plateMap = seeds.ToDictionary(seed => seed, seed => seed);
-        var frontier = new PriorityQueue<(CellId cell, CellId plate), double>();
+        var frontier = new PriorityQueue<(CellId cell, CellId plate, double cost), double>();
 
         foreach (var seed in seeds)
-        foreach (var neighbour in r0Cells.Where(c => c != seed))
+        foreach (var neighbour in grid.Disk(seed, 1).Where(c => c != seed))
         {
-            // Prime the frontier with seed neighbours.
-            // Only direct grid neighbours matter; IGrid.GridRing(seed, 1) gives ring-1.
-            // We approximate here using all R0 cells — replaced when grid exposes R0 adjacency.
-            frontier.Enqueue((neighbour, seed), -weights[seed] * rng.NextDouble());
+            var cost = rng.NextDouble() / weights[seed];
+            frontier.Enqueue((neighbour, seed, cost), cost);
         }
 
-        // Drain frontier in priority order; skip already-claimed cells.
+        // Drain frontier in cost order; skip already-claimed cells; keep growing
+        // the claiming plate's border by enqueuing the newly-claimed cell's own neighbours
+        // at accumulated cost, so distance from the seed is always reflected in priority.
         while (frontier.Count > 0)
         {
-            var (candidate, plate) = frontier.Dequeue();
-            plateMap.TryAdd(candidate, plate);
+            var (candidate, plate, cost) = frontier.Dequeue();
+            if (!plateMap.TryAdd(candidate, plate))
+            {
+                continue;
+            }
+
+            foreach (var neighbour in grid.Disk(candidate, 1).Where(c => c != candidate && !plateMap.ContainsKey(c)))
+            {
+                var nextCost = cost + rng.NextDouble() / weights[plate];
+                frontier.Enqueue((neighbour, plate, nextCost), nextCost);
+            }
         }
 
-        // Any remaining unclaimed cells fall back to the closest seed by index.
-        foreach (var cell in r0Cells)
+        // Any cells unreachable from every seed (disconnected component) fall back to the closest
+        // claimed neighbour if one exists, else the first seed — should be rare on a connected grid.
+        foreach (var cell in r0Cells.Where(c => !plateMap.ContainsKey(c)))
         {
-            plateMap.TryAdd(cell, seeds[0]);
+            var claimedNeighbour = grid.Disk(cell, 1).FirstOrDefault(n => n != cell && plateMap.ContainsKey(n));
+            plateMap[cell] = claimedNeighbour != default ? plateMap[claimedNeighbour] : seeds[0];
         }
 
         return plateMap;
