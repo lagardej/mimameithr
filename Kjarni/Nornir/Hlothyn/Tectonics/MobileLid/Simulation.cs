@@ -69,6 +69,7 @@ public static class Simulation
 
             result[r2Cell] = new TectonicsCell
             {
+                PlateSeedCellId = seedCellId,
                 SeedCellId = seedCellId,
                 CrustComposition = crustComposition,
                 CrustThickness = crustThickness,

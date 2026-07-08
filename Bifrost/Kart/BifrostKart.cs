@@ -1,5 +1,6 @@
 using Kjarni.Kvasir.Foundation;
 using Kjarni.Kvasir.Foundation.Grid;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -16,7 +17,7 @@ public sealed partial class BifrostKart : IGeodesicGrid
     internal static void RegisterDllImportResolver() =>
         NativeLibrary.SetDllImportResolver(typeof(BifrostKart).Assembly, ResolveKartLib);
 
-    private static IntPtr ResolveKartLib(string libraryName, System.Reflection.Assembly assembly,
+    private static IntPtr ResolveKartLib(string libraryName, Assembly assembly,
         DllImportSearchPath? searchPath)
     {
         if (libraryName != KartLib)

@@ -12,7 +12,7 @@ public class SetGeometryHandler(EntityStore store) : ICommandHandler<SetGeometry
     public void Handle(SetGeometry command)
     {
         var entity = store.GetEntityById(command.Id);
-        var radius = Range100.ExponentialScale(command.Radius, 1, 1e9);
+        var radius = Range100.PiecewiseExponentialScale(command.Radius, [0, 4, 6, 9]);
 
         entity.AddComponent(new GeometryC
         {

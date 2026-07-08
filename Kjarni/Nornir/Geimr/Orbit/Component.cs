@@ -16,6 +16,7 @@ public struct OrbitParentC : ILinkComponent
 
 /// <summary>Keplerian orbital state of a planetary body around its parent star.</summary>
 [ComponentKey("geimr-orbit")]
+[Obsolete("Use Position instead")]
 public struct OrbitC : IComponent
 {
     /// <summary>Current distance between the body and its parent star.</summary>

@@ -63,6 +63,7 @@ internal static class Extensions
     {
         public TectonicsMobileLidC ToComponent() => new()
         {
+            PlateSeedCellId = cell.PlateSeedCellId,
             BoundaryType = cell.BoundaryType,
             CrustComposition = cell.CrustComposition,
             CrustalThickness = cell.CrustThickness,

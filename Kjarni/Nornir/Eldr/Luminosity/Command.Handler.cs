@@ -13,7 +13,8 @@ public class SetLuminosityHandler(EntityStore store) : ICommandHandler<SetLumino
     public void Handle(SetLuminosity command)
     {
         var entity = store.GetEntityById(command.Id);
-        var luminosity = Range100.ExponentialScale(command.Luminosity, 1e-3, 1e3) * SolarLuminosityWatts;
+        var luminosityMult = Range100.PiecewiseExponentialScale(command.Luminosity, exponents: [-3, 0, 1, 3]);
+        var luminosity = luminosityMult * SolarLuminosityWatts;
 
         entity.AddComponent(new LuminosityC { Luminosity = UnitsNet.Luminosity.FromWatts(luminosity) });
     }

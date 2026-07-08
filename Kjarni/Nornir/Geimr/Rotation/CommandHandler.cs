@@ -12,12 +12,12 @@ public class SetRotationHandler(EntityStore store) : ICommandHandler<SetRotation
     public void Handle(SetRotation command)
     {
         var entity = store.GetEntityById(command.Id);
-        var rotationRate = Range100.ExponentialScale(command.RotationRate, 1e9, 10.0);
+        var rotationSeconds = Range100.PiecewiseExponentialScale(command.RotationRate, exponents: [9, 5, 3, 1]);
 
         entity.AddComponent(new RotationC
         {
             CurrentAngle = Angle.FromDegrees(command.InitialAngle),
-            RotationRate = RotationalSpeed.FromDegreesPerSecond(rotationRate)
+            RotationRate = RotationalSpeed.FromDegreesPerSecond(rotationSeconds)
         });
     }
 }

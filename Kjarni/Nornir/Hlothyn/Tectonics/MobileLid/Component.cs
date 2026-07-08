@@ -9,6 +9,9 @@ namespace Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
 [ComponentKey("hlothyn-tectonics-mobilelid")]
 public struct TectonicsMobileLidC : IComponent
 {
+    /// <summary>Plate seed cell that identifies the tectonic plate for this cell.</summary>
+    public CellId PlateSeedCellId;
+
     /// <summary>Tectonic boundary type at this cell. Determines seismic and volcanic activity regime.</summary>
     public BoundaryType BoundaryType;
 

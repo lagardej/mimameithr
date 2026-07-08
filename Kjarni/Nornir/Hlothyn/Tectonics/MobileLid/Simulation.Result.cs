@@ -14,6 +14,9 @@ public sealed record Result(Dictionary<CellId, TectonicsCell> Cells);
 /// </summary>
 public sealed record TectonicsCell
 {
+    /// <summary>Plate seed cell that identifies the tectonic plate for this cell.</summary>
+    public required CellId PlateSeedCellId { get; init; }
+
     /// <summary>Tectonic boundary type at this cell. Determines seismic and volcanic activity regime.</summary>
     public required BoundaryType BoundaryType { get; init; }
 

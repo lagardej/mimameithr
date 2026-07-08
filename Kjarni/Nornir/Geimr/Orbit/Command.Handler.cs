@@ -6,6 +6,7 @@ using static Kjarni.Kvasir.Foundation.Scaling;
 namespace Kjarni.Nornir.Geimr.Orbit;
 
 /// <summary>Handles <see cref="SetOrbit" /> commands against the entity store.</summary>
+/// [Obsolete("Use Position instead")]
 public class SetOrbitHandler(EntityStore store) : ICommandHandler<SetOrbit>
 {
     /// <inheritdoc />

@@ -10,6 +10,7 @@ namespace Kjarni.Nornir.Geimr.Orbit;
 /// <param name="OrbitalPeriod">Sidereal orbital period on a 1–100 scale mapping 10³ s to 10¹³ s exponentially.</param>
 /// <param name="SemiMajorAxis">Semi-major axis of the orbit on a 1–100 scale mapping 10⁴ km to 10¹⁴ km exponentially.</param>
 /// <param name="ParentId">The parent id. May be null</param>
+[Obsolete("Use Position instead")]
 public record SetOrbit(
     int Id,
     [Range(1u, 100u)] uint Eccentricity,
