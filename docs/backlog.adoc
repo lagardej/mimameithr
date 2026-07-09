@@ -9,6 +9,10 @@ Status tags: `TODO`, `IN PROGRESS`, `DEFERRED` (good idea, no consumer/prerequis
 
 _Nothing outstanding._
 
+== Skald — Bithot (Rendering)
+
+* `TODO` — Restart `BootTest.cs` from blank slate. Minimal scope only: lit sphere, orbital camera control, zoom in/out. Nothing else — no plates, boundaries, arrows, guides, UI toggles until re-added deliberately as separate building blocks (see `Render/Layer.cs`, `Render/VisualScale.cs`).
+
 == Hlothyn — Tectonics
 
 * `TODO` — Per-plate-pair boundary classification. Currently per-cell (a cell's boundary type doesn't know which two plates it's between). Prerequisite for Orogeny belt coherence.
