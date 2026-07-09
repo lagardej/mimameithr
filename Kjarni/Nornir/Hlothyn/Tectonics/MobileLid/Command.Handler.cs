@@ -77,6 +77,7 @@ internal static class Extensions
             BoundaryType = cell.BoundaryType,
             CrustComposition = cell.CrustComposition,
             CrustalThickness = cell.CrustThickness,
+            CrustAge = cell.CrustAge,
             SeedCellId = cell.SeedCellId,
             PlateAngularVelocity = cell.PlateAngularVelocity,
             VerticalDisplacementRate = cell.VerticalDisplacementRate

@@ -22,6 +22,9 @@ public struct TectonicsMobileLidC : IComponent
     /// <summary>Thickness of the crust at this cell. Drives isostatic elevation via buoyancy in the mantle.</summary>
     public Length CrustalThickness;
 
+    /// <summary>Time since crust formation at this cell, approximated from distance to the nearest divergent boundary.</summary>
+    public Duration CrustAge;
+
     /// <summary>The R0 cell that seeded this plate. Stable identity across all cells belonging to the same plate.</summary>
     public CellId SeedCellId;
 

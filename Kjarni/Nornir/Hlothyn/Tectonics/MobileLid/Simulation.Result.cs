@@ -27,6 +27,9 @@ internal sealed record TectonicsCell
     /// <summary>Thickness of the crust at this cell. Drives isostatic elevation via buoyancy in the mantle.</summary>
     public required Length CrustThickness { get; init; }
 
+    /// <summary>Time since crust formation at this cell, approximated from distance to the nearest divergent boundary.</summary>
+    public required Duration CrustAge { get; init; }
+
     /// <summary>The R0 cell that seeded this plate. Stable identity across all cells belonging to the same plate.</summary>
     public required CellId SeedCellId { get; init; }
 

@@ -214,6 +214,7 @@ flowchart TB
 
 * Crust composition per cell — felsic / mafic (enum)
 * Crustal thickness per cell — `Length`
+* Crust age per cell — `Duration`
 * Vertical displacement rate per cell — `Speed` (m/yr)
 * Boundary type per cell — convergent / divergent / transform / none (enum)
 
@@ -225,11 +226,13 @@ _Nothing, external driver._
 
 * Crust composition → Elevation
 * Crustal thickness → Elevation
+* Crust age → Geology
 * Vertical displacement rate → Elevation
 * Boundary type → Elevation, Dynamics, Geothermal
 
 ==== Notes
 
+* Crust age is a distance-from-divergent-boundary proxy, not tracked elapsed time — one-shot generator has no crust-creation history. Felsic crust is not aged this way; treated as old/stable.
 * One-shot computation at world gen. Only changes via explicit forcings.
 * Timescale: Myr.
 
@@ -324,6 +327,7 @@ _To be filled when consumers are designed._
 ==== Reads
 
 * Crust composition ← Tectonics
+* Crust age ← Tectonics
 * Boundary type ← Tectonics
 * Orogenic age ← Orogeny
 

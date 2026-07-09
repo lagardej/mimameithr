@@ -76,13 +76,86 @@ internal static class Simulation
                 SeedCellId = seedCellId,
                 CrustComposition = crustComposition,
                 CrustThickness = crustThickness,
+                CrustAge = Duration.Zero,
                 BoundaryType = boundaryType,
                 PlateAngularVelocity = angularVelocities[seedCellId],
                 VerticalDisplacementRate = verticalDisplacement
             };
         }
 
+        //
+        // Pass 3: crust age from distance to nearest divergent boundary
+        //
+        AssignCrustAge(result, grid, parameters.BodyAge);
+
         return new Result(result);
+    }
+
+    /// <summary>
+    ///     Approximates crust age via multi-source BFS from divergent-boundary cells, since a one-shot generator
+    ///     has no actual crust-creation history to track. Only meaningful for <see cref="CrustComposition.Mafic" />
+    ///     crust (oceanic-style spreading); <see cref="CrustComposition.Felsic" /> crust is treated as old/stable,
+    ///     matching Earth where continental crust is not recycled by spreading.
+    /// </summary>
+    private static void AssignCrustAge(Dictionary<CellId, TectonicsCell> result, IGeodesicGrid grid,
+        Duration bodyAge)
+    {
+        var distances = new Dictionary<CellId, int>();
+        var frontier = new Queue<CellId>();
+
+        foreach (var (cellId, cell) in result)
+        {
+            if (cell.BoundaryType != Divergent)
+            {
+                continue;
+            }
+
+            distances[cellId] = 0;
+            frontier.Enqueue(cellId);
+        }
+
+        while (frontier.Count > 0)
+        {
+            var current = frontier.Dequeue();
+            var nextDistance = distances[current] + 1;
+
+            foreach (var neighbour in grid.Disk(current, 1).Where(n => n != current))
+            {
+                if (distances.ContainsKey(neighbour) ||
+                    !result.TryGetValue(neighbour, out var neighbourCell) ||
+                    neighbourCell.CrustComposition != CrustComposition.Mafic)
+                {
+                    continue;
+                }
+
+                distances[neighbour] = nextDistance;
+                frontier.Enqueue(neighbour);
+            }
+        }
+
+        var maxDistance = distances.Count > 0 ? distances.Values.Max() : 0;
+
+        foreach (var cellId in result.Keys.ToArray())
+        {
+            var cell = result[cellId];
+
+            Duration age;
+            if (cell.CrustComposition == CrustComposition.Felsic)
+            {
+                age = bodyAge;
+            }
+            else if (distances.TryGetValue(cellId, out var distance) && maxDistance > 0)
+            {
+                age = Duration.FromJulianYears(bodyAge.JulianYears * distance / maxDistance);
+            }
+            else
+            {
+                // Mafic cell unreachable from any divergent source — treat as oldest.
+                age = bodyAge;
+            }
+
+            result[cellId] = cell with { CrustAge = age };
+        }
     }
 
     /// <summary>
