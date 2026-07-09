@@ -8,74 +8,35 @@ Solution file: `Mimameithr.slnx`
 - Oxford spelling (`-ize` not `-ise`).
 - Documentation is in English. Discussion may be in French.
 
-## Naming
-
-All project and domain names are Old Norse. See `docs/glossary.adoc` for the full list.
-
-C# identifiers use the original Old Norse form with Unicode characters.
-Filenames and directories use ASCII romanization to avoid filesystem issues.
-
-Romanisation rules:
-- `ð` (eth) → `th`
-- `þ` (thorn) → `th`
-- Accented vowels (`ö`, `í`, `á`, `ø`) are dropped or replaced by their unaccented equivalent.
-
-Example: class `Urðr` lives in `Urth.cs`.
-
 ## Documentation
 
 ### Component properties
 
-XML doc summaries must describe what a property is, not how it will be used. Producers are not consumer-aware.
-
-Computed properties include a `<remarks>` block stating what they are computed from, using `<see cref>` references where possible.
+XML doc summaries must describe what a property is, not how it will be used. Producers are not consumer-aware. Required for all public classes, properties and methods. Use `<summary>` and `<remarks>` tags. Use `<see cref>` references where possible.
 
 No temporal or lifecycle qualifiers in property docs.
 
 ## Architecture
 
-### Kvasir
+### Bounded contexts
 
-Simulations are stateless pure functions.
+No hard Kvasir/Nornir split. Group by what changes together, not by statelessness.
 
-### Nornir
+Bounded context = domain folder under `Nornir/` (`Eldr`, `Geimr`, `Hlothyn`, `Ginnungagap`, `Skuld`, ...). Each folder mixes generation-phase code (`Command.cs`, `Command.Handler.cs`) and active-phase code (`System.cs`) alongside the `Component.cs` they operate on. Phase is not a folder split — domain is.
 
-Components hold both parameters and current state as separate properties.
+- Cross-cutting computation (physics, geometry, mantle flux, etc.) lives as static functions, called directly by whichever system or handler needs it.
+- Store derived state on a component only when: (a) expensive to recompute, or (b) multiple unrelated systems read it and per-read recompute duplicates real work. Otherwise, compute at point of use — don't cache a value the consumer could derive from components it already holds.
 
-- `[Setting(unit, purpose)]` — externally supplied inputs (world gen, forcings, or runtime).
-- `[State(unit, purpose)]` — values computed by a system.
+### Urðr and Verðandi
 
-`purpose` is a short description for generated documentation. XML doc summaries may contain more detail for developers.
+`Urðr` (`Nornir/Urth.cs`) and `Verðandi` (`Nornir/Verthandi.cs`) are not bounded contexts. They are internal engine classes owned by `Nornir` (`Nornir/Nornir.cs`) that manage the two phases. They hold no domain logic — only orchestration.
 
-Systems are stateful: they read parameters and elapsed time, compute current state via Kvasir, and write it back to the component.
+- **Urðr** — generation-phase dispatcher. Routes a validated command to the `ICommandHandler<TCommand>` registered for it, one handler per domain command, resolved via DI at construction. No tick loop, no evaluation graph of its own — the player calls a command, a handler runs, done. Must stay operable without Godot.
+- **Verðandi** — active-phase driver. Builds a `SystemRoot` (`VerðandiSystems.Build`) from the domain `System` classes and ticks it forward on `Advance`. The ECS state at phase transition is whatever Urðr's handlers left behind; epoch is set then.
 
-### Urth (generation phase)
-
-Urth is the generation phase engine. It lives in `Nornir/Urth/`.
-It uses an evaluation graph, not a tick loop. The player is the driver, not time.
-It exposes a CQRS interface: one command per system (full settings replacement), queries with no side effects.
-It must be fully operable without Godot.
-
-See `docs/architecture.adoc` and `docs/session-handout-urth.adoc` for details.
-
-### Verdandi (active phase)
-
-Verdandi is the active phase engine. It runs a standard ECS tick loop.
-The state produced by Urth is the initial ECS state. The epoch is set at phase transition.
+See `docs/architecture.adoc`.
 
 ## Behaviour
-
-- Instructions are directives, not suggestions.
-- The model should act like a machine, be concise and accurate, and don't assume.
-- It should only do what is asked, stop and ask if unclear, and provide exactly what was requested.
-- The communication style should be short, direct responses, asking first and executing second, with no apologies for brevity.
-- The model should not create things that weren't requested, assume user needs, add bonus features or files, build full solutions for vague requests, or use verbose explanations.
-- It should ask for clarification when needed, provide exactly what's asked, use minimal clear language, work with what's provided, and stop and ask if something's unclear.
-- No praise, no engagement bait, no flattery.
-- Assess requests factually.
-- Push back when warranted.
-- Suggest alternatives without being asked. Guide, don't serve — Sacagawea, not a butler.
-- Calibrate enthusiasm: it's an assignment.
 
 Respond terse like smart caveman. All technical substance stay. Only fluff die.
 

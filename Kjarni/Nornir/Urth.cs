@@ -2,11 +2,13 @@ using Friflo.Engine.ECS;
 using Kjarni.Brunnr.Command;
 using Kjarni.Brunnr.Engine.Data.Validation;
 using Kjarni.Nornir.Ginnungagap.Seed;
+using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace Kjarni.Nornir;
 
 /// <summary>Generation phase engine. Routes commands to registered endpoints.</summary>
-public class Urðr(EntityStore store, RandomProvider randomProvider)
+internal class Urðr(EntityStore store, RandomProvider randomProvider)
 {
     private readonly HandlerRegistry _handlerRegistry = new(store, randomProvider);
 
@@ -17,5 +19,50 @@ public class Urðr(EntityStore store, RandomProvider randomProvider)
     {
         Validator.Validate(command);
         _handlerRegistry.Dispatch(command);
+    }
+}
+
+internal class HandlerRegistry
+{
+    private readonly Dictionary<Type, ICommandHandler> _handlers;
+
+    internal HandlerRegistry(EntityStore store, RandomProvider randomProvider)
+    {
+        var services = new ServiceCollection();
+        services.AddSingleton(store);
+        services.AddSingleton(randomProvider);
+
+        var handlerTypes = Assembly.GetExecutingAssembly()
+            .GetTypes()
+            .Where(t => t is { IsClass: true, IsAbstract: false })
+            .Select(t => new { Type = t, CommandType = GetCommandType(t) })
+            .Where(x => x.CommandType is not null)
+            .ToList();
+
+        foreach (var handlerType in handlerTypes)
+        {
+            services.AddSingleton(handlerType.Type);
+        }
+
+        var provider = services.BuildServiceProvider();
+
+        _handlers = handlerTypes.ToDictionary(
+            x => x.CommandType!,
+            x => (ICommandHandler) provider.GetRequiredService(x.Type));
+    }
+
+    private static Type? GetCommandType(Type handlerType) => handlerType
+        .GetInterfaces()
+        .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommandHandler<>))
+        ?.GetGenericArguments()[0];
+
+    internal void Dispatch<TCommand>(TCommand command) where TCommand : ICommand
+    {
+        if (!_handlers.TryGetValue(typeof(TCommand), out var handler))
+        {
+            throw new InvalidOperationException($"No handler registered for command type {typeof(TCommand).Name}.");
+        }
+
+        handler.Handle(command);
     }
 }
