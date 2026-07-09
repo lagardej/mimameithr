@@ -60,5 +60,5 @@ The simulation runs headless.
 |===
 |Directory |Purpose
 
-|`docs/` |Design documents and backlog
+|`docs/` |Design documents and link:docs/backlog.adoc[backlog]
 |===
