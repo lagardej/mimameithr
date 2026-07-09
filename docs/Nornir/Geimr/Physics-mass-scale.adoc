@@ -1,0 +1,44 @@
+= Mass Scale Reference
+
+The `Mass` parameter uses a 1–100 scale that maps piecewise-exponentially from 10¹² kg to 10³² kg, across three zones:
+
+[cols="<,<,<"]
+|===
+|Score range |Exponent range |Mass range
+
+|1 – 40 |10¹² – 10²⁶ |10¹² kg – 10²⁶ kg
+|40 – 70 |10²⁶ – 10²⁹ |10²⁶ kg – 10²⁹ kg
+|70 – 100 |10²⁹ – 10³² |10²⁹ kg – 10³² kg
+|===
+
+Score is linearly interpolated against exponent within each zone, then mass = 10^exponent.
+Implemented by `Range100.PiecewiseExponentialScale(mass, exponents: [12, 26, 29, 32])` (default thresholds `[40, 70, 100]`).
+The following table provides a reference for common celestial bodies and their corresponding mass scale values.
+
+[cols=">,>,<"]
+|===
+|Score |Mass (kg) |Body
+
+|*1* |*10¹²* |*Scale minimum*
+|4 |9.98×10¹² |https://en.wikipedia.org/wiki/67P/Churyumov%E2%80%93Gerasimenko[Comet 67P]
+|12 |1.07×10¹⁶ |https://en.wikipedia.org/wiki/Phobos_(moon)[Phobos]
+|22 |3.75×10¹⁹ |https://en.wikipedia.org/wiki/Mimas[Mimas]
+|26 |9.1×10²⁰ |https://en.wikipedia.org/wiki/Ceres_(dwarf_planet)[Ceres]
+|29 |1.303×10²² |https://en.wikipedia.org/wiki/Pluto[Pluto]
+|31 |7.342×10²² |https://en.wikipedia.org/wiki/Moon[Moon]
+|33 |3.3011×10²³ |https://en.wikipedia.org/wiki/Mercury_(planet)[Mercury]
+|34 |6.4171×10²³ |https://en.wikipedia.org/wiki/Mars[Mars]
+|36 |4.8675×10²⁴ |https://en.wikipedia.org/wiki/Venus[Venus]
+|37 |5.9724×10²⁴ |https://en.wikipedia.org/wiki/Earth[Earth]
+|*40* |*10²⁶* |*10²⁶ kg*
+|40 |8.681×10²⁵ |https://en.wikipedia.org/wiki/Uranus[Uranus]
+|48 |5.6834×10²⁶ |https://en.wikipedia.org/wiki/Saturn[Saturn]
+|53 |1.8982×10²⁷ |https://en.wikipedia.org/wiki/Jupiter[Jupiter]
+|*70* |*10²⁹* |*10²⁹ kg*
+|83 |1.989×10³⁰ |https://en.wikipedia.org/wiki/Sun[Sun]
+|86 |3.978×10³⁰ |https://en.wikipedia.org/wiki/Sirius[Sirius A]
+|96 |3.58×10³¹ |https://en.wikipedia.org/wiki/Betelgeuse[Betelgeuse]
+|100 |~10³² |*Scale maximum (~50 M☉)*
+|===
+
+Stars more massive than 10³² kg exceed the scale maximum and are out of range for this simulation.

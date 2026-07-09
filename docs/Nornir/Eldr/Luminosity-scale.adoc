@@ -1,0 +1,46 @@
+= Luminosity Scale Reference
+
+The `Luminosity` parameter uses a 1–100 scale that maps piecewise-exponentially from 10⁻³ L☉ to 10³ L☉, across three zones:
+
+[cols="<,<,<"]
+|===
+|Score range |Exponent range |Luminosity range
+
+|1 – 40 |10⁻³ – 10⁰ |0.001 L☉ – 1 L☉
+|40 – 70 |10⁰ – 10¹ |1 L☉ – 10 L☉
+|70 – 100 |10¹ – 10³ |10 L☉ – 1,000 L☉
+|===
+
+Range is compressed around the habitable zone for a civilization-scale simulation.
+Score is linearly interpolated against exponent within each zone, then luminosity = 10^exponent.
+Implemented by `Range100.PiecewiseExponentialScale(luminosity, exponents: [-3, 0, 1, 3])` (default thresholds `[40, 70, 100]`).
+The following table provides a reference for known stars and their corresponding luminosity scale values.
+
+[cols=">,>,<,<"]
+|===
+|Score |Luminosity (L☉) |Star |Colour
+
+|*1* |*0.001* |*Scale minimum* |Red
+|4 |0.0017 |https://en.wikipedia.org/wiki/Proxima_Centauri[Proxima Centauri] |Red
+|8 |0.0035 |https://en.wikipedia.org/wiki/Barnard%27s_Star[Barnard's Star] |Red
+|*14* |*0.01* |*Decade* |Red
+|27 |0.1 |*Decade* |Orange
+|29 |0.153 |https://en.wikipedia.org/wiki/61_Cygni[61 Cygni A] |Orange
+|34 |0.34 |https://en.wikipedia.org/wiki/Epsilon_Eridani[Epsilon Eridani] |Orange
+|36 |0.5 |https://en.wikipedia.org/wiki/Alpha_Centauri[Alpha Centauri B] |Orange
+|*40* |*1* |*Sun* |Yellow-white
+|45 |1.5 |https://en.wikipedia.org/wiki/Alpha_Centauri[Alpha Centauri A] |Yellow-white
+|65 |7 |https://en.wikipedia.org/wiki/Procyon[Procyon A] |Yellow-white
+|*70* |*10* |*Decade* |White
+|70 |10.6 |https://en.wikipedia.org/wiki/Altair[Altair] |White
+|73 |16.6 |https://en.wikipedia.org/wiki/Fomalhaut[Fomalhaut] |White
+|76 |25.4 |https://en.wikipedia.org/wiki/Sirius[Sirius A] |Blue-white
+|79 |40 |https://en.wikipedia.org/wiki/Vega[Vega] |Blue-white
+|83 |79 |https://en.wikipedia.org/wiki/Capella[Capella] |Yellow
+|*85* |*100* |*Decade* |Blue-white
+|88 |170 |https://en.wikipedia.org/wiki/Arcturus[Arcturus] |Orange
+|94 |400 |https://en.wikipedia.org/wiki/Aldebaran[Aldebaran] |Orange
+|*100* |*1,000* |*Scale maximum* |Blue-white
+|===
+
+Stars brighter than 10³ L☉ (e.g. Antares, Betelgeuse, Rigel, Deneb) exceed the scale maximum and are out of range for this simulation.

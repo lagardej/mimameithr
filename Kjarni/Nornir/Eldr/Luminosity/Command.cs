@@ -7,7 +7,7 @@ namespace Kjarni.Nornir.Eldr.Luminosity;
 /// <param name="Id">The entity id.</param>
 /// <param name="Luminosity">Luminosity on a 1–100 scale mapping 10⁻³ L☉ to 10³ L☉ exponentially.</param>
 /// <remarks>
-///     <see href="../../../../docs/Nornir/Geimr/Luminosity-scale.adoc">Full scale reference</see>
+///     <see href="../../../../docs/Nornir/Eldr/Luminosity-scale.adoc">Full scale reference</see>
 /// </remarks>
 public record SetLuminosity(
     int Id,

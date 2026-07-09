@@ -76,6 +76,7 @@ public static class Simulation
                 CrustComposition = crustComposition,
                 CrustThickness = crustThickness,
                 BoundaryType = boundaryType,
+                PlateAngularVelocity = angularVelocities[seedCellId],
                 VerticalDisplacementRate = verticalDisplacement
             };
         }

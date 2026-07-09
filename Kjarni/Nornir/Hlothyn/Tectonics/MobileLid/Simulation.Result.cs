@@ -1,5 +1,6 @@
 using Kjarni.Kvasir.Foundation.Grid;
 using Kjarni.Nornir.Hlothyn.Lithosphere;
+using System.Numerics;
 using UnitsNet;
 
 namespace Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
@@ -28,6 +29,13 @@ public sealed record TectonicsCell
 
     /// <summary>The R0 cell that seeded this plate. Stable identity across all cells belonging to the same plate.</summary>
     public required CellId SeedCellId { get; init; }
+
+    /// <summary>
+    ///     Rigid-body angular velocity of this cell's plate (Euler-pole rotation axis × rate).
+    ///     Same value for every cell belonging to the plate. Linear velocity at a point is
+    ///     <c>cross(PlateAngularVelocity, positionUnitVector)</c>.
+    /// </summary>
+    public required Vector3 PlateAngularVelocity { get; init; }
 
     /// <summary>
     ///     Rate of vertical crustal displacement at this cell. Positive = uplift, negative = subsidence.

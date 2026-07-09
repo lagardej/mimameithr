@@ -15,7 +15,7 @@ public class SetPhysicsHandler(EntityStore store) : ICommandHandler<SetPhysics>
         var entity = store.GetEntityById(command.Id);
         var radius = entity.GetComponent<GeometryC>().Radius;
         var age = Range100.PiecewiseExponentialScale(command.Age, [6, 10, 11, 13]);
-        var mass = Mass.FromKilograms(Range100.PiecewiseExponentialScale(command.Mass, [22, 26, 29, 32]));
+        var mass = Mass.FromKilograms(Range100.PiecewiseExponentialScale(command.Mass, [12, 26, 29, 32]));
 
         entity.AddComponent(new PhysicsC
         {
