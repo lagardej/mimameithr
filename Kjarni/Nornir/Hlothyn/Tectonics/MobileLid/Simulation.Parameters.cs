@@ -5,7 +5,7 @@ using UnitsNet;
 namespace Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
 
 /// <summary>All inputs to the tectonics simulation.</summary>
-public sealed record Parameters
+internal sealed record Parameters
 {
     /// <summary>Total number of major and minor tectonic plates.</summary>
     /// <remarks>Earth: ~15.</remarks>

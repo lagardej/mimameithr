@@ -1,7 +1,6 @@
 using Kjarni.Kvasir.Foundation;
 using Kjarni.Kvasir.Foundation.Grid;
 using Kjarni.Kvasir.Geimr;
-using Kjarni.Nornir.Geimr.Physics;
 using Kjarni.Nornir.Hlothyn.Lithosphere;
 using System.Numerics;
 using UnitsNet;
@@ -35,7 +34,7 @@ namespace Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
 ///         </item>
 ///     </list>
 /// </remarks>
-public static class Simulation
+internal static class Simulation
 {
     private static readonly Resolution s_boundaryResolution = new(2);
 

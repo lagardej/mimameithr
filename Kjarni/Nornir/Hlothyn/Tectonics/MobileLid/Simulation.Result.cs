@@ -7,13 +7,13 @@ namespace Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
 
 /// <summary>Aggregated tectonic simulation output, mapping each grid cell to its tectonic state.</summary>
 /// <param name="Cells">Per-cell tectonic state, keyed by cell identifier.</param>
-public sealed record Result(Dictionary<CellId, TectonicsCell> Cells);
+internal sealed record Result(Dictionary<CellId, TectonicsCell> Cells);
 
 /// <summary>
 ///     Tectonic state of a single grid cell.
 ///     Output of <see cref="Simulation" />.
 /// </summary>
-public sealed record TectonicsCell
+internal sealed record TectonicsCell
 {
     /// <summary>Plate seed cell that identifies the tectonic plate for this cell.</summary>
     public required CellId PlateSeedCellId { get; init; }
