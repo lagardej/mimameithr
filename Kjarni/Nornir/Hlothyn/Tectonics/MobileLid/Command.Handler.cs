@@ -2,6 +2,7 @@
 using Kjarni.Brunnr.Command;
 using Kjarni.Brunnr.Engine.Cell;
 using Kjarni.Brunnr.Grid;
+using Kjarni.Kvasir.Foundation;
 using Kjarni.Kvasir.Foundation.Grid;
 using Kjarni.Nornir.Geimr.Geometry;
 using Kjarni.Nornir.Geimr.Physics;
@@ -19,14 +20,13 @@ public class SetTectonicsMobileLidHandler(EntityStore store, RandomProvider rand
     public void Handle(SetTectonicsMobileLid command)
     {
         var entity = store.GetEntityById(command.Id);
-        RegimeInvariant.RemoveAllRegimeComponents(store, entity);
-        entity.AddComponent(new TectonicsRegimeC { Regime = Regime.MobileLid });
-        var geometry = entity.GetComponent<GeometryC>();
-        var physics = entity.GetComponent<PhysicsC>();
         var rng = randomProvider.CreateStream((ulong) command.Id);
 
-        var parameters = command.ToParameters(physics, geometry);
-        var result = Simulation.Run(parameters, rng);
+        var parameters = command.ToParameters(entity, rng);
+        var result = Simulation.Run(parameters);
+
+        RegimeInvariant.RemoveAllRegimeComponents(store, entity);
+        entity.AddComponent(new TectonicsRegimeC { Regime = Regime.MobileLid });
 
         store.Query<CellIdentityC, CellParentRefC>().ForEachEntity((ref identity, ref parentRef, cellEntity) =>
         {
@@ -42,22 +42,31 @@ public class SetTectonicsMobileLidHandler(EntityStore store, RandomProvider rand
 
 internal static class Extensions
 {
+    private static readonly LinearScale s_linear0To1 = new(Range10, 0, 1);
+    private static readonly LinearScale s_plateScale = new(Range10, 4, 5);
+
     extension(SetTectonicsMobileLid command)
     {
-        public Parameters ToParameters(PhysicsC physics, GeometryC geometry) => new()
+        public Parameters ToParameters(Entity entity, StableRandom rng)
         {
-            BodyAge = physics.Age,
-            BodyMass = physics.Mass,
-            BodyRadius = geometry.Radius,
-            BodySurfaceGravity = physics.Gravity,
-            BoundaryFocus = Ratio.FromDecimalFractions(Range10.LinearScale(command.BoundaryFocus, 0, 1)),
-            CollisionDominance = Ratio.FromDecimalFractions(Range10.LinearScale(command.CollisionDominance, 0, 1)),
-            Grid = (IGeodesicGrid) GridProvider.Get(geometry.GridShape),
-            HotSpotDensity = Ratio.FromDecimalFractions(Range10.LinearScale(command.HotSpotDensity, 0, 1)),
-            PlateCount = (int) Math.Round(Range10.LinearScale(command.PlateCount, 4, 50)),
-            PlateFragmentation = Ratio.FromDecimalFractions(Range10.LinearScale(command.PlateFragmentation, 0, 1)),
-            PlateStability = Ratio.FromDecimalFractions(Range10.LinearScale(command.PlateStability, 0, 1))
-        };
+            var geometry = entity.GetComponent<GeometryC>();
+            var physics = entity.GetComponent<PhysicsC>();
+
+            return new Parameters
+            {
+                BodyAge = physics.Age,
+                BodyMass = physics.Mass,
+                BodyRadius = geometry.Radius,
+                BoundaryFocus = Ratio.FromDecimalFractions(s_linear0To1.Evaluate(command.BoundaryFocus)),
+                CollisionDominance = Ratio.FromDecimalFractions(s_linear0To1.Evaluate(command.CollisionDominance)),
+                Grid = (IGeodesicGrid) GridProvider.Get(geometry.GridShape),
+                HotSpotDensity = Ratio.FromDecimalFractions(s_linear0To1.Evaluate(command.HotSpotDensity)),
+                PlateCount = (int) Math.Round(s_plateScale.Evaluate(command.PlateCount)),
+                PlateFragmentation = Ratio.FromDecimalFractions(s_linear0To1.Evaluate(command.PlateFragmentation)),
+                PlateStability = Ratio.FromDecimalFractions(s_linear0To1.Evaluate(command.PlateStability)),
+                Rng = rng
+            };
+        }
     }
 
     extension(TectonicsCell cell)

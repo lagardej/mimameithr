@@ -2,6 +2,7 @@ using Friflo.Engine.ECS;
 using Kjarni.Brunnr.Command;
 using Kjarni.Brunnr.Engine.Cell;
 using Kjarni.Brunnr.Grid;
+using Kjarni.Kvasir.Foundation;
 using Kjarni.Kvasir.Foundation.Grid;
 using Kjarni.Nornir.Geimr.Geometry;
 using Kjarni.Nornir.Geimr.Physics;
@@ -15,6 +16,9 @@ namespace Kjarni.Nornir.Hlothyn.Orogeny;
 /// <summary>Handles <see cref="SetOrogeny" /> commands against the entity store.</summary>
 public class SetOrogenyHandler(EntityStore store, RandomProvider randomProvider) : ICommandHandler<SetOrogeny>
 {
+    private static readonly ExponentialScale s_ageBiasScale = new(Range10, 0.3, 3.0);
+    private static readonly ExponentialScale s_reliefDecayRateScale = new(Range10, 10e6, 1e9);
+
     /// <inheritdoc />
     public void Handle(SetOrogeny command)
     {
@@ -42,8 +46,8 @@ public class SetOrogenyHandler(EntityStore store, RandomProvider randomProvider)
         var parameters = new Parameters
         {
             BodyAge = physics.Age,
-            AgeBiasExponent = Range10.ExponentialScale(command.AgeBias, 0.3, 3.0),
-            ReliefHalfLife = Duration.FromJulianYears(Range10.ExponentialScale(command.ReliefDecayRate, 10e6, 1e9)),
+            AgeBiasExponent = s_ageBiasScale.Evaluate(command.AgeBias),
+            ReliefHalfLife = Duration.FromJulianYears(s_reliefDecayRateScale.Evaluate(command.ReliefDecayRate)),
             Grid = grid
         };
 

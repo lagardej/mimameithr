@@ -3,7 +3,7 @@ namespace Kjarni.Kvasir.Foundation;
 /// <summary>A closed interval [Min, Max].</summary>
 public readonly record struct Range<T>(T Min, T Max) where T : struct;
 
-/// <summary>Provides methods for mapping a range between specified minimum and maximum values.</summary>
+/// <summary>Provides common scale ranges.</summary>
 public static class Scaling
 {
     /// <summary>Gets a range spanning from 1 to 10.</summary>
@@ -12,67 +12,90 @@ public static class Scaling
     /// <summary>Gets a range spanning from 1 to 100.</summary>
     public static Range<uint> Range100 => new(1, 100);
 
-    extension(Range<uint> range)
+    /// <summary>Gets a range spanning from 1 to 1000.</summary>
+    public static Range<uint> Range1000 => new(1, 1000);
+}
+
+/// <summary>Maps a scale value linearly onto [<see cref="Min" />, <see cref="Max" />].</summary>
+public readonly record struct LinearScale(Range<uint> Range, double Min, double Max)
+{
+    /// <summary>Maps <paramref name="value" /> from <see cref="Range" /> onto [<see cref="Min" />, <see cref="Max" />].</summary>
+    public double Evaluate(uint value)
     {
-        /// <summary>Maps a scale within a given range to a linear range between a specified minimum and maximum value.</summary>
-        public double LinearScale(uint value, double min, double max)
+        var clamped = Math.Clamp(value, Range.Min, Range.Max);
+        return Min + ((Max - Min) * (clamped - Range.Min) / (Range.Max - Range.Min));
+    }
+}
+
+/// <summary>Maps a scale value exponentially onto [<see cref="Min" />, <see cref="Max" />].</summary>
+public readonly record struct ExponentialScale(Range<uint> Range, double Min, double Max)
+{
+    /// <summary>
+    ///     Maps <paramref name="value" /> from <see cref="Range" /> exponentially onto [<see cref="Min" />,
+    ///     <see cref="Max" />].
+    /// </summary>
+    public double Evaluate(uint value)
+    {
+        var clamped = Math.Clamp(value, Range.Min, Range.Max);
+        return Min * Math.Pow(Max / Min, (clamped - Range.Min) / (double) (Range.Max - Range.Min));
+    }
+}
+
+/// <summary>
+///     Maps a scale value across multiple contiguous base-10 exponential zones.
+///     Thresholds and exponents are fixed at construction — there is no implicit default,
+///     so the zone boundaries are always sized correctly for the given <see cref="Range" />.
+/// </summary>
+public readonly record struct PiecewiseExponentialScale
+{
+    private readonly int[] _exponents;
+    private readonly Range<uint> _range;
+    private readonly uint[] _thresholds;
+
+    /// <param name="range">The input scale's range.</param>
+    /// <param name="exponents">
+    ///     The base-10 integer exponents defining the boundaries of each zone. Length must be
+    ///     thresholds.Length + 1.
+    /// </param>
+    /// <param name="thresholds">The upper scale boundaries for each zone, sized for <paramref name="range" />.</param>
+    public PiecewiseExponentialScale(Range<uint> range, int[] exponents, uint[] thresholds)
+    {
+        if (thresholds.Length == 0 || exponents.Length != thresholds.Length + 1)
         {
-            var clampedScale = Math.Clamp(value, range.Min, range.Max);
-            return min + ((max - min) * (clampedScale - range.Min) / (range.Max - range.Min));
+            throw new ArgumentException("Exponents length must be exactly thresholds length + 1.");
         }
 
-        /// <summary>Maps a scale within a given range to an exponential range between a specified minimum and maximum value.</summary>
-        public double ExponentialScale(uint scale, double min, double max)
+        _range = range;
+        _exponents = exponents;
+        _thresholds = thresholds;
+    }
+
+    /// <summary>Maps <paramref name="scale" /> through the configured zones to a value of the form 10^exponent.</summary>
+    public double Evaluate(uint scale)
+    {
+        var clamped = Math.Clamp(scale, _range.Min, _range.Max);
+
+        double lowerThreshold = _range.Min;
+        double lowerExponent = _exponents[0];
+
+        for (var i = 0; i < _thresholds.Length; i++)
         {
-            var clampedScale = Math.Clamp(scale, range.Min, range.Max);
-            return min * Math.Pow(max / min,
-                (clampedScale - range.Min) / (double) (range.Max - range.Min));
+            double upperThreshold = _thresholds[i];
+            double upperExponent = _exponents[i + 1];
+
+            if (clamped <= upperThreshold || i == _thresholds.Length - 1)
+            {
+                upperThreshold = Math.Max(clamped, upperThreshold);
+
+                var t = (clamped - lowerThreshold) / (upperThreshold - lowerThreshold);
+                var exponent = lowerExponent + (t * (upperExponent - lowerExponent));
+                return Math.Pow(10, exponent);
+            }
+
+            lowerThreshold = upperThreshold;
+            lowerExponent = upperExponent;
         }
 
-
-        /// <summary>
-        /// Maps a scale value across multiple contiguous base-10 exponential zones.
-        /// </summary>
-        /// <param name="scale">The input slider value.</param>
-        /// <param name="exponents">The base-10 integer exponents defining the boundaries of each zone. Length must be thresholds.Length + 1.</param>
-        /// <param name="thresholds">The upper slider boundaries for each zone. Default to [40u, 70u, 100u]</param>
-        public double PiecewiseExponentialScale(uint scale, ReadOnlySpan<int> exponents,
-            ReadOnlySpan<uint> thresholds = default)
-        {
-            if (thresholds.IsEmpty)
-            {
-                thresholds = [40u, 70u, 100u];
-            }
-
-            if (thresholds.Length == 0 || exponents.Length != thresholds.Length + 1)
-            {
-                throw new ArgumentException("Exponents length must be exactly thresholds length + 1.");
-            }
-
-            var clampedScale = Math.Clamp(scale, range.Min, range.Max);
-
-            double lowerThreshold = range.Min;
-            double lowerExponent = exponents[0];
-
-            for (int i = 0; i < thresholds.Length; i++)
-            {
-                double upperThreshold = thresholds[i];
-                double upperExponent = exponents[i + 1];
-
-                if (clampedScale <= upperThreshold || i == thresholds.Length - 1)
-                {
-                    upperThreshold = Math.Max(clampedScale, upperThreshold);
-
-                    double t = (clampedScale - lowerThreshold) / (upperThreshold - lowerThreshold);
-                    double exponent = lowerExponent + t * (upperExponent - lowerExponent);
-                    return Math.Pow(10, exponent);
-                }
-
-                lowerThreshold = upperThreshold;
-                lowerExponent = upperExponent;
-            }
-
-            return Math.Pow(10, exponents[^1]);
-        }
+        return Math.Pow(10, _exponents[^1]);
     }
 }

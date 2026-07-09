@@ -1,5 +1,7 @@
 using Kjarni.Kvasir.Foundation;
 using Kjarni.Kvasir.Foundation.Grid;
+using Kjarni.Kvasir.Geimr;
+using Kjarni.Nornir.Geimr.Physics;
 using Kjarni.Nornir.Hlothyn.Lithosphere;
 using System.Numerics;
 using UnitsNet;
@@ -39,9 +41,8 @@ public static class Simulation
 
     /// <summary>Runs the tectonic simulation and returns the per-cell tectonic state.</summary>
     /// <param name="parameters">Simulation parameters.</param>
-    /// <param name="rng">Deterministic random stream.</param>
     /// <returns>Tectonic state for every R2 cell in the grid.</returns>
-    public static Result Run(Parameters parameters, StableRandom rng)
+    public static Result Run(Parameters parameters)
     {
         var grid = parameters.Grid;
 
@@ -49,23 +50,24 @@ public static class Simulation
         // Pass 1: plate seeding at R0
         //
         var r0Cells = grid.RootCells();
-        var plateMap = SeedPlates(r0Cells, parameters, rng);
-        var plateComps = AssignCompositions(plateMap, parameters, rng);
-        var angularVelocities = AssignVelocities(plateMap, parameters, rng);
+        var plateMap = SeedPlates(r0Cells, parameters);
+        var plateComps = AssignCompositions(plateMap, parameters);
+        var angularVelocities = AssignVelocities(plateMap, parameters);
 
         //
         // Pass 2: boundary classification at R2
         //
         var heatFlux = AsthenosphericHeatFlux(parameters.BodyAge, parameters.BodyMass, parameters.BodyRadius);
         var result = new Dictionary<CellId, TectonicsCell>();
+        var gravity = Gravitation.Acceleration(parameters.BodyMass, parameters.BodyRadius);
 
         foreach (var r2Cell in grid.CellsAtResolution(s_boundaryResolution))
         {
             var plate = grid.ParentOf(r2Cell, Resolution.R0);
             var seedCellId = plateMap[plate];
             var crustComposition = plateComps[seedCellId];
-            var crustThickness = CrustThickness(crustComposition, parameters.BodySurfaceGravity, heatFlux);
-            var boundaryType = ClassifyBoundary(r2Cell, seedCellId, grid, plateMap, angularVelocities, parameters, rng);
+            var crustThickness = CrustThickness(crustComposition, gravity, heatFlux);
+            var boundaryType = ClassifyBoundary(r2Cell, seedCellId, grid, plateMap, angularVelocities, parameters);
             var verticalDisplacement =
                 VerticalDisplacementRate(boundaryType, crustComposition, crustThickness, parameters, heatFlux);
 
@@ -90,12 +92,10 @@ public static class Simulation
     ///     Plate count drives how many distinct seeds exist.
     ///     Distribution drives size variance via per seed expansion weights.
     /// </summary>
-    private static Dictionary<CellId, CellId> SeedPlates(
-        CellId[] r0Cells,
-        Parameters parameters,
-        StableRandom rng)
+    private static Dictionary<CellId, CellId> SeedPlates(CellId[] r0Cells, Parameters parameters)
     {
         var grid = parameters.Grid;
+        var rng = parameters.Rng;
         var totalCells = r0Cells.Length;
         var plateCount = Math.Clamp(parameters.PlateCount, 1, totalCells);
         var seeds = r0Cells.OrderBy(_ => rng.NextDouble()).Take(plateCount).ToArray();
@@ -109,7 +109,7 @@ public static class Simulation
         // Flood fill: each seed expands into unclaimed *grid-adjacent* neighbours only.
         // Priority is cumulative cost from the seed (weighted Dijkstra), not an independent
         // random roll per edge — a cell is claimed by whichever plate has the cheapest *path*
-        // to it, so growth is monotonic outward and can't leave gaps that later fill from the
+        // to it. Growth is monotonic outward and can't leave gaps that later fill from the
         // wrong side (which produced islands / plate-in-plate artefacts).
         var plateMap = seeds.ToDictionary(seed => seed, seed => seed);
         var frontier = new PriorityQueue<(CellId cell, CellId plate, double cost), double>();
@@ -134,7 +134,7 @@ public static class Simulation
 
             foreach (var neighbour in grid.Disk(candidate, 1).Where(c => c != candidate && !plateMap.ContainsKey(c)))
             {
-                var nextCost = cost + rng.NextDouble() / weights[plate];
+                var nextCost = cost + (rng.NextDouble() / weights[plate]);
                 frontier.Enqueue((neighbour, plate, nextCost), nextCost);
             }
         }
@@ -155,11 +155,11 @@ public static class Simulation
     ///     High <see cref="Parameters.CollisionDominance" /> biases toward felsic crust —
     ///     buoyant plates crumple rather than subduct, producing continental-style crust.
     /// </summary>
-    private static Dictionary<CellId, CrustComposition> AssignCompositions(
-        Dictionary<CellId, CellId> plateMap,
-        Parameters parameters,
-        StableRandom rng)
+    private static Dictionary<CellId, CrustComposition> AssignCompositions(Dictionary<CellId, CellId> plateMap,
+        Parameters parameters)
     {
+        var rng = parameters.Rng;
+
         // CollisionDominance: min = mostly mafic (subducting), max = mostly felsic (colliding).
         var felsicProbability = parameters.CollisionDominance.DecimalFractions;
 
@@ -175,11 +175,10 @@ public static class Simulation
     ///     Axis is uniform-random on the sphere; magnitude variance is driven by <see cref="Parameters.PlateStability" /> —
     ///     low stability means plates reorganize/change direction often, modelled here as a wider speed spread.
     /// </summary>
-    private static Dictionary<CellId, Vector3> AssignVelocities(
-        Dictionary<CellId, CellId> plateMap,
-        Parameters parameters,
-        StableRandom rng)
+    private static Dictionary<CellId, Vector3> AssignVelocities(Dictionary<CellId, CellId> plateMap,
+        Parameters parameters)
     {
+        var rng = parameters.Rng;
         var speedVariance = parameters.PlateStability.DecimalFractions;
 
         return plateMap.Values.Distinct().ToDictionary(
@@ -188,12 +187,12 @@ public static class Simulation
             {
                 // Uniform-random unit axis (Marsaglia-ish via lat/lng sampling is fine here — no need for
                 // strict uniformity given this only drives visual/classification variety, not real statistics).
-                var axisLat = rng.NextDouble() * 180.0 - 90.0;
-                var axisLng = rng.NextDouble() * 360.0 - 180.0;
+                var axisLat = (rng.NextDouble() * 180.0) - 90.0;
+                var axisLng = (rng.NextDouble() * 360.0) - 180.0;
                 var axis = new LatLng(axisLat, axisLng).ToUnitVector();
 
                 // Magnitude: baseline speed jittered by stability-driven variance.
-                var speed = 0.3 + rng.NextDouble() * (0.7 + speedVariance);
+                var speed = 0.3 + (rng.NextDouble() * (0.7 + speedVariance));
                 return axis * (float) speed;
             });
     }
@@ -207,15 +206,10 @@ public static class Simulation
     ///     Interior cells (all neighbours share the same plate) → <see cref="BoundaryType.None" /> or
     ///     <see cref="BoundaryType.HotSpot" />, driven by <see cref="Parameters.HotSpotDensity" />.
     /// </summary>
-    private static BoundaryType ClassifyBoundary(
-        CellId r2Cell,
-        CellId ownPlate,
-        IGeodesicGrid grid,
-        Dictionary<CellId, CellId> plateMap,
-        Dictionary<CellId, Vector3> angularVelocities,
-        Parameters parameters,
-        StableRandom rng)
+    private static BoundaryType ClassifyBoundary(CellId r2Cell, CellId ownPlate, IGeodesicGrid grid,
+        Dictionary<CellId, CellId> plateMap, Dictionary<CellId, Vector3> angularVelocities, Parameters parameters)
     {
+        var rng = parameters.Rng;
         var neighbours = grid.Disk(r2Cell, 1).Where(n => n != r2Cell).ToArray();
         var neighbourPlates = neighbours
             .Select(n => plateMap[grid.ParentOf(n, Resolution.R0)])
@@ -260,14 +254,14 @@ public static class Simulation
         // Component of relative motion perpendicular to boundaryDir but still in the tangent plane —
         // sliding along the boundary rather than toward/away from it.
         var relativeVelocity = neighbourVelocity - ownVelocity;
-        var lateralVelocity = relativeVelocity - separationRate * boundaryDir;
+        var lateralVelocity = relativeVelocity - (separationRate * boundaryDir);
         var lateralRate = lateralVelocity.Length();
 
         // CollisionDominance nudges the decision threshold: higher bias means a given closing rate is
         // more readily called Convergent (mirrors the old dial's intent without reverting to a pure roll).
         var dominanceBias = (float) (parameters.CollisionDominance.DecimalFractions - 0.5) * 0.5f;
 
-        if (MathF.Abs(separationRate) + dominanceBias * MathF.Sign(-separationRate) > lateralRate)
+        if (MathF.Abs(separationRate) + (dominanceBias * MathF.Sign(-separationRate)) > lateralRate)
         {
             return separationRate < 0f ? Convergent : Divergent;
         }
@@ -294,8 +288,9 @@ public static class Simulation
 
         // Convective velocity proxy: heatFlux / (density × gravity × thickness) [m/s].
         // Represents the rate at which mantle convection can drive vertical crustal motion.
+        var gravity = Gravitation.Acceleration(parameters.BodyMass, parameters.BodyRadius);
         var baseRate = heatFlux.WattsPerSquareMeter /
-                       (density * parameters.BodySurfaceGravity.MetersPerSecondSquared * crustalThickness.Meters);
+                       (density * gravity.MetersPerSecondSquared * crustalThickness.Meters);
 
         // Sign and designer-knob modulation by boundary type.
         var sign = boundaryType switch

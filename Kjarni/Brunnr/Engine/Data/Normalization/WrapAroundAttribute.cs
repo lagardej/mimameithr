@@ -15,8 +15,10 @@ public sealed class WrapAroundAttribute(double min, double max, object unit) : A
 {
     /// <summary>Minimum value of the wrap-around range (inclusive).</summary>
     public double Min { get; } = min;
+
     /// <summary>Maximum value of the wrap-around range (exclusive).</summary>
     public double Max { get; } = max;
+
     /// <summary>Physical unit for extracting and reconstructing the quantity.</summary>
     public Enum Unit { get; } = (Enum) unit;
 }

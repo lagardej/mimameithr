@@ -23,6 +23,7 @@ public sealed class ComponentAttribute(string group = "", string title = "") : A
 {
     /// <summary>Slash-delimited group path for component categorization.</summary>
     public string Group { get; } = group;
+
     /// <summary>Display title for the component reference document.</summary>
     public string Title { get; } = title;
 }
@@ -35,6 +36,7 @@ public sealed class SettingAttribute(string purpose, string unit = "") : Attribu
 {
     /// <summary>Short description of what this parameter controls.</summary>
     public string Purpose { get; } = purpose;
+
     /// <summary>Optional physical unit (e.g. "K", "m/s", "Pa").</summary>
     public string Unit { get; } = unit;
 }
@@ -47,6 +49,7 @@ public sealed class StateAttribute(string purpose, string unit = "") : Attribute
 {
     /// <summary>Short description of what this value represents.</summary>
     public string Purpose { get; } = purpose;
+
     /// <summary>Optional physical unit (e.g. "K", "m/s", "Pa").</summary>
     public string Unit { get; } = unit;
 }

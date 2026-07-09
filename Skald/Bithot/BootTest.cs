@@ -3,10 +3,12 @@ using Godot;
 using Kjarni.Brunnr.Grid;
 using Kjarni.Kvasir.Foundation;
 using Kjarni.Kvasir.Foundation.Grid;
+using Kjarni.Kvasir.Geimr;
 using Kjarni.Nornir;
 using Kjarni.Nornir.Geimr.Geometry;
 using Kjarni.Nornir.Geimr.Physics;
 using Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
+using Skald.Bithot.Render;
 using UnitsNet;
 using static Kjarni.Nornir.Hlothyn.Tectonics.MobileLid.BoundaryType;
 
@@ -27,30 +29,21 @@ public partial class BootTest : Node3D
 	private const float BoundaryLevel = 1.12f;
 	private const float ArrowLevel = 1.14f;
 	private const float SeedOutlineLevel = 1.18f;
-
-	// Real body radius spans 1 km (asteroid) to 1e9 km (supergiant star) — 9 orders of magnitude,
-	// far beyond what float32 scene coordinates can hold without precision collapse. Map log-scale
-	// into a fixed, bounded scene-space range instead: preserves relative size ordering between
-	// bodies (star > planet > moon) without letting real units leak into scene-space distances.
-	private const double MinRealRadiusKm = 1.0;
-	private const double MaxRealRadiusKm = 1_000_000_000.0;
-	private const float MinVisualRadius = 0.05f;
-	private const float MaxVisualRadius = 40f;
+	private MeshInstance3D _arrowMesh = null!;
+	private MeshInstance3D _boundaryMesh = null!;
 
 	private Camera3D _camera = null!;
 	private float _distance;
+	private MeshInstance3D _edgeMesh = null!;
 	private Label _fpsLabel = null!;
+	private MeshInstance3D _guideMesh = null!;
 	private bool _orbiting;
 	private float _pitch = -0.3f;
-	private float _visualRadius;
-	private float _yaw;
 
 	private MeshInstance3D _plateMesh = null!;
-	private MeshInstance3D _arrowMesh = null!;
 	private MeshInstance3D _seedOutlineMesh = null!;
-	private MeshInstance3D _boundaryMesh = null!;
-	private MeshInstance3D _edgeMesh = null!;
-	private MeshInstance3D _guideMesh = null!;
+	private float _visualRadius;
+	private float _yaw;
 
 	/// <inheritdoc />
 	public override void _Ready()
@@ -60,17 +53,22 @@ public partial class BootTest : Node3D
 		var nornir = new Nornir();
 		var id = nornir.CreateEntity();
 
-		nornir.Handle(new SetGeometry(id, 23, GridShape.Spherical, 38));
-		nornir.Handle(new SetPhysics(id, 37, 28));
+		const uint earthAgeScale = 365;
+		const uint earthMassScale = 365;
+		const uint earthRadiusScale = 380;
+
+		nornir.Handle(new SetGeometry(id, 23, GridShape.Spherical, earthRadiusScale));
+		nornir.Handle(new SetPhysics(id, earthAgeScale, earthMassScale));
 
 		var geometry = nornir.GetComponent<GeometryC>(id);
 		var physics = nornir.GetComponent<PhysicsC>(id);
 
-		GD.Print($"Entity {id}: AxialTilt={geometry.AxialTilt}, Radius={geometry.Radius}, GridShape={geometry.GridShape}");
-		GD.Print($"Entity {id}: Age={physics.Age}, Mass={physics.Mass}, Gravity={physics.Gravity}");
+		var gravity = Gravitation.Acceleration(physics.Mass, geometry.Radius);
+		GD.Print(
+			$"Entity {id}: AxialTilt={geometry.AxialTilt}, Radius={geometry.Radius}, GridShape={geometry.GridShape}, Age={physics.Age}, Mass={physics.Mass}, Gravity={gravity}");
 
-		// Real radius doesn't drive scene-space size directly — see ToVisualRadius.
-		var visualRadius = ToVisualRadius(geometry.Radius);
+		// Real radius doesn't drive scene-space size directly — see VisualScale.ToVisualRadius.
+		var visualRadius = VisualScale.ToVisualRadius(geometry.Radius);
 		_visualRadius = visualRadius;
 		_distance = visualRadius * 4f;
 
@@ -82,15 +80,15 @@ public partial class BootTest : Node3D
 			BodyAge = physics.Age,
 			BodyMass = physics.Mass,
 			BodyRadius = geometry.Radius,
-			BodySurfaceGravity = physics.Gravity,
 			BoundaryFocus = Ratio.FromDecimalFractions(0.67),
 			CollisionDominance = Ratio.FromDecimalFractions(0.44),
 			Grid = grid,
 			HotSpotDensity = Ratio.FromDecimalFractions(0.22),
 			PlateCount = 15,
 			PlateFragmentation = Ratio.FromDecimalFractions(0.78),
-			PlateStability = Ratio.FromDecimalFractions(0.11)
-		}, new StableRandom(42));
+			PlateStability = Ratio.FromDecimalFractions(0.11),
+			Rng = new StableRandom(42)
+		});
 
 		DrawGrid(grid, visualRadius, tectonics);
 
@@ -211,18 +209,6 @@ public partial class BootTest : Node3D
 		return new Camera3D();
 	}
 
-	/// <summary>
-	///     Maps real body radius to a bounded scene-space radius via log scale. Preserves relative size
-	///     ordering between bodies without letting real units (1 km – 1e9 km) leak into scene coordinates,
-	///     where float32 precision would collapse at the extremes of that range.
-	/// </summary>
-	private static float ToVisualRadius(Length radius)
-	{
-		var km = Math.Clamp(radius.Kilometers, MinRealRadiusKm, MaxRealRadiusKm);
-		var t = (Math.Log10(km) - Math.Log10(MinRealRadiusKm)) / (Math.Log10(MaxRealRadiusKm) - Math.Log10(MinRealRadiusKm));
-		return (float) (MinVisualRadius + t * (MaxVisualRadius - MinVisualRadius));
-	}
-
 	private void DrawGrid(IGeodesicGrid grid, float visualRadius, Result tectonics)
 	{
 		var tectonicCells = tectonics.Cells;
@@ -290,7 +276,8 @@ public partial class BootTest : Node3D
 	///     through the sphere's centre keeps it on the sphere for free, so the arc needs no reprojection.
 	///     Length/curvature scale with local speed. Winding matches <see cref="AddCellFan" />'s outward convention.
 	/// </summary>
-	private static ArrayMesh BuildVelocityArrowMesh(IGeodesicGrid grid, IReadOnlyDictionary<CellId, TectonicsCell> tectonics,
+	private static ArrayMesh BuildVelocityArrowMesh(IGeodesicGrid grid,
+		IReadOnlyDictionary<CellId, TectonicsCell> tectonics,
 		float visualRadius)
 	{
 		var tool = new SurfaceTool();
@@ -336,7 +323,7 @@ public partial class BootTest : Node3D
 		var points = new Vector3[samples];
 		for (var i = 0; i < samples; i++)
 		{
-			var t = (float) i / (samples - 1);
+			var t = (float)i / (samples - 1);
 			points[i] = normal.Rotated(axis, arcAngle * t) * liftRadius;
 		}
 
@@ -355,7 +342,9 @@ public partial class BootTest : Node3D
 				// Tip segment: taper the shaft into a small triangular head.
 				var p0 = a - side * (shaftWidth * 0.5f);
 				var p1 = a + side * (shaftWidth * 0.5f);
-				tool.AddVertex(p0); tool.AddVertex(p1); tool.AddVertex(b);
+				tool.AddVertex(p0);
+				tool.AddVertex(p1);
+				tool.AddVertex(b);
 			}
 			else
 			{
@@ -363,14 +352,19 @@ public partial class BootTest : Node3D
 				var p1 = a + side * (shaftWidth * 0.5f);
 				var p2 = b + side * (shaftWidth * 0.5f);
 				var p3 = b - side * (shaftWidth * 0.5f);
-				tool.AddVertex(p0); tool.AddVertex(p1); tool.AddVertex(p2);
-				tool.AddVertex(p0); tool.AddVertex(p2); tool.AddVertex(p3);
+				tool.AddVertex(p0);
+				tool.AddVertex(p1);
+				tool.AddVertex(p2);
+				tool.AddVertex(p0);
+				tool.AddVertex(p2);
+				tool.AddVertex(p3);
 			}
 		}
 	}
 
 	/// <summary>Builds a bold outline around each plate's seed cell boundary, marking the plate's anchor point.</summary>
-	private static ArrayMesh BuildSeedOutlineMesh(IGeodesicGrid grid, IReadOnlyDictionary<CellId, TectonicsCell> tectonics,
+	private static ArrayMesh BuildSeedOutlineMesh(IGeodesicGrid grid,
+		IReadOnlyDictionary<CellId, TectonicsCell> tectonics,
 		float visualRadius)
 	{
 		var tool = new SurfaceTool();
@@ -403,8 +397,12 @@ public partial class BootTest : Node3D
 				var p2 = b * liftRadius + side * (outlineWidth * 0.5f);
 				var p3 = b * liftRadius - side * (outlineWidth * 0.5f);
 
-				tool.AddVertex(p0); tool.AddVertex(p1); tool.AddVertex(p2);
-				tool.AddVertex(p0); tool.AddVertex(p2); tool.AddVertex(p3);
+				tool.AddVertex(p0);
+				tool.AddVertex(p1);
+				tool.AddVertex(p2);
+				tool.AddVertex(p0);
+				tool.AddVertex(p2);
+				tool.AddVertex(p3);
 			}
 		}
 

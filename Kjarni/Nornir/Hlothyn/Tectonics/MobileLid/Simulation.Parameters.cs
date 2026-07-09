@@ -1,3 +1,4 @@
+using Kjarni.Kvasir.Foundation;
 using Kjarni.Kvasir.Foundation.Grid;
 using UnitsNet;
 
@@ -36,12 +37,12 @@ public sealed record Parameters
     /// <summary>Mean radius of the body. Used to compute surface area for heat flux derivation.</summary>
     public required Length BodyRadius { get; init; }
 
-    /// <summary>Gravitational acceleration at the body's surface. Scales plate displacement rates.</summary>
-    public required Acceleration BodySurfaceGravity { get; init; }
-
     /// <summary>Total mass of the body. Scales mantle heat flux and radiogenic heat inventory.</summary>
     public required Mass BodyMass { get; init; }
 
     /// <summary>Age of the body. Drives radiogenic heat decay.</summary>
     public required Duration BodyAge { get; init; }
+
+    /// <summary>Deterministic random stream. </summary>
+    public required StableRandom Rng { get; init; }
 }
