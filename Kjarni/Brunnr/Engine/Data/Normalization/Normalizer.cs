@@ -14,6 +14,10 @@ public static class Normalizer
     private static readonly ConcurrentDictionary<Type, PropertyMeta[]> s_cache = new();
     private static readonly ConcurrentDictionary<Type, MethodInfo> s_cloneCache = new();
 
+    /// <summary>Normalizes a record's properties according to declared attributes.</summary>
+    /// <typeparam name="T">Record type with properties to normalize.</typeparam>
+    /// <param name="record">Record instance to normalize.</param>
+    /// <returns>Copy of the record with normalized values, or the original if no changes were needed.</returns>
     public static T Normalize<T>(T record) where T : notnull
     {
         var metas = s_cache.GetOrAdd(typeof(T), BuildMeta);

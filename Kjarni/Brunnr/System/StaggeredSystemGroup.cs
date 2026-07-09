@@ -6,8 +6,8 @@ namespace Kjarni.Brunnr.System;
 /// <summary>
 ///     A <see cref="SystemGroup" /> that executes its children at a fixed simulated-time interval,
 ///     with each child staggered by a fixed offset relative to the previous one.
-///     Children fire independently — member N fires <paramref name="offset" /> simulated seconds
-///     after member N-1. Member order determines firing order.
+///     Children fire independently — each child fires after the previous one by the specified offset.
+///     Member order determines firing order.
 /// </summary>
 public class StaggeredSystemGroup : SystemGroup
 {
@@ -16,6 +16,12 @@ public class StaggeredSystemGroup : SystemGroup
     private readonly List<(SystemGroup Wrapper, float Accumulator)> _members = [];
     private readonly float _offset;
 
+    /// <summary>
+    ///     Initializes a new staggered system group with the specified interval and offset.
+    /// </summary>
+    /// <param name="name">Name of the system group.</param>
+    /// <param name="interval">Fixed simulated-time interval between system executions, in seconds.</param>
+    /// <param name="offset">Initial phase offset for staggered execution, in seconds.</param>
     public StaggeredSystemGroup(string name, float interval, float offset = 0f) : base(name)
     {
         _interval = interval;
@@ -34,6 +40,7 @@ public class StaggeredSystemGroup : SystemGroup
         _members.Add((wrapper, initialAccumulator));
     }
 
+    /// <summary>Updates the staggered group by accumulating time and executing systems on interval.</summary>
     protected override void OnUpdateGroup()
     {
         var delta = Tick.deltaTime;

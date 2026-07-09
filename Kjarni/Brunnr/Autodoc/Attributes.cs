@@ -5,6 +5,7 @@ namespace Kjarni.Brunnr.Autodoc;
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
 public sealed class GroupAttribute(string summary = "") : Attribute
 {
+    /// <summary>Short description of the group.</summary>
     public string Summary { get; } = summary;
 }
 
@@ -20,7 +21,9 @@ public sealed class GroupAttribute(string summary = "") : Attribute
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false)]
 public sealed class ComponentAttribute(string group = "", string title = "") : Attribute
 {
+    /// <summary>Slash-delimited group path for component categorization.</summary>
     public string Group { get; } = group;
+    /// <summary>Display title for the component reference document.</summary>
     public string Title { get; } = title;
 }
 
@@ -30,7 +33,9 @@ public sealed class ComponentAttribute(string group = "", string title = "") : A
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
 public sealed class SettingAttribute(string purpose, string unit = "") : Attribute
 {
+    /// <summary>Short description of what this parameter controls.</summary>
     public string Purpose { get; } = purpose;
+    /// <summary>Optional physical unit (e.g. "K", "m/s", "Pa").</summary>
     public string Unit { get; } = unit;
 }
 
@@ -40,7 +45,9 @@ public sealed class SettingAttribute(string purpose, string unit = "") : Attribu
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 public sealed class StateAttribute(string purpose, string unit = "") : Attribute
 {
+    /// <summary>Short description of what this value represents.</summary>
     public string Purpose { get; } = purpose;
+    /// <summary>Optional physical unit (e.g. "K", "m/s", "Pa").</summary>
     public string Unit { get; } = unit;
 }
 

@@ -31,7 +31,7 @@ public sealed record Parameters
     public required Ratio HotSpotDensity { get; init; }
 
     /// <summary>Grid to operate on.</summary>
-    public required IGrid Grid { get; init; }
+    public required IGeodesicGrid Grid { get; init; }
 
     /// <summary>Mean radius of the body. Used to compute surface area for heat flux derivation.</summary>
     public required Length BodyRadius { get; init; }

@@ -2,6 +2,7 @@
 using Kjarni.Brunnr.Command;
 using Kjarni.Brunnr.Engine.Cell;
 using Kjarni.Brunnr.Grid;
+using Kjarni.Kvasir.Foundation.Grid;
 using Kjarni.Nornir.Geimr.Geometry;
 using Kjarni.Nornir.Geimr.Physics;
 using Kjarni.Nornir.Ginnungagap.Seed;
@@ -51,7 +52,7 @@ internal static class Extensions
             BodySurfaceGravity = physics.Gravity,
             BoundaryFocus = Ratio.FromDecimalFractions(Range10.LinearScale(command.BoundaryFocus, 0, 1)),
             CollisionDominance = Ratio.FromDecimalFractions(Range10.LinearScale(command.CollisionDominance, 0, 1)),
-            Grid = GridProvider.Get(geometry.GridShape),
+            Grid = (IGeodesicGrid) GridProvider.Get(geometry.GridShape),
             HotSpotDensity = Ratio.FromDecimalFractions(Range10.LinearScale(command.HotSpotDensity, 0, 1)),
             PlateCount = (int) Math.Round(Range10.LinearScale(command.PlateCount, 4, 50)),
             PlateFragmentation = Ratio.FromDecimalFractions(Range10.LinearScale(command.PlateFragmentation, 0, 1)),

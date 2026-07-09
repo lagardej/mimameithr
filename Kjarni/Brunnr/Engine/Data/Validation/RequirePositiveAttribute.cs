@@ -7,6 +7,10 @@ namespace Kjarni.Brunnr.Engine.Data.Validation;
 [AttributeUsage(AttributeTargets.Property)]
 public sealed class RequirePositiveAttribute : ValidationAttribute
 {
+    /// <summary>Validates that a quantity is strictly positive.</summary>
+    /// <param name="value">The quantity value to validate.</param>
+    /// <param name="ctx">Validation context containing member information.</param>
+    /// <returns>Success if the quantity is greater than zero, otherwise a validation error.</returns>
     protected override ValidationResult? IsValid(object? value, ValidationContext ctx)
     {
         if (value is not IQuantity q)

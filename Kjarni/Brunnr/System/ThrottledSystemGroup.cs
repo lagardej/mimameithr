@@ -15,6 +15,12 @@ public class ThrottledSystemGroup : SystemGroup
     private readonly SystemGroup _inner;
     private float _accumulator;
 
+    /// <summary>
+    ///     Initializes a new throttled system group with the specified interval and offset.
+    /// </summary>
+    /// <param name="name">Name of the system group.</param>
+    /// <param name="interval">Fixed simulated-time interval between system executions, in seconds.</param>
+    /// <param name="offset">Initial accumulator offset to phase execution, in seconds.</param>
     public ThrottledSystemGroup(string name, float interval, float offset = 0f) : base(name)
     {
         Interval = interval;
@@ -29,6 +35,7 @@ public class ThrottledSystemGroup : SystemGroup
     /// <summary>Adds a system to the throttled group.</summary>
     public new void Add(BaseSystem system) => _inner.Add(system);
 
+    /// <summary>Updates the throttled group by accumulating time and executing systems on interval.</summary>
     protected override void OnUpdateGroup()
     {
         _accumulator += Tick.deltaTime;

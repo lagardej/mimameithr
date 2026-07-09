@@ -26,6 +26,10 @@ public sealed class QuantityRangeAttribute(
 {
     private readonly Enum _unit = (Enum) unit;
 
+    /// <summary>Validates that a quantity falls within the specified range.</summary>
+    /// <param name="value">The quantity value to validate.</param>
+    /// <param name="ctx">Validation context containing member information.</param>
+    /// <returns>Success if the quantity is within range, otherwise a validation error.</returns>
     protected override ValidationResult? IsValid(object? value, ValidationContext ctx)
     {
         if (value is not IQuantity q)

@@ -147,7 +147,7 @@ public partial class BootTest : Node3D
 		return new MeshInstance3D
 		{
 			Mesh = new SphereMesh { Radius = visualRadius, Height = visualRadius * 2f },
-			MaterialOverride = new StandardMaterial3D { AlbedoColor = new Color(0.2f, 0.25f, 0.3f) }
+			MaterialOverride = new StandardMaterial3D { AlbedoColor = Colors.DarkSlateGray }
 		};
 	}
 
@@ -166,12 +166,13 @@ public partial class BootTest : Node3D
 		var tectonicCells = tectonics.Cells;
 
 		GD.Print($"Grid: {tectonicCells.Count} cells at resolution 2");
-		GD.Print($"Plates: {tectonicCells.Values.Select(c => c.PlateSeedCellId).Distinct().Count()} unique plate seeds");
+		GD.Print(
+			$"Plates: {tectonicCells.Values.Select(c => c.PlateSeedCellId).Distinct().Count()} unique plate seeds");
 
-		//AddChild(CreateInstance(BuildPlateMesh(grid, tectonicCells, visualRadius), Colors.White, true));
-		 AddChild(CreateInstance(BuildBoundaryMesh(grid, tectonicCells, visualRadius), Colors.White, true));
-		// AddChild(CreateInstance(BuildEdgeMesh(grid, tectonicCells, visualRadius), new Color(0.95f, 0.95f, 0.95f)));
-		AddChild(CreateInstance(BuildGuideMesh(visualRadius), new Color(1f, 0.9f, 0.2f)));
+		AddChild(CreateInstance(BuildGuideMesh(visualRadius), Colors.Yellow));
+		AddChild(CreateInstance(BuildEdgeMesh(grid, tectonicCells, visualRadius), Colors.WhiteSmoke));
+		AddChild(CreateInstance(BuildPlateMesh(grid, tectonicCells, visualRadius), Colors.White, true));
+		AddChild(CreateInstance(BuildBoundaryMesh(grid, tectonicCells, visualRadius), Colors.White, true));
 	}
 
 	private static MeshInstance3D CreateInstance(Mesh mesh, Color colour, bool useVertexColour = false)
@@ -200,11 +201,11 @@ public partial class BootTest : Node3D
 	{
 		return boundaryType switch
 		{
-			Convergent => new Color(1f, 0.35f, 0.2f),
-			Divergent => new Color(0.2f, 0.7f, 1f),
-			BoundaryType.Transform => new Color(0.9f, 0.85f, 0.25f),
-			HotSpot => new Color(1f, 0.45f, 0.85f),
-			_ => new Color(1f, 1f, 1f)
+			Convergent => Colors.OrangeRed,
+			Divergent => Colors.DeepSkyBlue,
+			BoundaryType.Transform => Colors.Gold,
+			HotSpot => Colors.HotPink,
+			_ => Colors.White
 		};
 	}
 
@@ -223,7 +224,7 @@ public partial class BootTest : Node3D
 		}
 	}
 
-	private static Mesh BuildPlateMesh(IGeodesicGrid grid, IReadOnlyDictionary<CellId, TectonicsCell> tectonics,
+	private static ArrayMesh BuildPlateMesh(IGeodesicGrid grid, IReadOnlyDictionary<CellId, TectonicsCell> tectonics,
 		float visualRadius)
 	{
 		var tool = new SurfaceTool();
@@ -245,7 +246,7 @@ public partial class BootTest : Node3D
 		return tool.Commit();
 	}
 
-	private static Mesh BuildBoundaryMesh(IGeodesicGrid grid, IReadOnlyDictionary<CellId, TectonicsCell> tectonics,
+	private static ArrayMesh BuildBoundaryMesh(IGeodesicGrid grid, IReadOnlyDictionary<CellId, TectonicsCell> tectonics,
 		float visualRadius)
 	{
 		var tool = new SurfaceTool();
@@ -267,7 +268,7 @@ public partial class BootTest : Node3D
 		return tool.Commit();
 	}
 
-	private static Mesh BuildEdgeMesh(IGeodesicGrid grid, IReadOnlyDictionary<CellId, TectonicsCell> tectonics,
+	private static ImmediateMesh BuildEdgeMesh(IGeodesicGrid grid, IReadOnlyDictionary<CellId, TectonicsCell> tectonics,
 		float visualRadius)
 	{
 		var mesh = new ImmediateMesh();
@@ -293,7 +294,7 @@ public partial class BootTest : Node3D
 		return mesh;
 	}
 
-	private static Mesh BuildGuideMesh(float visualRadius)
+	private static ImmediateMesh BuildGuideMesh(float visualRadius)
 	{
 		var mesh = new ImmediateMesh();
 		mesh.SurfaceBegin(Mesh.PrimitiveType.Lines);
