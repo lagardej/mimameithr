@@ -1,8 +1,6 @@
 <Project Sdk="Godot.NET.Sdk/4.6.3">
 
     <PropertyGroup>
-        <ActualSolutionDir Condition="'$(SolutionDir)' != ''">$(SolutionDir)</ActualSolutionDir>
-        <ActualSolutionDir Condition="'$(SolutionDir)' == ''">$(MSBuildThisFileDirectory)..\..\</ActualSolutionDir>
         <EnableDynamicLoading>true</EnableDynamicLoading>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
@@ -12,20 +10,20 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="$(ActualSolutionDir)Kjarni\Nornir\Kjarni.Nornir.csproj"/>
-        <ProjectReference Include="$(ActualSolutionDir)Bifrost\Kart\Bifrost.Kart.csproj"/>
+        <ProjectReference Include="..\..\Kjarni\Nornir\Kjarni.Nornir.csproj"/>
+        <ProjectReference Include="..\..\Bifrost\Kart\Bifrost.Kart.csproj"/>
     </ItemGroup>
 
     <Target Name="CopyRustLibWindows" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('Windows'))">
-        <Copy SourceFiles="$(ActualSolutionDir)Rustr\Kart\target\release\rustr_kart.dll" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
+        <Copy SourceFiles="..\..\Rustr\Kart\target\release\rustr_kart.dll" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
     </Target>
 
     <Target Name="CopyRustLibLinux" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('Linux'))">
-        <Copy SourceFiles="$(ActualSolutionDir)Rustr\Kart\target\release\librustr_kart.so" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
+        <Copy SourceFiles="..\..\Rustr\Kart\target\release\librustr_kart.so" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
     </Target>
 
     <Target Name="CopyRustLibMac" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('OSX'))">
-        <Copy SourceFiles="$(ActualSolutionDir)Rustr\Kart\target\release\librustr_kart.dylib" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
+        <Copy SourceFiles="..\..\Rustr\Kart\target\release\librustr_kart.dylib" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
     </Target>
 
 </Project>

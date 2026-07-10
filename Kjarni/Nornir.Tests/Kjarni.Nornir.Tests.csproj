@@ -1,8 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <ActualSolutionDir Condition="'$(SolutionDir)' != ''">$(SolutionDir)</ActualSolutionDir>
-    <ActualSolutionDir Condition="'$(SolutionDir)' == ''">$(MSBuildThisFileDirectory)..\..\</ActualSolutionDir>
     <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>false</IsPackable>
     <Nullable>enable</Nullable>
@@ -11,8 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(SolutionDir)Kjarni\Brunnr\Kjarni.Brunnr.csproj"/>
-    <ProjectReference Include="$(SolutionDir)Kjarni\Nornir\Kjarni.Nornir.csproj"/>
+    <ProjectReference Include="..\..\Kjarni\Brunnr\Kjarni.Brunnr.csproj"/>
+    <ProjectReference Include="..\..\Kjarni\Nornir\Kjarni.Nornir.csproj"/>
   </ItemGroup>
 
   <ItemGroup>
