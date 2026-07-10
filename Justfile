@@ -2,16 +2,13 @@
 default:
     @just --list
 
-[group('autodoc')]
-autodoc-kvasir:
-    dotnet run --project Volundr/Gler -- kvasir .
+[group('doc')]
+doc-build:
+    docfx metadata && docfx build
 
-[group('autodoc')]
-autodoc-nornir:
-    dotnet run --project Volundr/Gler -- nornir .
-
-[group('autodoc')]
-autodoc: autodoc-nornir autodoc-kvasir
+[group('doc')]
+doc-serve:
+    docfx serve
 
 [group('code-quality')]
 format:

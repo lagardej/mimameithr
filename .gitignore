@@ -15,3 +15,5 @@ coverage/
 
 Mimameithr.sln.DotSettings*
 .godot
+_site/
+api/
