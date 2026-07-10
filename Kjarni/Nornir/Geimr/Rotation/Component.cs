@@ -11,5 +11,5 @@ public struct RotationC : IComponent
     public Angle CurrentAngle;
 
     /// <summary>Rate at which the body completes a full rotation.</summary>
-    public RotationalSpeed RotationRate;
+    public RotationalSpeed RotationalSpeed;
 }

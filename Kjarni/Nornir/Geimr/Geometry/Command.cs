@@ -8,13 +8,28 @@ namespace Kjarni.Nornir.Geimr.Geometry;
 /// <param name="Id">The entity id.</param>
 /// <param name="AxialTilt">Axial tilt relative to the orbital plane normal, in degrees. Range: [0, 180].</param>
 /// <param name="GridShape">Grid backend shape for this body's discrete global grid.</param>
-/// <param name="Radius">Mean radius on a 1–100 scale mapping 1 km to 10⁹ km exponentially.</param>
+/// <param name="Radius">Mean radius on a 1–1000 scale mapping 1 km to 10⁹ km exponentially.</param>
 /// <remarks>
-///     <see href="../../../../docs/Nornir/Geimr/BodyGeometry-radius-scale.adoc">Full scale reference</see>
+///     <para>Radius Scale Reference</para>
+///     <code>
+/// Scale |   Radius (km) | Closest Real Class
+/// ----- | ------------- | ------------------
+///     1 |             1 | Boulder
+///   100 |            10 | Small asteroid
+///   200 |            99 | Large asteroid
+///   300 |           994 | Small moon
+///   400 |        10,000 | Super-Earth
+///   500 |        46,416 | Neptune-class planet
+///   600 |       215,443 | Brown dwarf
+///   700 |     1,000,000 | Sun-sized star (1.4 R☉)
+///   800 |    10,000,000 | Red giant (14.3 R☉)
+///   900 |   100,000,000 | Red supergiant (143 R☉)
+///  1000 | 1,000,000,000 | Largest hypergiants (1,428 R☉)
+/// </code>
 /// </remarks>
 public record SetGeometry(
     int Id,
     [Range(0u, 180u)] uint AxialTilt,
     GridShape GridShape,
-    [Range(1u, 100u)] uint Radius
+    [Range(1u, 1000u)] uint Radius
 ) : ICommand;

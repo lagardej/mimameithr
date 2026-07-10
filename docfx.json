@@ -1,0 +1,49 @@
+{
+    "$schema": "https://raw.githubusercontent.com/dotnet/docfx/main/schemas/docfx.schema.json",
+    "metadata": [
+        {
+            "src": [
+                {
+                    "files": [
+                        "Mimameithr.slnx"
+                    ],
+                    "exclude": [
+                        "**/*Tests.csproj",
+                        "**/*Benchmark*.csproj"
+                    ]
+                }
+            ],
+            "dest": "api"
+        }
+    ],
+    "build": {
+        "content": [
+            {
+                "files": [
+                    "**/*.{md,yml}"
+                ],
+                "exclude": [
+                    "_site/**"
+                ]
+            }
+        ],
+        "resource": [
+            {
+                "files": [
+                    "images/**"
+                ]
+            }
+        ],
+        "output": "_site",
+        "template": [
+            "default",
+            "modern"
+        ],
+        "globalMetadata": {
+            "_appName": "M\u00EDmamei\u00F0r",
+            "_appTitle": "M\u00EDmamei\u00F0r",
+            "_enableSearch": true,
+            "pdf": false
+        }
+    }
+}

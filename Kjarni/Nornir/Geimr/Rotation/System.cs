@@ -11,7 +11,7 @@ public sealed class RotationSystem : QuerySystem<RotationC>
     {
         var elapsed = Duration.FromSeconds(Tick.time);
         Query.ForEachEntity((ref rotation, _) =>
-            rotation.CurrentAngle = CurrentAngle(rotation.CurrentAngle, rotation.RotationRate, elapsed));
+            rotation.CurrentAngle = CurrentAngle(rotation.CurrentAngle, rotation.RotationalSpeed, elapsed));
     }
 
     /// <summary>Computes the current rotation angle of a body around its axis.</summary>

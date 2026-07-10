@@ -16,12 +16,13 @@ public class SetRotationHandler(EntityStore store) : ICommandHandler<SetRotation
     public void Handle(SetRotation command)
     {
         var entity = store.GetEntityById(command.Id);
-        var rotationSeconds = s_rotationScale.Evaluate(command.RotationRate);
+        var rotationPeriod = s_rotationScale.Evaluate(command.RotationPeriod);
+        var revolutionsPerSecond = 1 / rotationPeriod;
 
         entity.AddComponent(new RotationC
         {
             CurrentAngle = Angle.FromDegrees(command.InitialAngle),
-            RotationRate = RotationalSpeed.FromDegreesPerSecond(rotationSeconds)
+            RotationalSpeed = RotationalSpeed.FromRevolutionsPerSecond(revolutionsPerSecond)
         });
     }
 }
