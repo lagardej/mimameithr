@@ -9,7 +9,6 @@ internal static class RegimeInvariant
 {
     internal static void RemoveAllRegimeComponents(EntityStore store, Entity body)
     {
-        body.RemoveComponent<TectonicsMobileLidC>();
         body.RemoveComponent<TectonicsStagnantLidC>();
 
         store.Query<CellParentRefC>().ForEachEntity((ref parentRef, cellEntity) =>
@@ -19,7 +18,8 @@ internal static class RegimeInvariant
                 return;
             }
 
-            cellEntity.RemoveComponent<TectonicsMobileLidC>();
+            cellEntity.RemoveComponent<TectonicsBoundaryC>();
+            cellEntity.RemoveComponent<TectonicsPlateC>();
             cellEntity.RemoveComponent<TectonicsStagnantLidC>();
         });
     }

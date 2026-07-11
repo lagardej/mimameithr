@@ -28,15 +28,51 @@ public class SetTectonicsMobileLidHandler(EntityStore store, RandomProvider rand
         RegimeInvariant.RemoveAllRegimeComponents(store, entity);
         entity.AddComponent(new TectonicsRegimeC { Regime = Regime.MobileLid });
 
+        var existingCells = new Dictionary<CellId, Entity>();
         store.Query<CellIdentityC, CellParentRefC>().ForEachEntity((ref identity, ref parentRef, cellEntity) =>
         {
-            if (parentRef.Parent != entity || !result.Cells.TryGetValue(identity.Id, out var cell))
+            if (parentRef.Parent == entity)
             {
-                return;
+                existingCells[identity.Id] = cellEntity;
+            }
+        });
+
+        // R0 — dense: each plate covers many cells; write its component onto every cell it covers, on demand.
+        foreach (var plate in result.Plates.Values)
+        {
+            var component = plate.ToComponent();
+
+            foreach (var cellId in plate.Cells)
+            {
+                GetOrCreateCell(existingCells, entity, cellId).AddComponent(component);
+            }
+        }
+
+        // R2 — sparse: only persist boundary/hot-spot cells. The simulation returns every R2 cell (including
+        // None); skipping interior cells here is a storage decision, not the simulation's.
+        foreach (var (cellId, boundary) in result.Boundaries)
+        {
+            if (boundary.BoundaryType == BoundaryType.None)
+            {
+                continue;
             }
 
-            cellEntity.AddComponent(cell.ToComponent());
-        });
+            GetOrCreateCell(existingCells, entity, cellId).AddComponent(boundary.ToComponent());
+        }
+    }
+
+    private Entity GetOrCreateCell(Dictionary<CellId, Entity> existingCells, Entity body, CellId cellId)
+    {
+        if (existingCells.TryGetValue(cellId, out var cellEntity))
+        {
+            return cellEntity;
+        }
+
+        cellEntity = store.CreateEntity();
+        cellEntity.AddComponent(new CellIdentityC { Id = cellId });
+        cellEntity.AddComponent(new CellParentRefC { Parent = body });
+        existingCells[cellId] = cellEntity;
+        return cellEntity;
     }
 }
 
@@ -69,18 +105,25 @@ internal static class Extensions
         }
     }
 
-    extension(TectonicsCell cell)
+    extension(Plate plate)
     {
-        public TectonicsMobileLidC ToComponent() => new()
+        public TectonicsPlateC ToComponent() => new()
         {
-            PlateSeedCellId = cell.PlateSeedCellId,
-            BoundaryType = cell.BoundaryType,
-            CrustComposition = cell.CrustComposition,
-            CrustalThickness = cell.CrustThickness,
-            CrustAge = cell.CrustAge,
-            SeedCellId = cell.SeedCellId,
-            PlateAngularVelocity = cell.PlateAngularVelocity,
-            VerticalDisplacementRate = cell.VerticalDisplacementRate
+            CrustComposition = plate.CrustComposition,
+            CrustalThickness = plate.CrustThickness,
+            PlateAngularVelocity = plate.AngularVelocity,
+            PlateSeedCellId = plate.SeedCellId
+        };
+    }
+
+    extension(Boundary boundary)
+    {
+        public TectonicsBoundaryC ToComponent() => new()
+        {
+            BoundaryType = boundary.BoundaryType,
+            CrustAge = boundary.CrustAge,
+            PlateSeedCellId = boundary.PlateSeedCellId,
+            VerticalDisplacementRate = boundary.VerticalDisplacementRate
         };
     }
 }

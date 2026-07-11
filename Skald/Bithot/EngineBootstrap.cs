@@ -1,0 +1,48 @@
+using Bifrost.Kart;
+using Kjarni.Brunnr.Grid;
+using Kjarni.Nornir;
+using Kjarni.Nornir.Geimr.Geometry;
+using Kjarni.Nornir.Geimr.Physics;
+using Kjarni.Nornir.Geimr.Rotation;
+using Kjarni.Nornir.Ginnungagap.Seed;
+using Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
+
+namespace Skald.Bithot;
+
+/// <summary>Boots a headless <see cref="Nornir" /> engine and configures a single test body through generation-phase commands.</summary>
+public static class EngineBootstrap
+{
+    private const uint Seed = 42;
+    private const uint AxialTilt = 23;
+    private const uint BodyRadius = 400;
+    private const uint BodyAge = 400;
+    private const uint BodyMass = 400;
+    private const uint RotationPeriod = 400;
+
+    /// <summary>
+    ///     Initializes <see cref="GridProvider" /> with the geodesic grid backend, creates one body entity, and runs
+    ///     mobile-lid tectonics generation on it. Returns the engine and the body's entity id.
+    /// </summary>
+    public static (Nornir Engine, int BodyId) CreateTestBody()
+    {
+        GridProvider.Initialize(GridShape.Spherical, new BifrostKart());
+
+        var engine = new Nornir();
+        engine.Handle(new SetSeed(Seed));
+
+        var bodyId = engine.CreateEntity();
+        engine.Handle(new SetGeometry(bodyId, AxialTilt, GridShape.Spherical, BodyRadius));
+        engine.Handle(new SetPhysics(bodyId, BodyAge, BodyMass));
+        engine.Handle(new SetRotation(bodyId, InitialAngle: 1, RotationPeriod));
+        engine.Handle(new SetTectonicsMobileLid(
+            bodyId,
+            BoundaryFocus: 5,
+            CollisionDominance: 5,
+            HotSpotDensity: 5,
+            PlateCount: 5,
+            PlateFragmentation: 5,
+            PlateStability: 5));
+
+        return (engine, bodyId);
+    }
+}

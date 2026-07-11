@@ -28,10 +28,10 @@ public class SetOrogenyHandler(EntityStore store, RandomProvider randomProvider)
         var grid = GridProvider.Get(geometry.GridShape);
         var rng = randomProvider.CreateStream((ulong) command.Id, 1);
 
-        var tectonics = new Dictionary<CellId, TectonicsMobileLidC>();
+        var tectonics = new Dictionary<CellId, TectonicsBoundaryC>();
         var cellEntities = new Dictionary<CellId, Entity>();
 
-        store.Query<CellIdentityC, CellParentRefC, TectonicsMobileLidC>()
+        store.Query<CellIdentityC, CellParentRefC, TectonicsBoundaryC>()
             .ForEachEntity((ref identity, ref parentRef, ref cellTectonics, cellEntity) =>
             {
                 if (parentRef.Parent != entity)

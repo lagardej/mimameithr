@@ -12,7 +12,8 @@ namespace Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
 
 /// <summary>
 ///     One-shot tectonic world-generation simulation.
-///     Produces a <see cref="TectonicsCell" /> per grid cell from <see cref="Parameters" />.
+///     Produces a <see cref="Plate" /> per plate (covering many R0 cells) and a <see cref="Boundary" /> per R2
+///     boundary/hot-spot cell from <see cref="Parameters" />.
 /// </summary>
 /// <remarks>
 ///     <para>Two-pass algorithm:</para>
@@ -40,7 +41,7 @@ internal static class Simulation
 
     /// <summary>Runs the tectonic simulation and returns the per-cell tectonic state.</summary>
     /// <param name="parameters">Simulation parameters.</param>
-    /// <returns>Tectonic state for every R2 cell in the grid.</returns>
+    /// <returns>Every plate and boundary state for every R2 boundary/hot-spot cell.</returns>
     public static Result Run(Parameters parameters)
     {
         var grid = parameters.Grid;
@@ -52,33 +53,49 @@ internal static class Simulation
         var plateMap = SeedPlates(r0Cells, parameters);
         var plateComps = AssignCompositions(plateMap, parameters);
         var angularVelocities = AssignVelocities(plateMap, parameters);
+        var heatFlux = AsthenosphericHeatFlux(parameters.BodyAge, parameters.BodyMass, parameters.BodyRadius);
+        var gravity = Gravitation.Acceleration(parameters.BodyMass, parameters.BodyRadius);
+
+        var plateThickness = plateComps.ToDictionary(
+            kv => kv.Key,
+            kv => CrustThickness(kv.Value, gravity, heatFlux));
+
+        var plates = plateMap
+            .GroupBy(kv => kv.Value)
+            .ToDictionary(
+                g => g.Key,
+                g => new Plate
+                {
+                    SeedCellId = g.Key,
+                    CrustComposition = plateComps[g.Key],
+                    CrustThickness = plateThickness[g.Key],
+                    AngularVelocity = angularVelocities[g.Key],
+                    Cells = g.Select(kv => kv.Key).ToArray()
+                });
 
         //
         // Pass 2: boundary classification at R2
         //
-        var heatFlux = AsthenosphericHeatFlux(parameters.BodyAge, parameters.BodyMass, parameters.BodyRadius);
-        var result = new Dictionary<CellId, TectonicsCell>();
-        var gravity = Gravitation.Acceleration(parameters.BodyMass, parameters.BodyRadius);
+        var boundaries = new Dictionary<CellId, Boundary>();
+        var r2Composition = new Dictionary<CellId, CrustComposition>();
 
         foreach (var r2Cell in grid.CellsAtResolution(s_boundaryResolution))
         {
             var plate = grid.ParentOf(r2Cell, Resolution.R0);
             var seedCellId = plateMap[plate];
             var crustComposition = plateComps[seedCellId];
-            var crustThickness = CrustThickness(crustComposition, gravity, heatFlux);
+            var crustThickness = plateThickness[seedCellId];
             var boundaryType = ClassifyBoundary(r2Cell, seedCellId, grid, plateMap, angularVelocities, parameters);
             var verticalDisplacement =
                 VerticalDisplacementRate(boundaryType, crustComposition, crustThickness, parameters, heatFlux);
 
-            result[r2Cell] = new TectonicsCell
+            r2Composition[r2Cell] = crustComposition;
+
+            boundaries[r2Cell] = new Boundary
             {
                 PlateSeedCellId = seedCellId,
-                SeedCellId = seedCellId,
-                CrustComposition = crustComposition,
-                CrustThickness = crustThickness,
                 CrustAge = Duration.Zero,
                 BoundaryType = boundaryType,
-                PlateAngularVelocity = angularVelocities[seedCellId],
                 VerticalDisplacementRate = verticalDisplacement
             };
         }
@@ -86,9 +103,9 @@ internal static class Simulation
         //
         // Pass 3: crust age from distance to nearest divergent boundary
         //
-        AssignCrustAge(result, grid, parameters.BodyAge);
+        AssignCrustAge(boundaries, r2Composition, grid, parameters.BodyAge);
 
-        return new Result(result);
+        return new Result(plates, boundaries);
     }
 
     /// <summary>
@@ -97,13 +114,13 @@ internal static class Simulation
     ///     crust (oceanic-style spreading); <see cref="CrustComposition.Felsic" /> crust is treated as old/stable,
     ///     matching Earth where continental crust is not recycled by spreading.
     /// </summary>
-    private static void AssignCrustAge(Dictionary<CellId, TectonicsCell> result, IGeodesicGrid grid,
-        Duration bodyAge)
+    private static void AssignCrustAge(Dictionary<CellId, Boundary> boundaries,
+        Dictionary<CellId, CrustComposition> composition, IGeodesicGrid grid, Duration bodyAge)
     {
         var distances = new Dictionary<CellId, int>();
         var frontier = new Queue<CellId>();
 
-        foreach (var (cellId, cell) in result)
+        foreach (var (cellId, cell) in boundaries)
         {
             if (cell.BoundaryType != Divergent)
             {
@@ -122,8 +139,8 @@ internal static class Simulation
             foreach (var neighbour in grid.Disk(current, 1).Where(n => n != current))
             {
                 if (distances.ContainsKey(neighbour) ||
-                    !result.TryGetValue(neighbour, out var neighbourCell) ||
-                    neighbourCell.CrustComposition != CrustComposition.Mafic)
+                    !composition.TryGetValue(neighbour, out var neighbourComposition) ||
+                    neighbourComposition != CrustComposition.Mafic)
                 {
                     continue;
                 }
@@ -135,12 +152,12 @@ internal static class Simulation
 
         var maxDistance = distances.Count > 0 ? distances.Values.Max() : 0;
 
-        foreach (var cellId in result.Keys.ToArray())
+        foreach (var cellId in boundaries.Keys.ToArray())
         {
-            var cell = result[cellId];
+            var cell = boundaries[cellId];
 
             Duration age;
-            if (cell.CrustComposition == CrustComposition.Felsic)
+            if (composition[cellId] == CrustComposition.Felsic)
             {
                 age = bodyAge;
             }
@@ -154,7 +171,7 @@ internal static class Simulation
                 age = bodyAge;
             }
 
-            result[cellId] = cell with { CrustAge = age };
+            boundaries[cellId] = cell with { CrustAge = age };
         }
     }
 
