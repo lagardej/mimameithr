@@ -33,9 +33,9 @@ for exactly this sync problem. The implemented `GeometrySystem` used
 — implementation drifted from its own design doc; the drift is the
 bug.
 
-## Open question — needs empirical check before fixing
+## Open question — resolved
 
-Two unresolved hypotheses, not one confirmed bug:
+Two hypotheses were proposed:
 
 1. `EventFilter.ComponentAdded<T>()` only sees genuine first-attach
    — `AddComponent` on an already-present component fires `Update`,
@@ -46,20 +46,19 @@ Two unresolved hypotheses, not one confirmed bug:
    push subscription, not to what `EventFilter` tracks. No gap;
    `GeometrySystem` already catches forcing-driven overwrites.
 
-Docs didn't settle which applies to `EventFilter` specifically.
-Before touching `GeometrySystem`: write a small test (add same
-component type twice on an entity, check
-`query.EventFilter.ComponentAdded<T>()` / `query.HasEvent()` fires
-on the second call) to confirm which hypothesis holds. Only
-implement the `OnComponentChanged` fix below if (1) is confirmed.
+Confirmed by test (`Kjarni/Brunnr.Tests/EventFilterTests.cs`,
+`ComponentAdded_FiresOnAddOverExisting`): add component, clear
+events, `AddComponent` again on the same entity (an `Update`),
+assert `query.HasEvent()` — passes green. **Hypothesis (2) holds.**
+`EventFilter.ComponentAdded<T>()` fires on `AddComponent` regardless
+of prior presence. `GeometrySystem` already catches forcing-driven
+geometry overwrites. No gap.
 
 ## Fix
 
-Switch `GeometrySystem` (and any future Bithot system following its
-pattern) to subscribe via `store.OnComponentChanged`, filtered to
-the component type it renders, marking the entity dirty on both
-`Add` and `Update` (`Remove` already needs separate handling to
-strip `VisualRadiusC`). Drain the dirty set in `Advance()` as today.
+Not needed — closing as no-bug. `GeometrySystem` stays on
+`EventRecorder`/`EventFilter` as implemented. No
+`OnComponentChanged` migration required.
 
 Not needed for `Skald.Bithot.Geimr.Position.PositionSystem` — that
 one always full-resyncs every entity every `Advance()` call, no
