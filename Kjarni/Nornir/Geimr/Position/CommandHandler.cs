@@ -21,31 +21,14 @@ public class SetPositionHandler(EntityStore store) : ICommandHandler<SetPosition
     {
         var entity = store.GetEntityById(command.Id);
 
-        var velocityX = Speed.FromKilometersPerSecond(command.VelocityX);
-        var velocityY = Speed.FromKilometersPerSecond(command.VelocityY);
-        var velocityZ = Speed.FromKilometersPerSecond(command.VelocityZ);
-
-        // If body has a parent, velocity is relative to parent — convert to absolute
-        if (command.ParentId.HasValue)
-        {
-            var parent = store.GetEntityById(command.ParentId.Value);
-            if (parent.HasComponent<PositionC>())
-            {
-                var parentVel = parent.GetComponent<PositionC>();
-                velocityX += parentVel.VelocityX;
-                velocityY += parentVel.VelocityY;
-                velocityZ += parentVel.VelocityZ;
-            }
-        }
-
         entity.AddComponent(new PositionC
         {
             X = Length.FromKilometers(command.X),
             Y = Length.FromKilometers(command.Y),
             Z = Length.FromKilometers(command.Z),
-            VelocityX = velocityX,
-            VelocityY = velocityY,
-            VelocityZ = velocityZ
+            VelocityX = Speed.FromKilometersPerSecond(command.VelocityX),
+            VelocityY = Speed.FromKilometersPerSecond(command.VelocityY),
+            VelocityZ = Speed.FromKilometersPerSecond(command.VelocityZ)
         });
 
         if (command.ParentId is null)

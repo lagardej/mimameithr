@@ -53,7 +53,7 @@ public static class NornirBootstrap
         engine.Handle(new SetGeometry(id, Spherical, RadiusKm(1_737)));
         engine.Handle(new SetPhysics(id, AgeYears(4.54e9), MassKg(7.342e22)));
         engine.Handle(new SetRotation(id, InitialAngle: 1, RotationPeriodDays(27.3)));
-        engine.Handle(new SetPosition(id, X: 384_400, VelocityY: 1, ParentId: earthId));
+        engine.Handle(new SetPosition(id, X: 150_000_000 + 384_400, Y: 0, Z: 0, VelocityX: 0, VelocityY: 1.022, VelocityZ: 0, ParentId: earthId));
     }
 
     /// <summary>
