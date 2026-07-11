@@ -1,4 +1,5 @@
 using Friflo.Engine.ECS;
+using Godot;
 using Kjarni.Nornir.Geimr.Position;
 using Skald.Bithot.Geimr.Geometry;
 
@@ -30,7 +31,10 @@ public sealed class PositionSystem : IBithotSystem
         {
             var position = entity.GetComponent<PositionC>();
             var node = entity.GetComponent<BodyNodeC>().Node;
-            node.Position = PositionScale.ToVisualPosition(position.X, position.Y, position.Z);
+            var visual = PositionScale.ToVisualPosition(position.X, position.Y, position.Z);
+            node.Position = visual;
+
+            // GD.Print($"Body_{entity.Id}: real pos=({position.X.Kilometers:N0}, {position.Y.Kilometers:N0}, " + $"{position.Z.Kilometers:N0}) km, visual pos={visual}");
         }
     }
 }

@@ -50,7 +50,16 @@ shows nothing changing on screen.
 
 ## Sub-tasks
 
-- [ ] Position render sync — orbital-distance scale (`VisualScale`
+- [x] Position render sync — orbital-distance scale (`VisualScale`
       equivalent for `Length`→world float), `PositionC` → `Node3D.Position`
-- [ ] Rotation render sync — `RotationC.CurrentAngle` (`Angle`) →
+
+  **Acceptance**: run `BootTest` in the Godot editor/shell. Sun,
+  Earth, and Moon are visible as spheres in the scene, each at its
+  correct position (Earth offset from Sun, Moon offset from Earth,
+  per `NornirBootstrap.CreateSolarSystem`'s initial state vectors,
+  scaled through the new orbital-distance scale). Confirms the
+  `Node3D` lookup + position-sync system is wired end-to-end, not
+  just unit-tested.
+
+- [x] Rotation render sync — `RotationC.CurrentAngle` (`Angle`) →
       `Node3D.Rotation`, radians conversion
