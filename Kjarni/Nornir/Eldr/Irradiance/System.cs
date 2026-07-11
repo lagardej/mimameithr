@@ -13,21 +13,25 @@ public sealed class IrradianceSystem : QuerySystem<IrradianceC, CellIdentityC, C
     protected override void OnUpdate() =>
         Query.ForEachEntity((ref irradiance, ref identity, ref planetRef, _) =>
         {
+            // Blocked on cell-id -> LatLng lookup: IGrid has no such method, GeoGrid referenced here
+            // pre-refactor doesn't exist. Orbit/Rotation/Geometry/Luminosity inputs below are otherwise
+            // ready (orbit-system-rewrite.md re-derives OrbitC.OrbitalAngle/DistanceFromStar) -- only the
+            // geographic lookup is missing. Separate ticket.
             // var planet = planetRef.Parent;
             // var orbit = planet.GetComponent<OrbitC>();
             // var rotation = planet.GetComponent<RotationC>();
             // var geometry = planet.GetComponent<GeometryC>();
-            // var luminosity = planet.GetComponent<LuminosityC>();
+            // var luminosity = planet.GetComponent<Luminosity.LuminosityC>();
             //
-            // var zenith = StellarGeometry.StellarZenithAngle(
-            //     GeoGrid.Instance.CenterOf(identity.Id),
+            // var zenith = StellarZenithAngle(
+            //     /* cell centre LatLng lookup -- missing */,
             //     orbit.OrbitalAngle,
             //     rotation.CurrentAngle,
             //     geometry.AxialTilt);
             //
             // irradiance.ZenithAngle = zenith;
             // irradiance.IsDaytime = zenith.Degrees < 90.0;
-            // irradiance.Insolation = StellarGeometry.Insolation(luminosity.Luminosity, orbit.DistanceFromStar, zenith);
+            // irradiance.Insolation = Insolation(luminosity.Luminosity, orbit.DistanceFromStar, zenith);
         });
 
 

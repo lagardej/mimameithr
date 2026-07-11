@@ -3,7 +3,7 @@ using Friflo.Engine.ECS.Systems;
 using Kjarni.Brunnr.Engine.Time;
 using Kjarni.Brunnr.System;
 using Kjarni.Nornir.Eldr.Irradiance;
-using Kjarni.Nornir.Geimr.Orbit;
+using Kjarni.Nornir.Geimr.Position;
 using Kjarni.Nornir.Geimr.Rotation;
 
 namespace Kjarni.Nornir;
@@ -60,6 +60,6 @@ internal static class VerðandiSystems
     private static StaggeredSystemGroup StaggeredAt10S() =>
         new("10s staggered systems", SimSecond * 10, StaggerOffset)
         {
-            new RotationSystem(), new OrbitSystem(), new IrradianceSystem()
+            new RotationSystem(), new PositionSystem(), new IrradianceSystem()
         };
 }

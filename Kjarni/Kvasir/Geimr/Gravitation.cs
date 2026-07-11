@@ -35,4 +35,11 @@ public static class Gravitation
     /// </summary>
     public static Speed OrbitalVelocity(Mass centralMass, Length orbitalRadius) =>
         Speed.FromMetersPerSecond(Math.Sqrt(G * centralMass.Kilograms / orbitalRadius.Meters));
+
+    /// <summary>
+    ///     Computes the standard gravitational parameter (μ = G·M) for a two-body system, in m³ s⁻².
+    ///     No dedicated <c>UnitsNet</c> quantity exists for this, so the result is a raw SI double.
+    /// </summary>
+    public static double StandardGravitationalParameter(Mass mass1, Mass mass2) =>
+        G * (mass1.Kilograms + mass2.Kilograms);
 }
