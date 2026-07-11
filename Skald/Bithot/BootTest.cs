@@ -30,9 +30,13 @@ public partial class BootTest : Node3D
 		_bithot.AttachTo(this);
 	}
 
-    public override void _Process(double delta)
+    public override void _PhysicsProcess(double delta)
     {
         _nornir.Advance((float)delta);
+    }
+
+    public override void _Process(double delta)
+    {
         _bithot.Advance();
     }
 }
