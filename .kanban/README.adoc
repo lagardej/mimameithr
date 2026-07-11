@@ -1,0 +1,32 @@
+= Kanban
+
+One card per file, frontmatter `status`.
+
+== Todo
+
+* link:1_Todo/bithot-real-body-geometry.md[bithot-real-body-geometry] — Skald/Bithot
+* link:1_Todo/bithot-render-tectonics.md[bithot-render-tectonics] — Skald/Bithot (blocked)
+
+== Doing
+
+_empty_
+
+== Done
+
+_empty_
+
+== Archive
+
+* link:Archive/bithot-render-restart.md[bithot-render-restart] — Skald/Bithot
+* link:Archive/tectonics-cell-persistence.md[tectonics-cell-persistence] — Hlothyn/Tectonics
+* link:Archive/per-plate-pair-boundary-classification.md[per-plate-pair-boundary-classification] — Hlothyn/Tectonics
+
+== Backlog
+
+* link:0_Backlog/extension-rate.md[extension-rate] — Hlothyn/Tectonics
+* link:0_Backlog/ilinkrelation-orogeny-belt-cell.md[ilinkrelation-orogeny-belt-cell] — Hlothyn/Orogeny (blocked)
+* link:0_Backlog/orbit-system-rewrite.md[orbit-system-rewrite] — Geimr/Orbit
+
+== Rejected
+
+* link:Rejected/discrete-fault-lines.md[discrete-fault-lines] — Hlothyn/Tectonics
