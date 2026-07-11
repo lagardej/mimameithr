@@ -1,5 +1,7 @@
 using Friflo.Engine.ECS;
+
 using Skald.Bithot.Geimr.Geometry;
+using Skald.Bithot.Geimr.Position;
 
 namespace Skald.Bithot;
 
@@ -11,7 +13,8 @@ internal static class BithotSystemRegistry
     {
         return
         [
-            new GeometrySystem(store)
+            new GeometrySystem(store),
+            new PositionSystem(store)
         ];
     }
 }

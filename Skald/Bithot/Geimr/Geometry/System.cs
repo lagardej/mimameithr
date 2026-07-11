@@ -9,7 +9,7 @@ namespace Skald.Bithot.Geimr.Geometry;
 /// </summary>
 /// <remarks>
 ///     Forcings mutate domain components mid-tick, not through discrete top-level commands — there is no
-///     single call site to hang a "re-derive everything" step on. Instead this enables
+///     single call site to hang a "re-derive everything" step on. Instead, this enables
 ///     <see cref="EntityStore.EventRecorder" /> and uses a query <see cref="EventFilter" /> to detect
 ///     geometry add/remove events once per render frame. This keeps sync work event-driven and batched.
 /// </remarks>

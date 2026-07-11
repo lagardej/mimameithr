@@ -1,3 +1,4 @@
+using Friflo.Engine.ECS;
 using Godot;
 using Kjarni.Nornir;
 
@@ -6,10 +7,12 @@ namespace Skald.Bithot.Geimr.Geometry;
 internal sealed class BodyRenderer
 {
     private readonly Nornir _nornir;
+    private readonly EntityStore _store;
 
-    internal BodyRenderer(Nornir nornir)
+    internal BodyRenderer(Nornir nornir, EntityStore store)
     {
         _nornir = nornir;
+        _store = store;
     }
 
     internal void AttachTo(Node parent)
@@ -32,6 +35,8 @@ internal sealed class BodyRenderer
             var axis = new RotationAxisGuide();
             body.AddChild(axis);
             axis.Configure(sphereRadius * 1.5f);
+
+            _store.GetEntityById(bodyId).AddComponent(new BodyNodeC { Node = body });
         }
     }
 }

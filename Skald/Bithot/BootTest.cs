@@ -4,9 +4,6 @@ using Kjarni.Brunnr.Engine;
 using Kjarni.Brunnr.Grid;
 using Kjarni.Nornir;
 using Kjarni.Nornir.Ginnungagap.Seed;
-using Skald.Bithot.Eldr.Irradiance;
-using Skald.Bithot.Geimr.Geometry;
-using Skald.Bithot.Geimr.Orbit;
 
 namespace Skald.Bithot;
 
@@ -23,15 +20,19 @@ public partial class BootTest : Node3D
     public override void _Ready()
     {
         _nornir = new Nornir(_brunnr.Store);
-        _bithot = new Bithot(_brunnr.Store);
+        _bithot = new Bithot(_brunnr.Store, _nornir);
 
 		GridProvider.Initialize(GridShape.Spherical, new BifrostKart());
 		_nornir.Handle(new SetSeed(Seed));
 		NornirBootstrap.CreateSolarSystem(_nornir);
 		_bithot.Advance();
 
-		new BodyRenderer(_nornir).AttachTo(this);
-		new IrradianceRenderer().AttachStellarLight(this, new Vector3(-1f, -0.6f, -0.4f));
-		new OrbitRenderer(_nornir).AttachCamera(this);
+		_bithot.AttachTo(this);
 	}
+
+    public override void _Process(double delta)
+    {
+        _nornir.Advance((float)delta);
+        _bithot.Advance();
+    }
 }
