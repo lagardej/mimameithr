@@ -7,7 +7,10 @@ using Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
 
 namespace Skald.Bithot;
 
-/// <summary>Boots a headless <see cref="Nornir" /> engine and configures a single test body through generation-phase commands.</summary>
+/// <summary>
+///     Boots a headless <see cref="Nornir" /> engine and configures a single test body through generation-phase
+///     commands.
+/// </summary>
 public static class NornirBootstrap
 {
     private const uint AxialTilt = 23;
@@ -25,15 +28,15 @@ public static class NornirBootstrap
         var bodyId = engine.CreateEntity();
         engine.Handle(new SetGeometry(bodyId, AxialTilt, GridShape.Spherical, BodyRadius));
         engine.Handle(new SetPhysics(bodyId, BodyAge, BodyMass));
-        engine.Handle(new SetRotation(bodyId, InitialAngle: 1, RotationPeriod));
+        engine.Handle(new SetRotation(bodyId, 1, RotationPeriod));
         engine.Handle(new SetTectonicsMobileLid(
             bodyId,
-            BoundaryFocus: 5,
-            CollisionDominance: 5,
-            HotSpotDensity: 5,
-            PlateCount: 5,
-            PlateFragmentation: 5,
-            PlateStability: 5));
+            5,
+            5,
+            5,
+            5,
+            5,
+            5));
 
         return bodyId;
     }

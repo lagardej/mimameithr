@@ -5,8 +5,8 @@ using Kjarni.Nornir.Hlothyn.Lithosphere;
 using System.Numerics;
 using UnitsNet;
 using static Kjarni.Nornir.Hlothyn.Lithosphere.CrustalPhysics;
-using static Kjarni.Nornir.Hlothyn.Tectonics.MobileLid.BoundaryType;
 using static Kjarni.Nornir.Hlothyn.Mantle.MantlePhysics;
+using static Kjarni.Nornir.Hlothyn.Tectonics.MobileLid.BoundaryType;
 
 namespace Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
 

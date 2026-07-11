@@ -1,8 +1,8 @@
-using System.Numerics;
 using Friflo.Engine.ECS;
 using Kjarni.Brunnr.Command;
 using Kjarni.Kvasir.Geimr;
 using Kjarni.Nornir.Geimr.Physics;
+using System.Numerics;
 using UnitsNet;
 
 namespace Kjarni.Nornir.Geimr.Position;
@@ -10,7 +10,10 @@ namespace Kjarni.Nornir.Geimr.Position;
 /// <summary>Handles <see cref="SetPosition" /> commands against the entity store.</summary>
 public class SetPositionHandler(EntityStore store) : ICommandHandler<SetPosition>
 {
-    /// <summary>Eccentricity below which the periapsis direction is undefined; the epoch position is used as the angle-zero reference instead.</summary>
+    /// <summary>
+    ///     Eccentricity below which the periapsis direction is undefined; the epoch position is used as the angle-zero
+    ///     reference instead.
+    /// </summary>
     private const double EccentricityEpsilon = 1e-8;
 
     /// <inheritdoc />
@@ -133,7 +136,7 @@ public class SetPositionHandler(EntityStore store) : ICommandHandler<SetPosition
             var cosTrueAnomaly = Math.Clamp(
                 ((ex * rx) + (ey * ry) + (ez * rz)) / (eccentricity * rMag), -1.0, 1.0);
             var angle = Math.Acos(cosTrueAnomaly);
-            var movingAwayFromPeriapsis = ((rx * vx) + (ry * vy) + (rz * vz)) >= 0.0;
+            var movingAwayFromPeriapsis = (rx * vx) + (ry * vy) + (rz * vz) >= 0.0;
             trueAnomaly = Angle.FromRadians(movingAwayFromPeriapsis ? angle : (2.0 * Math.PI) - angle);
         }
 

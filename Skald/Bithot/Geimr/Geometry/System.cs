@@ -1,6 +1,5 @@
 using Friflo.Engine.ECS;
 using Kjarni.Nornir.Geimr.Geometry;
-using Skald.Bithot;
 
 namespace Skald.Bithot.Geimr.Geometry;
 
@@ -36,12 +35,8 @@ public sealed class GeometrySystem : IBithotSystem
 
         _pending.Clear();
         foreach (var entity in _store.Entities)
-        {
             if (_syncAll || eventQuery.HasEvent(entity.Id))
-            {
                 _pending.Add(entity);
-            }
-        }
 
         foreach (var entity in _pending)
         {

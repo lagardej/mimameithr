@@ -51,7 +51,10 @@ internal sealed record Boundary
     /// <summary>Identity of the plate this boundary cell belongs to. Key into <see cref="Result.Plates" />.</summary>
     public required CellId PlateId { get; init; }
 
-    /// <summary>Identity of the neighbouring plate this boundary is shared with. Key into <see cref="Result.Plates" />. Null for <see cref="BoundaryType.None" /> and <see cref="BoundaryType.HotSpot" /> cells, which belong to only one plate.</summary>
+    /// <summary>
+    ///     Identity of the neighbouring plate this boundary is shared with. Key into <see cref="Result.Plates" />. Null
+    ///     for <see cref="BoundaryType.None" /> and <see cref="BoundaryType.HotSpot" /> cells, which belong to only one plate.
+    /// </summary>
     public required CellId? OtherPlateId { get; init; }
 
     /// <summary>

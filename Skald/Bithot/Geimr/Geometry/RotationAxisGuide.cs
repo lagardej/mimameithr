@@ -1,4 +1,5 @@
 using Godot;
+using Array = Godot.Collections.Array;
 
 namespace Skald.Bithot.Geimr.Geometry;
 
@@ -11,7 +12,7 @@ public partial class RotationAxisGuide : MeshInstance3D
         var arrayMesh = new ArrayMesh();
         var points = new[] { new Vector3(0f, -length, 0f), new Vector3(0f, length, 0f) };
 
-        var arrays = new Godot.Collections.Array();
+        var arrays = new Array();
         arrays.Resize((int)Mesh.ArrayType.Max);
         arrays[(int)Mesh.ArrayType.Vertex] = points;
         arrayMesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Lines, arrays);
@@ -20,7 +21,7 @@ public partial class RotationAxisGuide : MeshInstance3D
         MaterialOverride = new StandardMaterial3D
         {
             ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded,
-            AlbedoColor = color ?? new Color(1f, 0.8f, 0.2f),
+            AlbedoColor = color ?? new Color(1f, 0.8f, 0.2f)
         };
     }
 }

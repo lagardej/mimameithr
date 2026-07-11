@@ -17,7 +17,10 @@ public static class OrbitalMechanics
     /// <param name="trueAnomaly">Current true anomaly.</param>
     /// <param name="periapsisDirection">Unit vector from the parent toward periapsis.</param>
     /// <param name="orbitNormal">Unit vector normal to the orbital plane.</param>
-    /// <returns>Offset from the parent, in metres, as a double-precision triple to avoid <see cref="Vector3" />'s float precision loss at interplanetary distances.</returns>
+    /// <returns>
+    ///     Offset from the parent, in metres, as a double-precision triple to avoid <see cref="Vector3" />'s float
+    ///     precision loss at interplanetary distances.
+    /// </returns>
     public static (double X, double Y, double Z) OrbitalOffset(
         Length distance, Angle trueAnomaly, Vector3 periapsisDirection, Vector3 orbitNormal)
     {

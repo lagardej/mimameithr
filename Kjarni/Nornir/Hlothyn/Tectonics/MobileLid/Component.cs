@@ -20,7 +20,10 @@ public struct TectonicsBoundaryC : IComponent
     public Speed VerticalDisplacementRate;
 }
 
-/// <summary>Link from a boundary cell to the entity of the plate it belongs to. Target entity carries <see cref="TectonicsPlateC" />.</summary>
+/// <summary>
+///     Link from a boundary cell to the entity of the plate it belongs to. Target entity carries
+///     <see cref="TectonicsPlateC" />.
+/// </summary>
 [ComponentKey("hlothyn-tectonics-boundary-plate-link")]
 public struct TectonicsBoundaryPlateLinkC : ILinkComponent
 {
@@ -31,7 +34,10 @@ public struct TectonicsBoundaryPlateLinkC : ILinkComponent
     public Entity GetIndexedValue() => entity;
 }
 
-/// <summary>Link from a boundary cell to the entity of the neighbouring plate it shares the boundary with. Absent on <see cref="BoundaryType.None" /> and <see cref="BoundaryType.HotSpot" /> cells, which belong to only one plate.</summary>
+/// <summary>
+///     Link from a boundary cell to the entity of the neighbouring plate it shares the boundary with. Absent on
+///     <see cref="BoundaryType.None" /> and <see cref="BoundaryType.HotSpot" /> cells, which belong to only one plate.
+/// </summary>
 [ComponentKey("hlothyn-tectonics-boundary-other-plate-link")]
 public struct TectonicsBoundaryOtherPlateLinkC : ILinkComponent
 {

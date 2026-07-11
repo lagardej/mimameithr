@@ -11,7 +11,7 @@ internal static class BithotSystemRegistry
     {
         return
         [
-            new GeometrySystem(store),
+            new GeometrySystem(store)
         ];
     }
 }

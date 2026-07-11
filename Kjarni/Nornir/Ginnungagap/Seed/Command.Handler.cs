@@ -1,4 +1,4 @@
-﻿using Kjarni.Brunnr.Command;
+using Kjarni.Brunnr.Command;
 
 namespace Kjarni.Nornir.Ginnungagap.Seed;
 

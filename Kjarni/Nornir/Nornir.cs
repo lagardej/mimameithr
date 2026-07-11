@@ -17,7 +17,10 @@ public class Nornir
     /// <summary>The Norn of the present. Name of the active phase engine — the world as it unfolds.</summary>
     private readonly Verðandi _verðandi;
 
-    /// <summary>Constructor. Injected with a shared <see cref="EntityStore" /> — see <see cref="Brunnr.Engine.BrunnrEngine" />.</summary>
+    /// <summary>
+    ///     Constructor. Injected with a shared <see cref="EntityStore" /> — see <see cref="Brunnr.Engine.BrunnrEngine" />
+    ///     .
+    /// </summary>
     public Nornir(EntityStore store)
     {
         _store = store;

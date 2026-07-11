@@ -1,4 +1,5 @@
 using Godot;
+using Array = Godot.Collections.Array;
 
 namespace Skald.Bithot.Geimr.Geometry;
 
@@ -18,7 +19,7 @@ public partial class EquatorGuide : MeshInstance3D
             points[i] = new Vector3(radius * Mathf.Cos(angle), 0f, radius * Mathf.Sin(angle));
         }
 
-        var arrays = new Godot.Collections.Array();
+        var arrays = new Array();
         arrays.Resize((int)Mesh.ArrayType.Max);
         arrays[(int)Mesh.ArrayType.Vertex] = points;
         arrayMesh.AddSurfaceFromArrays(Mesh.PrimitiveType.LineStrip, arrays);
@@ -27,7 +28,7 @@ public partial class EquatorGuide : MeshInstance3D
         MaterialOverride = new StandardMaterial3D
         {
             ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded,
-            AlbedoColor = color ?? new Color(0.3f, 0.6f, 1f),
+            AlbedoColor = color ?? new Color(0.3f, 0.6f, 1f)
         };
     }
 }

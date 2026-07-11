@@ -19,10 +19,7 @@ internal sealed class OrbitRenderer
         foreach (var bodyId in _nornir.Query<VisualRadiusC>())
         {
             var radius = _nornir.GetComponent<VisualRadiusC>(bodyId).Value;
-            if (radius > targetRadius)
-            {
-                targetRadius = radius;
-            }
+            if (radius > targetRadius) targetRadius = radius;
         }
 
         var camera = new OrbitCamera();

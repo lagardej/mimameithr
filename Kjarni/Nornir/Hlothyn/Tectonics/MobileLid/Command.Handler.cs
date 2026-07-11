@@ -1,4 +1,4 @@
-﻿using Friflo.Engine.ECS;
+using Friflo.Engine.ECS;
 using Kjarni.Brunnr.Command;
 using Kjarni.Brunnr.Engine.Cell;
 using Kjarni.Brunnr.Grid;

@@ -23,9 +23,6 @@ public sealed class Bithot
     /// <summary>Advances all Bithot systems that need frame-level synchronization.</summary>
     public void Advance()
     {
-        foreach (var system in _systems)
-        {
-            system.Advance();
-        }
+        foreach (var system in _systems) system.Advance();
     }
 }

@@ -1,4 +1,4 @@
-﻿using Friflo.Engine.ECS;
+using Friflo.Engine.ECS;
 using Kjarni.Brunnr.Command;
 using Kjarni.Kvasir.Foundation;
 using static Kjarni.Kvasir.Foundation.Scaling;
