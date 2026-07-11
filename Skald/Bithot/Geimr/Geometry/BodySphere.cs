@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Skald.Bithot.Render;
+namespace Skald.Bithot.Geimr.Geometry;
 
 /// <summary>Mesh representing a spherical body (planet, moon, star). Radius is set externally, not computed here.</summary>
 public partial class BodySphere : MeshInstance3D

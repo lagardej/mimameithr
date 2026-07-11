@@ -8,7 +8,7 @@ using Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
 namespace Skald.Bithot;
 
 /// <summary>Boots a headless <see cref="Nornir" /> engine and configures a single test body through generation-phase commands.</summary>
-public static class EngineBootstrap
+public static class NornirBootstrap
 {
     private const uint AxialTilt = 23;
     private const uint BodyRadius = 400;

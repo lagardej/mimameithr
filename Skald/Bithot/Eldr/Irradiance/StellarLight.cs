@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Skald.Bithot.Render;
+namespace Skald.Bithot.Eldr.Irradiance;
 
 /// <summary>Directional light representing a star. Direction and energy are set externally, not computed here.</summary>
 public partial class StellarLight : DirectionalLight3D

@@ -1,5 +1,4 @@
 ---
-status: doing
 area: Skald/Bithot
 ---
 

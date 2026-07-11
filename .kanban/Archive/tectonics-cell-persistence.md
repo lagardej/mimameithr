@@ -1,5 +1,4 @@
 ---
-status: done
 area: Hlothyn/Tectonics
 ---
 

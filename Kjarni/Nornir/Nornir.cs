@@ -5,11 +5,11 @@ using Kjarni.Nornir.Ginnungagap.Seed;
 
 namespace Kjarni.Nornir;
 
-/// <summary>Front engine. Owns the shared <see cref="EntityStore" /> and instantiates the phase engines.</summary>
+/// <summary>Front engine. Instantiates the phase engines against an injected or private <see cref="EntityStore" />.</summary>
 public class Nornir
 {
     private readonly RandomProvider _randomProvider = new();
-    private readonly EntityStore _store = new();
+    private readonly EntityStore _store;
 
     /// <summary>The Norn of the past. Name of the generation phase — the world before sentient civilization begins.</summary>
     private readonly Urðr _urðr;
@@ -17,11 +17,17 @@ public class Nornir
     /// <summary>The Norn of the present. Name of the active phase engine — the world as it unfolds.</summary>
     private readonly Verðandi _verðandi;
 
-    /// <summary>Constructor</summary>
-    public Nornir()
+    /// <summary>Constructor. Injected with a shared <see cref="EntityStore" /> — see <see cref="Brunnr.Engine.BrunnrEngine" />.</summary>
+    public Nornir(EntityStore store)
     {
-        _urðr = new Urðr(_store, _randomProvider);
-        _verðandi = new Verðandi(_store);
+        _store = store;
+        _urðr = new Urðr(store, _randomProvider);
+        _verðandi = new Verðandi(store);
+    }
+
+    /// <summary>Constructor. Owns a private, unshared store — for headless use with no other engine attached.</summary>
+    public Nornir() : this(new EntityStore())
+    {
     }
 
     /// <summary>Current time compression factor. Defaults to <see cref="TimeCompression.RealTime" />.</summary>

@@ -56,5 +56,5 @@ Not solar system bound, engine supports arbitrary planetary systems.
 |===
 |Directory |Purpose
 
-|`docs/` |Design documents and link:.kanban/README.adoc[kanban]
+|`docs/` |Design documents and link:.kanban/README.md[kanban]
 |===

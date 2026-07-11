@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Skald.Bithot.Render;
+namespace Skald.Bithot.Geimr.Geometry;
 
 /// <summary>Line marking a body's rotation axis, extending past both poles. Length is set externally, not computed here.</summary>
 public partial class RotationAxisGuide : MeshInstance3D

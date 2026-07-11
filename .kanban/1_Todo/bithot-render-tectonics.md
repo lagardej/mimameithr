@@ -1,5 +1,4 @@
 ---
-status: todo
 area: Skald/Bithot
 ---
 
