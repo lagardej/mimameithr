@@ -1,4 +1,5 @@
 using Kjarni.Brunnr.Command;
+using Kjarni.Kvasir.Foundation;
 using System.ComponentModel.DataAnnotations;
 
 namespace Kjarni.Nornir.Geimr.Rotation;
@@ -30,3 +31,11 @@ public record SetRotation(
     [Range(1u, 360u)] uint InitialAngle,
     [Range(1u, 1000u)] uint RotationPeriod
 ) : ICommand;
+
+/// <summary>The scales used by the command properties.</summary>
+public static class SetRotationScale
+{
+    /// <summary>Rotation period scale: 10⁹ to 10 seconds exponentially.</summary>
+    public static readonly PiecewiseExponentialScale RotationPeriodScale =
+        new(Scaling.Range1000, [9, 5, 3, 1], [400, 700, 1000]);
+}

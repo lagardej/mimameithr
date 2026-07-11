@@ -1,4 +1,5 @@
 using Kjarni.Brunnr.Command;
+using Kjarni.Kvasir.Foundation;
 using System.ComponentModel.DataAnnotations;
 
 namespace Kjarni.Nornir.Eldr.Luminosity;
@@ -26,3 +27,11 @@ public record SetLuminosity(
     int Id,
     [Range(1u, 1000u)] uint Luminosity
 ) : ICommand;
+
+/// <summary>The scales used by the command properties.</summary>
+public static class SetLuminosityScale
+{
+    /// <summary>Luminosity scale: 10⁻³ to 10³ L☉ exponentially.</summary>
+    public static readonly PiecewiseExponentialScale LuminosityScale =
+        new(Scaling.Range1000, [-3, 0, 1, 3], [400, 700, 1000]);
+}

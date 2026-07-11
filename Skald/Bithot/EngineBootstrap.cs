@@ -1,43 +1,69 @@
-using Kjarni.Brunnr.Grid;
 using Kjarni.Nornir;
+using Kjarni.Nornir.Eldr.Luminosity;
 using Kjarni.Nornir.Geimr.Geometry;
 using Kjarni.Nornir.Geimr.Physics;
+using Kjarni.Nornir.Geimr.Position;
 using Kjarni.Nornir.Geimr.Rotation;
 using Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
+using static Kjarni.Brunnr.Grid.GridShape;
+using static Skald.Bithot.BootstrapScales;
 
 namespace Skald.Bithot;
 
 /// <summary>
-///     Boots a headless <see cref="Nornir" /> engine and configures a single test body through generation-phase
+///     Boots a headless <see cref="Nornir" /> engine and configures space bodies through generation-phase
 ///     commands.
 /// </summary>
 public static class NornirBootstrap
 {
-    private const uint AxialTilt = 23;
-    private const uint BodyRadius = 400;
-    private const uint BodyAge = 400;
-    private const uint BodyMass = 400;
-    private const uint RotationPeriod = 400;
+    /// <summary>
+    ///     Creates and positions the Sun, Earth, and Moon bodies. Returns a record with their entity ids.
+    /// </summary>
+    public static void CreateSolarSystem(Nornir engine)
+    {
+        var sun = CreateSun(engine);
+        var earth = CreateEarth(engine, sun);
+        CreateMoon(engine, earth);
+    }
+
+    private static int CreateSun(Nornir engine)
+    {
+        var id = engine.CreateEntity();
+        engine.Handle(new SetGeometry(id, Spherical, RadiusKm(696_000)));
+        engine.Handle(new SetPhysics(id, AgeYears(4.6e9), MassKg(1.989e30)));
+        engine.Handle(new SetLuminosity(id, LuminositySolar(1.0)));
+        engine.Handle(new SetRotation(id, InitialAngle: 1, RotationPeriodDays(25)));
+        engine.Handle(new SetPosition(id));
+        return id;
+    }
+
+    private static int CreateEarth(Nornir engine, int sunId)
+    {
+        var id = engine.CreateEntity();
+        engine.Handle(new SetGeometry(id, Spherical, RadiusKm(6_371), AxialTilt: 23));
+        engine.Handle(new SetPhysics(id, AgeYears(4.54e9), MassKg(5.972e24)));
+        engine.Handle(new SetRotation(id, InitialAngle: 1, RotationPeriodDays(1)));
+        engine.Handle(new SetPosition(id, X: 150_000_000, VelocityY: 30, ParentId: sunId));
+        return id;
+    }
+
+    private static void CreateMoon(Nornir engine, int earthId)
+    {
+        var id = engine.CreateEntity();
+        engine.Handle(new SetGeometry(id, Spherical, RadiusKm(1_737)));
+        engine.Handle(new SetPhysics(id, AgeYears(4.54e9), MassKg(7.342e22)));
+        engine.Handle(new SetRotation(id, InitialAngle: 1, RotationPeriodDays(27.3)));
+        engine.Handle(new SetPosition(id, X: 384_400, VelocityY: 1, ParentId: earthId));
+    }
 
     /// <summary>
-    ///     Initializes <see cref="GridProvider" /> with the geodesic grid backend, creates one body entity, and runs
-    ///     mobile-lid tectonics generation on it. Returns the engine and the body's entity id.
+    ///     Legacy test body creation. Creates one body with tectonics generation.
     /// </summary>
     public static int CreateTestBody(Nornir engine)
     {
-        var bodyId = engine.CreateEntity();
-        engine.Handle(new SetGeometry(bodyId, AxialTilt, GridShape.Spherical, BodyRadius));
-        engine.Handle(new SetPhysics(bodyId, BodyAge, BodyMass));
-        engine.Handle(new SetRotation(bodyId, 1, RotationPeriod));
-        engine.Handle(new SetTectonicsMobileLid(
-            bodyId,
-            5,
-            5,
-            5,
-            5,
-            5,
-            5));
+        var id = engine.CreateEntity();
+        engine.Handle(new SetTectonicsMobileLid(id, 5, 5, 5, 5, 5, 5));
 
-        return bodyId;
+        return id;
     }
 }

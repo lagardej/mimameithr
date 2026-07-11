@@ -98,4 +98,31 @@ public readonly record struct PiecewiseExponentialScale
 
         return Math.Pow(10, _exponents[^1]);
     }
+
+    /// <summary>Maps a quantity to its corresponding scale value by inverting the exponential mapping.</summary>
+    public uint Inverse(double quantity)
+    {
+        var logQuantity = Math.Log10(quantity);
+
+        double lowerThreshold = _range.Min;
+        double lowerExponent = _exponents[0];
+
+        for (var i = 0; i < _thresholds.Length; i++)
+        {
+            double upperThreshold = _thresholds[i];
+            double upperExponent = _exponents[i + 1];
+
+            if (logQuantity <= upperExponent || i == _thresholds.Length - 1)
+            {
+                var t = (logQuantity - lowerExponent) / (upperExponent - lowerExponent);
+                var scale = lowerThreshold + (t * (upperThreshold - lowerThreshold));
+                return (uint) Math.Clamp(Math.Round(scale), _range.Min, _range.Max);
+            }
+
+            lowerThreshold = upperThreshold;
+            lowerExponent = upperExponent;
+        }
+
+        return _range.Max;
+    }
 }

@@ -1,14 +1,15 @@
 using Kjarni.Brunnr.Command;
 using Kjarni.Brunnr.Grid;
+using Kjarni.Kvasir.Foundation;
 using System.ComponentModel.DataAnnotations;
 
 namespace Kjarni.Nornir.Geimr.Geometry;
 
 /// <summary>Command to configure the geometry of a planetary body.</summary>
 /// <param name="Id">The entity id.</param>
-/// <param name="AxialTilt">Axial tilt relative to the orbital plane normal, in degrees. Range: [0, 180].</param>
 /// <param name="GridShape">Grid backend shape for this body's discrete global grid.</param>
 /// <param name="Radius">Mean radius on a 1–1000 scale mapping 1 km to 10⁹ km exponentially.</param>
+/// <param name="AxialTilt">Axial tilt relative to the orbital plane normal, in degrees. Range: [0, 180].</param>
 /// <remarks>
 ///     <para>Radius Scale Reference</para>
 ///     <code>
@@ -29,7 +30,15 @@ namespace Kjarni.Nornir.Geimr.Geometry;
 /// </remarks>
 public record SetGeometry(
     int Id,
-    [Range(0u, 180u)] uint AxialTilt,
     GridShape GridShape,
-    [Range(1u, 1000u)] uint Radius
+    [Range(1u, 1000u)] uint Radius,
+    [Range(0u, 180u)] uint AxialTilt = 0
 ) : ICommand;
+
+/// <summary>The scales used by the command properties.</summary>
+public static class SetGeometryScale
+{
+    /// <summary>Radius scale: 1 km to 10⁹ km exponentially.</summary>
+    public static readonly PiecewiseExponentialScale RadiusScale =
+        new(Scaling.Range1000, [0, 4, 6, 9], [400, 700, 1000]);
+}

@@ -26,11 +26,11 @@ namespace Kjarni.Nornir.Geimr.Position;
 /// </param>
 public record SetPosition(
     int Id,
-    double X,
-    double Y,
-    double Z,
-    double VelocityX,
-    double VelocityY,
-    double VelocityZ,
+    double X = 0,
+    double Y = 0,
+    double Z = 0,
+    double VelocityX = 0,
+    double VelocityY = 0,
+    double VelocityZ = 0,
     int? ParentId = null
 ) : ICommand;

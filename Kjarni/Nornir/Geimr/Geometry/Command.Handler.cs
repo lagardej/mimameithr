@@ -1,22 +1,18 @@
 using Friflo.Engine.ECS;
 using Kjarni.Brunnr.Command;
-using Kjarni.Kvasir.Foundation;
 using UnitsNet;
-using static Kjarni.Kvasir.Foundation.Scaling;
+using static Kjarni.Nornir.Geimr.Geometry.SetGeometryScale;
 
 namespace Kjarni.Nornir.Geimr.Geometry;
 
 /// <summary>Handles <see cref="SetGeometry" /> commands against the entity store.</summary>
 public class SetGeometryHandler(EntityStore store) : ICommandHandler<SetGeometry>
 {
-    private static readonly PiecewiseExponentialScale s_radiusScale =
-        new(Range1000, [0, 4, 6, 9], [400, 700, 1000]);
-
     /// <inheritdoc />
     public void Handle(SetGeometry command)
     {
         var entity = store.GetEntityById(command.Id);
-        var radius = s_radiusScale.Evaluate(command.Radius);
+        var radius = RadiusScale.Evaluate(command.Radius);
 
         entity.AddComponent(new GeometryC
         {
