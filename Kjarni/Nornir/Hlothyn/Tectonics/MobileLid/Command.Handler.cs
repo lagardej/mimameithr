@@ -57,7 +57,20 @@ public class SetTectonicsMobileLidHandler(EntityStore store, RandomProvider rand
                 continue;
             }
 
-            GetOrCreateCell(existingCells, entity, cellId).AddComponent(boundary.ToComponent());
+            var cellEntity = GetOrCreateCell(existingCells, entity, cellId);
+            cellEntity.AddComponent(boundary.ToComponent());
+            cellEntity.AddComponent(new TectonicsBoundaryPlateLinkC
+            {
+                entity = GetOrCreateCell(existingCells, entity, boundary.PlateId)
+            });
+
+            if (boundary.OtherPlateId is { } otherPlateId)
+            {
+                cellEntity.AddComponent(new TectonicsBoundaryOtherPlateLinkC
+                {
+                    entity = GetOrCreateCell(existingCells, entity, otherPlateId)
+                });
+            }
         }
     }
 
@@ -112,7 +125,7 @@ internal static class Extensions
             CrustComposition = plate.CrustComposition,
             CrustalThickness = plate.CrustThickness,
             PlateAngularVelocity = plate.AngularVelocity,
-            PlateSeedCellId = plate.SeedCellId
+            PlateSeedCellId = plate.Id
         };
     }
 
@@ -122,7 +135,6 @@ internal static class Extensions
         {
             BoundaryType = boundary.BoundaryType,
             CrustAge = boundary.CrustAge,
-            PlateSeedCellId = boundary.PlateSeedCellId,
             VerticalDisplacementRate = boundary.VerticalDisplacementRate
         };
     }

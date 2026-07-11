@@ -16,11 +16,30 @@ public struct TectonicsBoundaryC : IComponent
     /// <summary>Time since crust formation at this cell, approximated from distance to the nearest divergent boundary.</summary>
     public Duration CrustAge;
 
-    /// <summary>The R0 cell that seeded this cell's plate. Look up the corresponding <see cref="TectonicsPlateC" /> entity for plate-level data.</summary>
-    public CellId PlateSeedCellId;
-
     /// <summary>Rate of vertical crustal displacement at this cell. Positive = uplift, negative = subsidence.</summary>
     public Speed VerticalDisplacementRate;
+}
+
+/// <summary>Link from a boundary cell to the entity of the plate it belongs to. Target entity carries <see cref="TectonicsPlateC" />.</summary>
+[ComponentKey("hlothyn-tectonics-boundary-plate-link")]
+public struct TectonicsBoundaryPlateLinkC : ILinkComponent
+{
+    /// <summary>The plate's seed-cell entity.</summary>
+    public Entity entity;
+
+    /// <inheritdoc />
+    public Entity GetIndexedValue() => entity;
+}
+
+/// <summary>Link from a boundary cell to the entity of the neighbouring plate it shares the boundary with. Absent on <see cref="BoundaryType.None" /> and <see cref="BoundaryType.HotSpot" /> cells, which belong to only one plate.</summary>
+[ComponentKey("hlothyn-tectonics-boundary-other-plate-link")]
+public struct TectonicsBoundaryOtherPlateLinkC : ILinkComponent
+{
+    /// <summary>The neighbouring plate's seed-cell entity.</summary>
+    public Entity entity;
+
+    /// <inheritdoc />
+    public Entity GetIndexedValue() => entity;
 }
 
 /// <summary>Tectonic plate state of an R0 cell. Every R0 cell belongs to exactly one plate and gets this component.</summary>

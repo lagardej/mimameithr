@@ -15,7 +15,10 @@ public partial class BootTest : Node3D
 	public override void _Ready()
 	{
 		(_engine, _bodyId) = EngineBootstrap.CreateTestBody();
-		GD.Print($"Engine booted. Body {_bodyId} tectonics generated.");
+
+		var plateCount = _engine.Query<TectonicsPlateC>().Count();
+		var boundaryCount = _engine.Query<TectonicsBoundaryC>().Count();
+		GD.Print($"Engine booted. Body {_bodyId}: {plateCount} plate cells, {boundaryCount} boundary cells.");
 
 		var sphere = new BodySphere();
 		AddChild(sphere);

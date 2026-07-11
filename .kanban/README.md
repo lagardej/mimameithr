@@ -4,7 +4,6 @@ One card per file, frontmatter `status`.
 
 ## Todo
 
-- [per-plate-pair-boundary-classification](1_Todo/per-plate-pair-boundary-classification.md) — Hlothyn/Tectonics
 - [ilinkrelation-orogeny-belt-cell](1_Todo/ilinkrelation-orogeny-belt-cell.md) — Hlothyn/Orogeny (blocked)
 - [orbit-system-rewrite](1_Todo/orbit-system-rewrite.md) — Geimr/Orbit
 
@@ -16,6 +15,7 @@ _empty_
 
 - [bithot-render-restart](3_Done/bithot-render-restart.md) — Skald/Bithot
 - [tectonics-cell-persistence](3_Done/tectonics-cell-persistence.md) — Hlothyn/Tectonics
+- [per-plate-pair-boundary-classification](2_Doing/per-plate-pair-boundary-classification.md) — Hlothyn/Tectonics
 
 ## Backlog
 

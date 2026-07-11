@@ -16,8 +16,8 @@ internal sealed record Result(Dictionary<CellId, Plate> Plates, Dictionary<CellI
 /// <summary>A tectonic plate: a contiguous set of R0 cells sharing one rigid-body motion and one crust composition.</summary>
 internal sealed record Plate
 {
-    /// <summary>The R0 cell that seeded this plate. Stable identity for the plate itself.</summary>
-    public required CellId SeedCellId { get; init; }
+    /// <summary>Stable identity of this plate, taken from the R0 cell that seeded it. Key into <see cref="Result.Plates" />.</summary>
+    public required CellId Id { get; init; }
 
     /// <summary>Dominant crust composition of this plate. Determines isostatic base elevation and volcanic character.</summary>
     public required CrustComposition CrustComposition { get; init; }
@@ -31,7 +31,7 @@ internal sealed record Plate
     /// </summary>
     public required Vector3 AngularVelocity { get; init; }
 
-    /// <summary>Every R0 cell this plate covers, including <see cref="SeedCellId" />.</summary>
+    /// <summary>Every R0 cell this plate covers, including <see cref="Id" />.</summary>
     public required IReadOnlyCollection<CellId> Cells { get; init; }
 }
 
@@ -48,8 +48,11 @@ internal sealed record Boundary
     /// <summary>Time since crust formation at this cell, approximated from distance to the nearest divergent boundary.</summary>
     public required Duration CrustAge { get; init; }
 
-    /// <summary>The plate (by seed cell) this boundary cell belongs to.</summary>
-    public required CellId PlateSeedCellId { get; init; }
+    /// <summary>Identity of the plate this boundary cell belongs to. Key into <see cref="Result.Plates" />.</summary>
+    public required CellId PlateId { get; init; }
+
+    /// <summary>Identity of the neighbouring plate this boundary is shared with. Key into <see cref="Result.Plates" />. Null for <see cref="BoundaryType.None" /> and <see cref="BoundaryType.HotSpot" /> cells, which belong to only one plate.</summary>
+    public required CellId? OtherPlateId { get; init; }
 
     /// <summary>
     ///     Rate of vertical crustal displacement at this cell. Positive = uplift, negative = subsidence.

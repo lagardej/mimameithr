@@ -66,7 +66,7 @@ internal static class Simulation
                 g => g.Key,
                 g => new Plate
                 {
-                    SeedCellId = g.Key,
+                    Id = g.Key,
                     CrustComposition = plateComps[g.Key],
                     CrustThickness = plateThickness[g.Key],
                     AngularVelocity = angularVelocities[g.Key],
@@ -85,7 +85,8 @@ internal static class Simulation
             var seedCellId = plateMap[plate];
             var crustComposition = plateComps[seedCellId];
             var crustThickness = plateThickness[seedCellId];
-            var boundaryType = ClassifyBoundary(r2Cell, seedCellId, grid, plateMap, angularVelocities, parameters);
+            var (boundaryType, otherPlateId) =
+                ClassifyBoundary(r2Cell, seedCellId, grid, plateMap, angularVelocities, parameters);
             var verticalDisplacement =
                 VerticalDisplacementRate(boundaryType, crustComposition, crustThickness, parameters, heatFlux);
 
@@ -93,7 +94,8 @@ internal static class Simulation
 
             boundaries[r2Cell] = new Boundary
             {
-                PlateSeedCellId = seedCellId,
+                PlateId = seedCellId,
+                OtherPlateId = otherPlateId,
                 CrustAge = Duration.Zero,
                 BoundaryType = boundaryType,
                 VerticalDisplacementRate = verticalDisplacement
@@ -295,8 +297,9 @@ internal static class Simulation
     ///     Interior cells (all neighbours share the same plate) → <see cref="BoundaryType.None" /> or
     ///     <see cref="BoundaryType.HotSpot" />, driven by <see cref="Parameters.HotSpotDensity" />.
     /// </summary>
-    private static BoundaryType ClassifyBoundary(CellId r2Cell, CellId ownPlate, IGeodesicGrid grid,
-        Dictionary<CellId, CellId> plateMap, Dictionary<CellId, Vector3> angularVelocities, Parameters parameters)
+    private static (BoundaryType Type, CellId? OtherPlate) ClassifyBoundary(CellId r2Cell, CellId ownPlate,
+        IGeodesicGrid grid, Dictionary<CellId, CellId> plateMap, Dictionary<CellId, Vector3> angularVelocities,
+        Parameters parameters)
     {
         var rng = parameters.Rng;
         var neighbours = grid.Disk(r2Cell, 1).Where(n => n != r2Cell).ToArray();
@@ -308,54 +311,77 @@ internal static class Simulation
         if (neighbourPlates.All(p => p == ownPlate))
         {
             // Interior cell — check for hot spot.
-            return rng.NextDouble() < parameters.HotSpotDensity.DecimalFractions
-                ? HotSpot
-                : None;
+            return (rng.NextDouble() < parameters.HotSpotDensity.DecimalFractions ? HotSpot : None, null);
         }
-
-        var otherPlate = neighbourPlates.First(p => p != ownPlate);
-        var otherNeighbourCell = neighbours.First(n => plateMap[grid.ParentOf(n, Resolution.R0)] == otherPlate);
 
         var ownPos = grid.CenterOf(r2Cell).ToUnitVector();
-        var neighbourPos = grid.CenterOf(otherNeighbourCell).ToUnitVector();
         var normal = ownPos; // outward sphere normal at r2Cell (unit sphere).
+        var ownVelocity = Vector3.Cross(angularVelocities[ownPlate], ownPos);
 
-        // Direction from own cell toward the neighbouring plate, projected onto the local tangent plane.
-        var toNeighbour = neighbourPos - ownPos;
-        toNeighbour -= Vector3.Dot(toNeighbour, normal) * normal;
-        if (toNeighbour.LengthSquared() < 1e-12f)
+        // At a triple (or higher) junction, several distinct plates border the same cell. Evaluate each
+        // candidate independently and keep the one with the strongest relative-motion signal — that
+        // interaction dominates the cell's seismic/volcanic character, the others are locally weaker.
+        var bestScore = -1f;
+        CellId? bestOtherPlate = null;
+        var bestSeparationRate = 0f;
+        var bestLateralRate = 0f;
+
+        foreach (var otherPlate in neighbourPlates.Where(p => p != ownPlate))
         {
-            // Degenerate (neighbour essentially antipodal on the tangent plane) — fall back to Transform.
-            return Transform;
+            var otherNeighbourCell = neighbours.First(n => plateMap[grid.ParentOf(n, Resolution.R0)] == otherPlate);
+            var neighbourPos = grid.CenterOf(otherNeighbourCell).ToUnitVector();
+
+            // Direction from own cell toward the neighbouring plate, projected onto the local tangent plane.
+            var toNeighbour = neighbourPos - ownPos;
+            toNeighbour -= Vector3.Dot(toNeighbour, normal) * normal;
+            if (toNeighbour.LengthSquared() < 1e-12f)
+            {
+                // Degenerate (neighbour essentially antipodal on the tangent plane) — skip, can't score it.
+                continue;
+            }
+
+            var boundaryDir = Vector3.Normalize(toNeighbour);
+
+            // Evaluate both plates' rigid-rotation velocity at the SAME point so the difference is a true
+            // relative velocity, not an artefact of sampling two different positions.
+            var neighbourVelocity = Vector3.Cross(angularVelocities[otherPlate], ownPos);
+            var relativeVelocity = neighbourVelocity - ownVelocity;
+
+            // Rate of change of separation along boundaryDir: positive = plates pulling apart (Divergent),
+            // negative = plates closing in on each other (Convergent).
+            var separationRate = Vector3.Dot(relativeVelocity, boundaryDir);
+
+            // Component of relative motion perpendicular to boundaryDir but still in the tangent plane —
+            // sliding along the boundary rather than toward/away from it.
+            var lateralVelocity = relativeVelocity - (separationRate * boundaryDir);
+            var lateralRate = lateralVelocity.Length();
+
+            var score = relativeVelocity.Length();
+            if (score > bestScore)
+            {
+                bestScore = score;
+                bestOtherPlate = otherPlate;
+                bestSeparationRate = separationRate;
+                bestLateralRate = lateralRate;
+            }
         }
 
-        var boundaryDir = Vector3.Normalize(toNeighbour);
-
-        // Evaluate both plates' rigid-rotation velocity at the SAME point so the difference is a true
-        // relative velocity, not an artefact of sampling two different positions.
-        var ownVelocity = Vector3.Cross(angularVelocities[ownPlate], ownPos);
-        var neighbourVelocity = Vector3.Cross(angularVelocities[otherPlate], ownPos);
-
-        // Rate of change of separation along boundaryDir: positive = plates pulling apart (Divergent),
-        // negative = plates closing in on each other (Convergent).
-        var separationRate = Vector3.Dot(neighbourVelocity - ownVelocity, boundaryDir);
-
-        // Component of relative motion perpendicular to boundaryDir but still in the tangent plane —
-        // sliding along the boundary rather than toward/away from it.
-        var relativeVelocity = neighbourVelocity - ownVelocity;
-        var lateralVelocity = relativeVelocity - (separationRate * boundaryDir);
-        var lateralRate = lateralVelocity.Length();
+        if (bestOtherPlate is not { } dominantPlate)
+        {
+            // All candidates degenerate — fall back to Transform against an arbitrary neighbour.
+            return (Transform, neighbourPlates.First(p => p != ownPlate));
+        }
 
         // CollisionDominance nudges the decision threshold: higher bias means a given closing rate is
         // more readily called Convergent (mirrors the old dial's intent without reverting to a pure roll).
         var dominanceBias = (float) (parameters.CollisionDominance.DecimalFractions - 0.5) * 0.5f;
 
-        if (MathF.Abs(separationRate) + (dominanceBias * MathF.Sign(-separationRate)) > lateralRate)
+        if (MathF.Abs(bestSeparationRate) + (dominanceBias * MathF.Sign(-bestSeparationRate)) > bestLateralRate)
         {
-            return separationRate < 0f ? Convergent : Divergent;
+            return (bestSeparationRate < 0f ? Convergent : Divergent, dominantPlate);
         }
 
-        return Transform;
+        return (Transform, dominantPlate);
     }
 
     /// <summary>
