@@ -4,12 +4,11 @@ One card per file, frontmatter `status`.
 
 == Todo
 
-* link:1_Todo/bithot-render-store.md[bithot-render-store] — Skald/Bithot
 * link:1_Todo/bithot-render-tectonics.md[bithot-render-tectonics] — Skald/Bithot (blocked)
 
 == Doing
 
-_empty_
+* link:2_Doing/bithot-render-store.md[bithot-render-store] — Skald/Bithot
 
 == Done
 * link:3_Done/bithot-real-body-geometry.md[bithot-real-body-geometry] — Skald/Bithot
