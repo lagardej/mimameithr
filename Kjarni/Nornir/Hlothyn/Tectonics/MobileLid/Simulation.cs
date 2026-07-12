@@ -311,7 +311,7 @@ internal static class MobileLidSimulation
         if (neighbourPlates.All(p => p == ownPlate))
         {
             // Interior cell — check for hot spot.
-            return (rng.NextDouble() < parameters.HotSpotDensity.DecimalFractions ? HotSpot : None, null);
+            return (rng.NextDouble() < parameters.HotSpotDensity.DecimalFractions * (1.0 - parameters.BoundaryFocus.DecimalFractions) ? HotSpot : None, null);
         }
 
         var ownPos = grid.CenterOf(r2Cell).ToUnitVector();
@@ -408,13 +408,15 @@ internal static class MobileLidSimulation
                        (density * gravity.MetersPerSecondSquared * crustalThickness.Meters);
 
         // Sign and designer-knob modulation by boundary type.
+        // BoundaryFocus amplifies displacement at boundary cells and suppresses it at interior ones.
+        var boundaryFocus = parameters.BoundaryFocus.DecimalFractions;
         var sign = boundaryType switch
         {
             Convergent => composition == CrustComposition.Felsic
-                ? +parameters.CollisionDominance.DecimalFractions // uplift: buoyant crust crumples
-                : -parameters.CollisionDominance.DecimalFractions, // subsidence: dense crust subducts
-            Divergent => -parameters.PlateStability.DecimalFractions, // subsidence: crust thins
-            Transform => 0.0,
+                ? +parameters.CollisionDominance.DecimalFractions * boundaryFocus // uplift: buoyant crust crumples
+                : -parameters.CollisionDominance.DecimalFractions * boundaryFocus, // subsidence: dense crust subducts
+            Divergent => -parameters.PlateStability.DecimalFractions * boundaryFocus, // subsidence: crust thins
+            HotSpot => +(1.0 - boundaryFocus), // uplift: mantle plume; suppressed when activity focuses at boundaries
             _ => 0.0
         };
 
