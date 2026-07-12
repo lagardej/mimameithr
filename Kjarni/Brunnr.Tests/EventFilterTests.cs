@@ -1,7 +1,7 @@
 using Friflo.Engine.ECS;
 using Xunit;
 
-namespace Kjarni.Brunnr.Tests;
+namespace Brunnr.Tests;
 
 /// <summary>Test-only component; isolates the check from any domain component.</summary>
 public struct ProbeC : IComponent
@@ -19,8 +19,7 @@ public class EventFilterTests
     [Fact]
     public void ComponentAdded_FiresOnFirstAttach()
     {
-        var store = new EntityStore();
-        store.EventRecorder.Enabled = true;
+        var store = new EntityStore { EventRecorder = { Enabled = true } };
 
         var entity = store.CreateEntity();
         entity.AddComponent(new ProbeC { Value = 1 });
@@ -34,8 +33,7 @@ public class EventFilterTests
     [Fact]
     public void ComponentAdded_FiresOnAddOverExisting()
     {
-        var store = new EntityStore();
-        store.EventRecorder.Enabled = true;
+        var store = new EntityStore { EventRecorder = { Enabled = true } };
 
         var entity = store.CreateEntity();
         entity.AddComponent(new ProbeC { Value = 1 });

@@ -1,9 +1,9 @@
+using Brunnr.Command;
 using Friflo.Engine.ECS;
-using Kjarni.Brunnr.Command;
 using UnitsNet;
-using static Kjarni.Nornir.Geimr.Physics.SetPhysicsScale;
+using static Nornir.Geimr.Physics.SetPhysicsScale;
 
-namespace Kjarni.Nornir.Geimr.Physics;
+namespace Nornir.Geimr.Physics;
 
 /// <summary>Handles <see cref="SetPhysics" /> commands against the entity store.</summary>
 public class SetPhysicsHandler(EntityStore store) : ICommandHandler<SetPhysics>

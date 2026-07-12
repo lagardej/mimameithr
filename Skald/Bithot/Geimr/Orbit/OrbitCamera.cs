@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Skald.Bithot.Geimr.Orbit;
+namespace Bithot.Geimr.Orbit;
 
 /// <summary>Camera3D with right-click-drag orbit and scroll-wheel zoom around the world origin.</summary>
 public partial class OrbitCamera : Camera3D

@@ -1,7 +1,7 @@
-using Kjarni.Kvasir.Foundation.Grid;
+using Kvasir.Grid;
 using UnitsNet;
 
-namespace Kjarni.Nornir.Hlothyn.Orogeny;
+namespace Nornir.Hlothyn.Orogeny;
 
 /// <summary>Aggregated orogeny simulation output, mapping each orogenic cell to its state.</summary>
 /// <param name="Cells">Per-cell orogenic state, keyed by cell identifier. Only convergent-belt cells are present.</param>
@@ -9,7 +9,7 @@ public sealed record Result(Dictionary<CellId, OrogenyCell> Cells);
 
 /// <summary>
 ///     Orogenic state of a single grid cell.
-///     Output of <see cref="Simulation" />.
+///     Output of <see cref="OrogenySimulation" />.
 /// </summary>
 public sealed record OrogenyCell
 {

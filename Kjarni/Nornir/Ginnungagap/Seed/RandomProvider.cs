@@ -1,6 +1,6 @@
-using Kjarni.Kvasir.Foundation;
+using Kvasir;
 
-namespace Kjarni.Nornir.Ginnungagap.Seed;
+namespace Nornir.Ginnungagap.Seed;
 
 /// <summary>Provides deterministic random seeds derived from the world generation seed.</summary>
 public sealed class RandomProvider

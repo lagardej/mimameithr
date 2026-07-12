@@ -1,8 +1,8 @@
+using Brunnr.Cell;
+using Brunnr.Command;
 using Friflo.Engine.ECS;
-using Kjarni.Brunnr.Command;
-using Kjarni.Brunnr.Engine.Cell;
 
-namespace Kjarni.Nornir.Hlothyn.Tectonics.StagnantLid;
+namespace Nornir.Hlothyn.Tectonics.StagnantLid;
 
 /// <summary>Handles <see cref="SetTectonicsStagnantLid" /> commands against the entity store.</summary>
 public class SetTectonicsStagnantLidHandler(EntityStore store) : ICommandHandler<SetTectonicsStagnantLid>

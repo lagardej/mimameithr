@@ -1,8 +1,9 @@
+using Brunnr.SystemGroup;
 using Friflo.Engine.ECS;
 using Friflo.Engine.ECS.Systems;
 using UnitsNet;
 
-namespace Kjarni.Nornir.Geimr.Rotation;
+namespace Nornir.Geimr.Rotation;
 
 /// <summary>Updates <see cref="RotationC.CurrentAngle" />.</summary>
 public sealed class RotationSystem : QuerySystem<RotationC>
@@ -13,7 +14,7 @@ public sealed class RotationSystem : QuerySystem<RotationC>
     }
 
     /// <summary>Creates a system limited to entities tagged with <paramref name="tier" />.</summary>
-    /// <param name="tier">Update-cadence tier, e.g. from <see cref="Kjarni.Brunnr.System.UpdateTiering" />.</param>
+    /// <param name="tier">Update-cadence tier, e.g. from <see cref="UpdateTiering" />.</param>
     public RotationSystem(Tags tier) => Filter.AnyTags(tier);
 
     /// <inheritdoc />

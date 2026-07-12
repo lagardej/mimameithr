@@ -1,9 +1,9 @@
-using Kjarni.Kvasir.Foundation.Grid;
-using Kjarni.Nornir.Hlothyn.Lithosphere;
+using Kvasir.Grid;
+using Nornir.Hlothyn.Lithosphere;
 using System.Numerics;
 using UnitsNet;
 
-namespace Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
+namespace Nornir.Hlothyn.Tectonics.MobileLid;
 
 /// <summary>
 ///     Aggregated tectonic simulation output. Domain objects, not a per-cell table: a <see cref="Plate" /> covers

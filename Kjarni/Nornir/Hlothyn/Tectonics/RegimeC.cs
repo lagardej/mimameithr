@@ -1,6 +1,6 @@
 using Friflo.Engine.ECS;
 
-namespace Kjarni.Nornir.Hlothyn.Tectonics;
+namespace Nornir.Hlothyn.Tectonics;
 
 /// <summary>Tectonic regime selected for a planetary body.</summary>
 [ComponentKey("hlothyn-tectonics-regime")]

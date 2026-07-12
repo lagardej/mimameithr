@@ -1,9 +1,9 @@
-using Kjarni.Brunnr.Engine;
-using Kjarni.Nornir.Geimr.Physics;
-using Kjarni.Nornir.Geimr.Position;
+using Brunnr;
+using Nornir.Geimr.Physics;
+using Nornir.Geimr.Position;
 using Xunit;
 
-namespace Kjarni.Nornir.Tests;
+namespace Nornir.Tests;
 
 /// <summary>Tests orbit derivation from position state vectors.</summary>
 public class OrbitDerivationTests
@@ -17,7 +17,7 @@ public class OrbitDerivationTests
         // Create Sun
         var sun = nornir.CreateEntity();
         nornir.Handle(new SetPhysics(sun, 1000, 1000));
-        nornir.Handle(new SetPosition(sun, 0, 0, 0, 0, 0, 0));
+        nornir.Handle(new SetPosition(sun));
 
         // Create Earth at 150M km with 30 km/s orbital velocity
         var earth = nornir.CreateEntity();
@@ -38,7 +38,7 @@ public class OrbitDerivationTests
         // Create Sun
         var sun = nornir.CreateEntity();
         nornir.Handle(new SetPhysics(sun, 1000, 1000));
-        nornir.Handle(new SetPosition(sun, 0, 0, 0, 0, 0, 0));
+        nornir.Handle(new SetPosition(sun));
 
         // Create Earth at 150M km with 30 km/s orbital velocity
         var earth = nornir.CreateEntity();

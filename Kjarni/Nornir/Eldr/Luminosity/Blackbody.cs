@@ -1,6 +1,6 @@
 using UnitsNet;
 
-namespace Kjarni.Nornir.Eldr.Luminosity;
+namespace Nornir.Eldr.Luminosity;
 
 /// <summary>Static utility methods for blackbody radiation calculations.</summary>
 public static class Blackbody

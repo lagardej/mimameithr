@@ -1,7 +1,7 @@
-using Kjarni.Nornir.Geimr.Rotation;
+using Nornir.Geimr.Rotation;
 using Xunit;
 
-namespace Kjarni.Nornir.Tests;
+namespace Nornir.Tests;
 
 /// <summary>
 ///     Regression coverage for the <c>Tick.time</c> vs <c>Tick.deltaTime</c> bug in

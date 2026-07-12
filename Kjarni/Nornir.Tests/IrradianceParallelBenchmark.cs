@@ -1,21 +1,21 @@
+using Brunnr.Cell;
+using Brunnr.Grid;
 using Friflo.Engine.ECS;
 using Friflo.Engine.ECS.Systems;
-using Kjarni.Brunnr.Engine.Cell;
-using Kjarni.Brunnr.Grid;
-using Kjarni.Kvasir.Foundation.Grid;
-using Kjarni.Nornir.Eldr.Irradiance;
-using Kjarni.Nornir.Eldr.Luminosity;
-using Kjarni.Nornir.Geimr.Geometry;
-using Kjarni.Nornir.Geimr.Position;
-using Kjarni.Nornir.Geimr.Rotation;
+using Kvasir.Grid;
+using Nornir.Eldr.Irradiance;
+using Nornir.Eldr.Luminosity;
+using Nornir.Geimr.Geometry;
+using Nornir.Geimr.Position;
+using Nornir.Geimr.Rotation;
 using System.Diagnostics;
 using UnitsNet;
 using Xunit;
 using Xunit.Abstractions;
-using static Kjarni.Nornir.Eldr.Irradiance.StellarIrradiance;
-using static Kjarni.Nornir.Geimr.Geometry.StellarGeometry;
+using static Nornir.Eldr.Irradiance.StellarIrradiance;
+using static Nornir.Geimr.Geometry.StellarGeometry;
 
-namespace Kjarni.Nornir.Tests;
+namespace Nornir.Tests;
 
 /// <summary>
 ///     Manual perf comparison for <see cref="IrradianceSystem" />'s parallel query conversion.
@@ -25,7 +25,8 @@ namespace Kjarni.Nornir.Tests;
 ///     Not a regression test — wall-clock timings are hardware-dependent and single-sample.
 ///     Run explicitly (<c>dotnet test --filter IrradianceParallelBenchmark</c>) and read the
 ///     output; there is no pass/fail threshold on the timings themselves.
-///     Sequential path re-uses <see cref="StellarGeometry" /> and <see cref="StellarIrradiance" /> directly (same as the production
+///     Sequential path re-uses <see cref="StellarGeometry" /> and <see cref="StellarIrradiance" /> directly (same as the
+///     production
 ///     system) so both paths run identical work — only threading differs.
 /// </remarks>
 public class IrradianceParallelBenchmark(ITestOutputHelper output)
@@ -119,7 +120,8 @@ public class IrradianceParallelBenchmark(ITestOutputHelper output)
             });
             planet.AddComponent(new OrbitC
             {
-                DistanceFromStar = Length.FromKilometers(150_000_000), OrbitalAngle = Angle.FromDegrees(0)
+                DistanceFromStar = Length.FromKilometers(150_000_000),
+                OrbitalAngle = Angle.FromDegrees(0)
             });
             planet.AddComponent(new RotationC { CurrentAngle = Angle.FromDegrees(0) });
             planet.AddComponent(new LuminosityC { Luminosity = Luminosity.FromWatts(3.828e26) });

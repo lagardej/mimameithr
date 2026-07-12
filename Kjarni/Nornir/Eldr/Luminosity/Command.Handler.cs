@@ -1,8 +1,8 @@
+using Brunnr.Command;
 using Friflo.Engine.ECS;
-using Kjarni.Brunnr.Command;
-using static Kjarni.Nornir.Eldr.Luminosity.SetLuminosityScale;
+using static Nornir.Eldr.Luminosity.SetLuminosityScale;
 
-namespace Kjarni.Nornir.Eldr.Luminosity;
+namespace Nornir.Eldr.Luminosity;
 
 /// <summary>Handles <see cref="SetLuminosity" /> commands against the entity store.</summary>
 public class SetLuminosityHandler(EntityStore store) : ICommandHandler<SetLuminosity>

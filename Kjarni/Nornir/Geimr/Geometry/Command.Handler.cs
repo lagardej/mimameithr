@@ -1,9 +1,9 @@
+using Brunnr.Command;
 using Friflo.Engine.ECS;
-using Kjarni.Brunnr.Command;
 using UnitsNet;
-using static Kjarni.Nornir.Geimr.Geometry.SetGeometryScale;
+using static Nornir.Geimr.Geometry.SetGeometryScale;
 
-namespace Kjarni.Nornir.Geimr.Geometry;
+namespace Nornir.Geimr.Geometry;
 
 /// <summary>Handles <see cref="SetGeometry" /> commands against the entity store.</summary>
 public class SetGeometryHandler(EntityStore store) : ICommandHandler<SetGeometry>

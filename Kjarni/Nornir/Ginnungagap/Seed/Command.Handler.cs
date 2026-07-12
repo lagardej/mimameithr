@@ -1,6 +1,6 @@
-using Kjarni.Brunnr.Command;
+using Brunnr.Command;
 
-namespace Kjarni.Nornir.Ginnungagap.Seed;
+namespace Nornir.Ginnungagap.Seed;
 
 /// <summary>
 ///     Handles <see cref="SetSeed" /> commands against <see cref="RandomProvider" />.

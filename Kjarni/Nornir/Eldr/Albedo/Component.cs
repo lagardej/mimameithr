@@ -1,7 +1,7 @@
 using Friflo.Engine.ECS;
 using UnitsNet;
 
-namespace Kjarni.Nornir.Eldr.Albedo;
+namespace Nornir.Eldr.Albedo;
 
 /// <summary>Surface reflectivity of a cell.</summary>
 [ComponentKey("eldr-albedo")]

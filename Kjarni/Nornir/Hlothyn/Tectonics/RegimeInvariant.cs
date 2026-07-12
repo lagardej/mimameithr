@@ -1,9 +1,9 @@
+using Brunnr.Cell;
 using Friflo.Engine.ECS;
-using Kjarni.Brunnr.Engine.Cell;
-using Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
-using Kjarni.Nornir.Hlothyn.Tectonics.StagnantLid;
+using Nornir.Hlothyn.Tectonics.MobileLid;
+using Nornir.Hlothyn.Tectonics.StagnantLid;
 
-namespace Kjarni.Nornir.Hlothyn.Tectonics;
+namespace Nornir.Hlothyn.Tectonics;
 
 internal static class RegimeInvariant
 {

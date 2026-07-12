@@ -1,7 +1,7 @@
 using Friflo.Engine.ECS;
 using UnitsNet;
 
-namespace Kjarni.Nornir.Geimr.Rotation;
+namespace Nornir.Geimr.Rotation;
 
 /// <summary>Rotational state of a planetary body.</summary>
 [ComponentKey("geimr-rotation")]

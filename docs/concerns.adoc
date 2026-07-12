@@ -1,575 +1,177 @@
 = Concerns
 :toc: left
 
-NOTE: All physical quantities via UnitsNet — no raw `double` for science values.
+NOTE: Elements are named after Old Norse terms. See `glossary.adoc` for the full list.
 
-NOTE: Elements are named after Old Norse terms. See `glossary.adoc` for the full list with original forms and descriptions.
-
-NOTE: Boundary processes (energy or matter transfer between two elements) are assigned to the *receiver*, not the emitter.
-Example: surface-to-air heat transfer belongs to Lopt, not Hlothyn.
-
-NOTE: Element boundaries are organizational, not hard constraints.
-Concerns may be split, merged, or reassigned as implementation reveals better boundaries.
-The element a concern belongs to reflects current understanding, not a permanent contract.
+NOTE: Element boundaries are organizational, not permanent. Concerns may be split, merged, or reassigned as understanding evolves. Nothing here is a fixed contract — treat it as a current snapshot of intent, not a specification.
 
 == Geimr
 
-Celestial mechanics at body scale.
-Covers the astronomical properties of space bodies — their geometry, orbital dynamics, and rotation.
-Concerns here operate on body entities, not cells.
-Forms the root dependency layer for all other elements.
-
-[mermaid]
-....
-flowchart TB
-    subgraph Geimr
-        StellarLuminosity([Stellar luminosity])
-        BodyGeometry([Body geometry])
-        Orbit([Orbit])
-        BodyRotation([BodyRotation])
-    end
-
-    Irradiance([Irradiance])
-
-    BodyGeometry --> BodyRotation
-    StellarLuminosity -.-> Irradiance
-    BodyGeometry -.-> Irradiance
-    BodyRotation -.-> Irradiance
-    Orbit -.-> Irradiance
-....
-
-=== Stellar luminosity
-
-==== Owns
-
-* Luminosity — `Luminosity`
-
-==== Reads
-
-_Nothing, external driver._
-
-==== Exposes
-
-_To be filled when consumers are designed._
+Celestial mechanics at body scale. Covers the astronomical properties of space bodies — their geometry, orbital dynamics, and rotation. Concerns here operate on body entities, not cells, and form a root dependency layer for other elements.
 
 === Body geometry
 
-==== Owns
-
-* Radius — `Length`
-* Axial tilt — `Angle`
-
-==== Reads
-
-_Nothing, external driver._
-
-==== Exposes
-
-_To be filled when consumers are designed._
-
-==== Notes
-
-* Static or near-static, set at world gen, rarely changes.
+Physical dimensions and orientation of the planetary body. Feeds geometry-dependent computations such as irradiance distribution. Near-static; set at world generation.
 
 === Orbit
 
-==== Owns
+Position of the body relative to its star over time. Determines distance and orbital phase inputs to irradiance.
 
-* Current distance from star — `Length`
-* Current orbital angle — `Angle`
+=== Body rotation
 
-==== Reads
-
-_Nothing, external driver._
-
-==== Exposes
-
-_To be filled when consumers are designed._
-
-=== BodyRotation
-
-==== Owns
-
-* BodyRotation rate — `RotationalSpeed`
-* Current rotation angle — `Angle`
-
-==== Reads
-
-_Nothing, external driver._
-
-==== Exposes
-
-_To be filled when consumers are designed._
-
-==== Notes
-
-* Computed state, ticks every step.
-* Rotation rate is stable; angle is derived from rate × elapsed time.
+Rotational state of the body. Determines local time-of-day and drives day/night cycling.
 
 == Eldr
 
-Surface energy input at cell scale.
-Covers how energy from the star arrives at and is absorbed by each surface cell.
-Concerns here operate on R0 cell entities.
-Forms the thermal foundation for Lopt and Logr.
+Surface energy input at cell scale. Covers how stellar energy arrives at and is absorbed by each surface cell. Forms the thermal foundation for Lopt and Logr.
 
-[mermaid]
-....
-flowchart TB
-    subgraph Eldr
-        Irradiance([Irradiance])
-        Albedo([Albedo])
-    end
+=== Stellar luminosity
 
-    StellarLuminosity([Stellar luminosity])
-    BodyGeometry([Body geometry])
-    Orbit([Orbit])
-    BodyRotation([BodyRotation])
-
-    StellarLuminosity -.-> Irradiance
-    BodyGeometry -.-> Irradiance
-    Orbit -.-> Irradiance
-    BodyRotation -.-> Irradiance
-....
+Energy output of the star. An external driver with no dependencies inside the simulation; feeds all solar energy calculations downstream.
 
 === Irradiance
 
-==== Owns
-
-* Insolation per R0 cell — `Irradiance` (W/m²)
-* Solar zenith angle per R0 cell — `Angle`
-* Day/night state per R0 cell
-
-==== Reads
-
-* Radius ← Body geometry
-* Axial tilt ← Body geometry
-* Current rotation angle ← Rotation
-* Current distance from star ← Orbit
-* Current orbital angle ← Orbit
-* Luminosity ← Stellar luminosity
-
-==== Exposes
-
-_To be filled when consumers are designed._
-
-==== Notes
-
-* Operates at R0 — 122 cells, full sphere coverage guaranteed by contract.
-* Smooth latitudinal function; R0 is the correct resolution.
+Solar energy received per surface cell, accounting for geometry, orbit, and rotation. The primary energy driver for all surface processes.
 
 === Albedo
 
-==== Owns
-
-* Albedo per R0 cell — `Ratio`
-
-==== Reads
-
-_Nothing, external driver for now. Will read surface composition when designed._
-
-==== Exposes
-
-_To be filled when consumers are designed._
+Fraction of incoming solar energy reflected by each surface cell. Determined by surface composition and cover; feeds back into the energy balance.
 
 == Hlothyn
 
-Solid earth at cell scale.
-Covers tectonic processes, terrain formation, soil composition, and geological timescales.
-The physical substrate on which all other cell-scale elements operate.
-
-[mermaid]
-....
-flowchart TB
-    subgraph Hlothyn
-        Tectonics([Tectonics])
-        Orogeny([Orogeny])
-        Elevation([Elevation])
-        Dynamics([Dynamics])
-        Sedimentation([Sedimentation])
-        Geology([Geology])
-        Geothermal([Geothermal])
-        SurfaceTemperature([Surface temperature])
-    end
-
-    Irradiance([Irradiance])
-    Albedo([Albedo])
-
-    Tectonics --> Orogeny
-    Tectonics --> Elevation
-    Tectonics --> Dynamics
-    Tectonics --> Geology
-    Tectonics --> Geothermal
-    Orogeny --> Elevation
-    Orogeny --> Geology
-    Dynamics --> Geothermal
-    Elevation --> Sedimentation
-    Irradiance -.-> SurfaceTemperature
-    Albedo -.-> SurfaceTemperature
-....
+Solid earth at cell scale. Covers tectonic processes, terrain formation, geological composition, and geothermal activity. The physical substrate on which all other cell-scale elements operate.
 
 === Tectonics
 
-==== Owns
-
-* Crust composition per cell — felsic / mafic (enum)
-* Crustal thickness per cell — `Length`
-* Crust age per cell — `Duration`
-* Vertical displacement rate per cell — `Speed` (m/yr)
-* Boundary type per cell — convergent / divergent / transform / none (enum)
-
-==== Reads
-
-_Nothing, external driver._
-
-==== Exposes
-
-* Crust composition → Elevation
-* Crustal thickness → Elevation
-* Crust age → Geology
-* Vertical displacement rate → Elevation
-* Boundary type → Elevation, Dynamics, Geothermal
-
-==== Notes
-
-* Crust age is a distance-from-divergent-boundary proxy, not tracked elapsed time — one-shot generator has no crust-creation history. Felsic crust is not aged this way; treated as old/stable.
-* One-shot computation at world gen. Only changes via explicit forcings.
-* Timescale: Myr.
+Crustal structure and plate dynamics. The foundational driver for most of Hlothyn — terrain, geology, geothermal heat, and seismic/volcanic activity all trace back here.
 
 === Orogeny
 
-==== Owns
-
-* Orogenic age per cell — `Duration`
-* Accumulated crustal shortening per cell — `Length`
-* Relief potential per cell — `Ratio` (0–1, decays with age)
-
-==== Reads
-
-* Boundary type ← Tectonics
-* Vertical displacement rate ← Tectonics
-
-==== Exposes
-
-* Orogenic age → Elevation
-* Accumulated crustal shortening → Elevation
-* Relief potential → Elevation
-* Orogenic age → Geology
-
-==== Notes
-
-* HYPOTHESIS: age + relief potential is sufficient to distinguish old vs young mountains. Validate when Elevation is implemented.
-* One-shot computation at world gen. Only changes via explicit forcings.
-* Timescale: Myr.
+Mountain-building processes. Captures the uplift and decay of mountain belts as an intermediate between tectonic forces and final terrain shape.
 
 === Elevation
 
-==== Owns
-
-* Elevation per cell — `Length`
-
-==== Reads
-
-* Crust composition ← Tectonics
-* Crustal thickness ← Tectonics
-* Vertical displacement rate ← Tectonics
-* Boundary type ← Tectonics
-* Orogenic age ← Orogeny
-* Accumulated crustal shortening ← Orogeny
-* Relief potential ← Orogeny
-
-==== Exposes
-
-_To be filled when consumers are designed._
-
-==== Notes
-
-* Derived from isostatic balance + tectonic displacement.
-* One-shot computation at world gen. Only changes via explicit forcings.
-* Timescale: Myr.
+Surface height per cell. Synthesizes tectonic, orogenic, and isostatic inputs into the terrain geometry consumed by almost every other element.
 
 === Dynamics
 
-==== Owns
-
-* Seismic frequency index per cell — `Ratio`
-* Seismic intensity index per cell — `Ratio`
-* Seismic duration index per cell — `Ratio`
-* Volcanic frequency index per cell — `Ratio`
-* Volcanic intensity index per cell — `Ratio`
-* Volcanic duration index per cell — `Ratio`
-
-==== Reads
-
-* Boundary type ← Tectonics
-* Vertical displacement rate ← Tectonics
-* Crust composition ← Tectonics
-
-==== Exposes
-
-* Volcanic frequency index → Geothermal
-* Volcanic intensity index → Geothermal
-
-==== Notes
-
-* Index values are designer-scaled (1–10), not physical quantities. Scaling driven by config.
-* One-shot computation at world gen. Only changes via explicit forcings.
-* Timescale: Myr.
+Seismic and volcanic activity indices per cell. Captures hazard potential derived from tectonic boundary conditions; does not simulate individual events.
 
 === Sedimentation
+
+Deposition and erosion of surface material over time. Connects terrain, water flow, and geological surface composition at shorter timescales than tectonics.
+
 === Geology
 
-==== Owns
-
-* Dominant rock type per cell — igneous / metamorphic / sedimentary (enum)
-* Surface rock age per cell — `Duration`
-
-==== Reads
-
-* Crust composition ← Tectonics
-* Crust age ← Tectonics
-* Boundary type ← Tectonics
-* Orogenic age ← Orogeny
-
-==== Exposes
-
-_To be filled when consumers are designed._
-
-==== Notes
-
-* Sedimentary classification has no driver at Myr scale — Sedimentation (shorter timescale) is out of scope here. Revisit when Sedimentation is designed.
-* One-shot computation at world gen. Only changes via explicit forcings.
-* Timescale: Myr.
+Surface rock character per cell. A snapshot of dominant geological type and age driven by tectonic history and orogenic processes.
 
 === Geothermal
 
-==== Owns
-
-* Heat flux per cell — `HeatFlux` (W/m²)
-
-==== Reads
-
-* Volcanic frequency index ← Dynamics
-* Volcanic intensity index ← Dynamics
-* Crust composition ← Tectonics
-* Crustal thickness ← Tectonics
-
-==== Exposes
-
-_To be filled when consumers are designed._
-
-==== Notes
-
-* Models continuous background heat flux, not discrete volcanic events.
-* One-shot computation at world gen. Only changes via explicit forcings.
-* Timescale: Myr.
+Continuous background heat flux from the crust. Driven by volcanic activity and crustal properties; distinct from discrete volcanic events.
 
 === Surface temperature
 
-==== Owns
-
-* Surface temperature per R0 cell — `Temperature`
-
-==== Reads
-
-* Insolation ← Irradiance
-* Albedo ← Albedo
-
-==== Exposes
-
-_To be filled when consumers are designed._
+Near-surface thermal state per cell at the broadest scale. Combines solar energy input and albedo into a baseline temperature used by atmospheric and other processes.
 
 == Logr
 
-Water at cell and body scale.
-Covers ocean currents, freshwater distribution, and river drainage.
-Driven by Eldr energy input, Lopt precipitation, and Hlothyn terrain.
-
-[mermaid]
-....
-flowchart TB
-    subgraph Logr
-        SeaLevel([Sea level])
-        Basin([Basin])
-        OceanCirculation([Ocean circulation])
-        RiverNetwork([River network])
-        Groundwater([Groundwater])
-    end
-
-    Elevation([Elevation])
-    ThermalRedistribution([Thermal redistribution])
-    Precipitation([Precipitation])
-
-    Elevation -.-> Basin
-    Elevation -.-> RiverNetwork
-    Basin --> RiverNetwork
-    Basin --> OceanCirculation
-    SeaLevel --> Basin
-    SeaLevel --> OceanCirculation
-    ThermalRedistribution -.-> OceanCirculation
-    Precipitation -.-> RiverNetwork
-    Precipitation -.-> Groundwater
-    RiverNetwork --> Groundwater
-....
+Water at cell and body scale. Covers ocean basins, sea level, ocean circulation, river drainage, and groundwater. Driven by Eldr energy, Lopt precipitation, and Hlothyn terrain.
 
 === Sea Level
+
+Global water level baseline. Influenced by ice volume; determines the land/ocean boundary for other elements.
+
 === Basin
+
+Ocean basin geometry and distribution. Shapes circulation patterns and interacts with sea level and terrain.
+
 === Ocean Circulation
+
+Large-scale movement of ocean water. Driven by thermal gradients, basin geometry, and sea level; redistributes heat and moisture across the sphere.
+
 === River Network
+
+Freshwater drainage across the surface. Shaped by terrain and precipitation; connects surface water to groundwater.
+
 === Groundwater
+
+Subsurface water storage and flow. Fed by precipitation and river infiltration; a slow-moving reservoir with broad ecological influence.
 
 == Hrim
 
-Ice and permafrost at cell scale.
-Covers ice sheets, glaciers, sea ice, and frozen ground.
-Modifies albedo, sea level, and river flux; feeds back into Lopt and Logr.
-
-[mermaid]
-....
-flowchart TB
-    subgraph Hrim
-        IceSheet([Ice sheet])
-        Glacier([Glacier])
-        SeaIce([Sea ice])
-        Permafrost([Permafrost])
-    end
-
-    ThermalRedistribution([Thermal redistribution])
-    Precipitation([Precipitation])
-    Elevation([Elevation])
-    SurfaceCover([Surface cover])
-    SeaLevel([Sea level])
-    RiverNetwork([River network])
-    Composition([Composition])
-
-    ThermalRedistribution -.-> IceSheet
-    ThermalRedistribution -.-> SeaIce
-    ThermalRedistribution -.-> Glacier
-    ThermalRedistribution -.-> Permafrost
-    Precipitation -.-> IceSheet
-    Precipitation -.-> Glacier
-    Elevation -.-> Glacier
-    IceSheet --> SeaIce
-    IceSheet -.-> SeaLevel
-    IceSheet -.-> Elevation
-    IceSheet --> SurfaceCover
-    SeaIce --> SurfaceCover
-    Glacier -.-> Elevation
-    Glacier -.-> RiverNetwork
-    Permafrost -.-> Composition
-....
+Ice and permafrost at cell scale. Covers ice sheets, glaciers, sea ice, and frozen ground. Modifies albedo, sea level, and river flux; feeds back into Lopt and Logr.
 
 === Ice Sheet
+
+Large continental ice masses. Affect sea level, surface albedo, and terrain under ice load.
+
 === Glacier
+
+Valley and mountain ice bodies. Shaped by terrain and thermal conditions; influence local elevation and river systems.
+
 === Sea Ice
+
+Frozen ocean surface. Responds to thermal state; strongly affects surface albedo and ocean-atmosphere exchange.
+
 === Permafrost
+
+Permanently frozen ground. Affects soil composition, drainage, and surface water behaviour in cold regions.
 
 == Lopt
 
-Atmospheric dynamics at cell scale.
-Covers air temperature, pressure, wind circulation, and weather patterns.
-Bridges Eldr energy input and Logr water movement.
-
-[mermaid]
-....
-flowchart TB
-    subgraph Lopt
-        ThermalRedistribution([Thermal redistribution])
-        Circulation([Circulation])
-        Composition([Composition])
-        Precipitation([Precipitation])
-    end
-
-    Irradiance([Irradiance])
-    Albedo([Albedo])
-    Elevation([Elevation])
-
-    Irradiance -.-> ThermalRedistribution
-    Albedo -.-> ThermalRedistribution
-    Elevation -.-> Circulation
-    ThermalRedistribution --> Circulation
-    ThermalRedistribution --> Precipitation
-    Composition --> Circulation
-    Circulation --> Precipitation
-....
+Atmospheric dynamics at cell scale. Covers air temperature, pressure, wind circulation, and weather patterns. Bridges Eldr energy input and Logr water movement.
 
 === Thermal Redistribution
+
+Heat transport through the atmosphere. Takes surface energy input and distributes it across the sphere, driving circulation and precipitation.
+
 === Circulation
+
+Large-scale atmospheric wind patterns. Shaped by thermal gradients, terrain, and atmospheric composition; drives weather and moisture transport.
+
 === Composition
+
+Atmospheric gas make-up. Affects heat retention, circulation behaviour, and habitability.
+
 === Precipitation
+
+Water delivery to the surface. Driven by circulation and thermal state; the primary freshwater input to Logr, Hrim, and Ithunn.
 
 == Ithunn
 
-Living systems at cell scale.
-Covers vegetation, fauna, soil biology, and disease vectors.
-Constrained by Hlothyn, Logr, Lopt, and Hrim conditions.
-
-[mermaid]
-....
-flowchart TB
-    subgraph Ithunn
-        Biome([Biome])
-        Flora([Flora])
-        Soil([Soil])
-        Fauna([Fauna])
-        Disease([Disease])
-    end
-
-    Sedimentation([Sedimentation])
-    Elevation([Elevation])
-    Precipitation([Precipitation])
-    ThermalRedistribution([Thermal redistribution])
-    Groundwater([Groundwater])
-    RiverNetwork([River network])
-    Circulation([Circulation])
-    SurfaceCover([Surface cover])
-
-    Sedimentation -.-> Soil
-    Elevation -.-> Biome
-    Precipitation -.-> Biome
-    ThermalRedistribution -.-> Biome
-    Biome --> Flora
-    Biome --> Fauna
-    Biome --> Soil
-    Biome --> Disease
-    Soil --> Flora
-    Flora --> Soil
-    Flora --> Fauna
-    Flora --> SurfaceCover
-    Groundwater -.-> Flora
-    RiverNetwork -.-> Flora
-    Precipitation -.-> Flora
-    Groundwater -.-> Fauna
-    RiverNetwork -.-> Fauna
-    Fauna --> Disease
-    Circulation -.-> Disease
-    Groundwater -.-> Disease
-    RiverNetwork -.-> Disease
-....
+Living systems at cell scale. Covers vegetation, fauna, soil biology, and disease. Constrained by Hlothyn, Logr, Lopt, and Hrim conditions.
 
 === Biome
+
+Broad ecological zone classification per cell. Synthesizes climate and terrain inputs into the dominant life-supporting context from which more detailed biological concerns derive.
+
 === Flora
+
+Plant life distribution and density. Shaped by biome, soil, and water availability; feeds back into soil character and surface cover.
+
 === Soil
+
+Biologically active surface layer. Built by flora and sedimentation; mediates water retention and nutrient cycling.
+
 === Fauna
+
+Animal life distribution and density. Follows flora and biome conditions; interacts with disease dynamics.
+
 === Disease
+
+Pathogen and disease vector distribution. Driven by fauna density, water access, and atmospheric circulation.
 
 == Mann
 
-Sentient civilisation at cell and network scale.
-Covers settlement, resource extraction, infrastructure, and cultural dynamics.
-Emerges from and is constrained by all other elements.
+Sentient civilization at cell and network scale. Covers settlement, resource extraction, infrastructure, and cultural dynamics. Emerges from and is constrained by all other elements.
 
 == Projections
 
-Read-only aggregations derived from one or more elements.
-No simulation logic — pure views over existing concern state.
-Do not belong to any element.
+Read-only aggregations derived from one or more elements. No simulation logic — pure views over existing concern state. Do not belong to any element.
 
 === Surface cover
 
-Aggregates per-cell surface composition from all elements that expose a surface state.
-Single consumer: Albedo.
-Fed by: Hrim (Ice Sheet, Sea Ice), Ithunn (Flora), Logr (Ocean), Hlothyn (terrain) — as those elements are designed.
+Composite per-cell surface type derived from whichever elements expose a surface state. Consumed primarily by Albedo.
 
 == Full dependency graph
 
@@ -577,13 +179,13 @@ Fed by: Hrim (Ice Sheet, Sea Ice), Ithunn (Flora), Logr (Ocean), Hlothyn (terrai
 ....
 flowchart TB
     subgraph Geimr
-        StellarLuminosity([Stellar luminosity])
         BodyGeometry([Body geometry])
         Orbit([Orbit])
         BodyRotation([BodyRotation])
     end
 
     subgraph Eldr
+        StellarLuminosity([Stellar luminosity])
         Irradiance([Irradiance])
         Albedo([Albedo])
     end

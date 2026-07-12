@@ -1,17 +1,3 @@
 = Urtharbrunnr (Brunnr)
 
 Urtharbrunnr is the spring beneath the roots of Yggdrasil, where the Norns draw water to shape fate.
-Brunnr is the simulation framework for Mimameithr — topology, scheduling, and validation.
-It provides the infrastructure on which `Nornir` domain systems run.
-
-== Layout
-
-[cols="1,3"]
-|===
-|Directory |Purpose
-
-|`Autodoc/` |Attributes driving the documentation generator (`[Component]`, `[Setting]`, `[State]`)
-|`Engine/` |Tick loop and simulation lifecycle
-|`Grid/` |Geodesic grid abstractions and topology
-|`System/` |ECS system base types and scheduling
-|===

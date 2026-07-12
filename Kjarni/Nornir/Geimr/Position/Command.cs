@@ -1,6 +1,6 @@
-using Kjarni.Brunnr.Command;
+using Brunnr.Command;
 
-namespace Kjarni.Nornir.Geimr.Position;
+namespace Nornir.Geimr.Position;
 
 /// <summary>Command to configure the position and velocity of a planetary body.</summary>
 /// <param name="Id">The entity id.</param>

@@ -1,8 +1,8 @@
-using Kjarni.Brunnr.Command;
-using Kjarni.Kvasir.Foundation;
+using Brunnr.Command;
+using Kvasir;
 using System.ComponentModel.DataAnnotations;
 
-namespace Kjarni.Nornir.Geimr.Physics;
+namespace Nornir.Geimr.Physics;
 
 /// <summary>Command to configure the physical properties of a planetary body.</summary>
 /// <param name="Id">The entity id.</param>

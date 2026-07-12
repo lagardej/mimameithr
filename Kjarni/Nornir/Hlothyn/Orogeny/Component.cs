@@ -1,7 +1,7 @@
 using Friflo.Engine.ECS;
 using UnitsNet;
 
-namespace Kjarni.Nornir.Hlothyn.Orogeny;
+namespace Nornir.Hlothyn.Orogeny;
 
 /// <summary>Orogenic state of a surface cell.</summary>
 [ComponentKey("hlothyn-orogeny")]

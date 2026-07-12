@@ -1,7 +1,7 @@
-using Kjarni.Kvasir.Foundation.Grid;
+using Kvasir.Grid;
 using UnitsNet;
 
-namespace Kjarni.Nornir.Hlothyn.Orogeny;
+namespace Nornir.Hlothyn.Orogeny;
 
 /// <summary>All inputs to the orogeny simulation.</summary>
 public sealed record Parameters

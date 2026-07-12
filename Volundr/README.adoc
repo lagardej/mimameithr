@@ -2,12 +2,3 @@
 
 Völundr was the master elven smith — the craftsman of the gods.
 Völundr is the developer toolbox for Mimameithr.
-
-== Projects
-
-[cols="1,3"]
-|===
-|Directory |Purpose
-
-|link:Gler/README.adoc[`Gler`] |Build-time documentation generator — reads code attributes via reflection and produces documentation fragments
-|===

@@ -1,7 +1,7 @@
 using Godot;
 using Array = Godot.Collections.Array;
 
-namespace Skald.Bithot.Geimr.Geometry;
+namespace Bithot.Geimr.Geometry;
 
 /// <summary>Line loop marking a body's equatorial plane. Radius is set externally, not computed here.</summary>
 public partial class EquatorGuide : MeshInstance3D

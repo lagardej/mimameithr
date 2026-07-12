@@ -1,8 +1,8 @@
-using Kjarni.Brunnr.System;
+using Brunnr.SystemGroup;
 using UnitsNet;
 using Xunit;
 
-namespace Kjarni.Brunnr.Tests;
+namespace Brunnr.Tests;
 
 /// <summary>Coverage for the period-to-tier boundaries used to bucket entities in <c>Ver&#240;andiSystems</c>.</summary>
 public class UpdateTieringTests

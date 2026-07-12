@@ -1,11 +1,11 @@
+using Brunnr.Command;
+using Brunnr.Data.Validation;
 using Friflo.Engine.ECS;
-using Kjarni.Brunnr.Command;
-using Kjarni.Brunnr.Engine.Data.Validation;
-using Kjarni.Nornir.Ginnungagap.Seed;
 using Microsoft.Extensions.DependencyInjection;
+using Nornir.Ginnungagap.Seed;
 using System.Reflection;
 
-namespace Kjarni.Nornir;
+namespace Nornir;
 
 /// <summary>Generation phase engine. Routes commands to registered endpoints.</summary>
 internal class Urðr(EntityStore store, RandomProvider randomProvider)

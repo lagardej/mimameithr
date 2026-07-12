@@ -1,4 +1,4 @@
-namespace Kjarni.Nornir.Hlothyn.Lithosphere;
+namespace Nornir.Hlothyn.Lithosphere;
 
 /// <summary>Crust composition classification.</summary>
 public enum CrustComposition

@@ -1,14 +1,14 @@
-using Kjarni.Nornir;
-using Kjarni.Nornir.Eldr.Luminosity;
-using Kjarni.Nornir.Geimr.Geometry;
-using Kjarni.Nornir.Geimr.Physics;
-using Kjarni.Nornir.Geimr.Position;
-using Kjarni.Nornir.Geimr.Rotation;
-using Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
-using static Kjarni.Brunnr.Grid.GridShape;
+using Nornir;
+using Nornir.Eldr.Luminosity;
+using Nornir.Geimr.Geometry;
+using Nornir.Geimr.Physics;
+using Nornir.Geimr.Position;
+using Nornir.Geimr.Rotation;
+using Nornir.Hlothyn.Tectonics.MobileLid;
+using static Brunnr.Grid.GridShape;
 using static Skald.Bithot.BootstrapScales;
 
-namespace Skald.Bithot;
+namespace Bithot;
 
 /// <summary>
 ///     Boots a headless <see cref="Nornir" /> engine and configures space bodies through generation-phase
@@ -19,14 +19,14 @@ public static class NornirBootstrap
     /// <summary>
     ///     Creates and positions the Sun, Earth, and Moon bodies. Returns a record with their entity ids.
     /// </summary>
-    public static void CreateSolarSystem(Nornir engine)
+    public static void CreateSolarSystem(Nornir.Nornir engine)
     {
         var sun = CreateSun(engine);
         var earth = CreateEarth(engine, sun);
         CreateMoon(engine, earth);
     }
 
-    private static int CreateSun(Nornir engine)
+    private static int CreateSun(Nornir.Nornir engine)
     {
         var id = engine.CreateEntity();
         engine.Handle(new SetGeometry(id, Spherical, RadiusKm(696_000)));
@@ -37,7 +37,7 @@ public static class NornirBootstrap
         return id;
     }
 
-    private static int CreateEarth(Nornir engine, int sunId)
+    private static int CreateEarth(Nornir.Nornir engine, int sunId)
     {
         var id = engine.CreateEntity();
         engine.Handle(new SetGeometry(id, Spherical, RadiusKm(6_371), 23));
@@ -47,7 +47,7 @@ public static class NornirBootstrap
         return id;
     }
 
-    private static void CreateMoon(Nornir engine, int earthId)
+    private static void CreateMoon(Nornir.Nornir engine, int earthId)
     {
         var id = engine.CreateEntity();
         engine.Handle(new SetGeometry(id, Spherical, RadiusKm(1_737)));
@@ -59,7 +59,7 @@ public static class NornirBootstrap
     /// <summary>
     ///     Legacy test body creation. Creates one body with tectonics generation.
     /// </summary>
-    public static int CreateTestBody(Nornir engine)
+    public static int CreateTestBody(Nornir.Nornir engine)
     {
         var id = engine.CreateEntity();
         engine.Handle(new SetTectonicsMobileLid(id, 5, 5, 5, 5, 5, 5));

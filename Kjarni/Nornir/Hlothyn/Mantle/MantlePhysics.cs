@@ -1,6 +1,6 @@
 using UnitsNet;
 
-namespace Kjarni.Nornir.Hlothyn.Mantle;
+namespace Nornir.Hlothyn.Mantle;
 
 /// <summary>Provides physics calculations for planetary mantle properties.</summary>
 public static class MantlePhysics

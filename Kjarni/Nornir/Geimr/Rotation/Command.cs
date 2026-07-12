@@ -1,8 +1,8 @@
-using Kjarni.Brunnr.Command;
-using Kjarni.Kvasir.Foundation;
+using Brunnr.Command;
+using Kvasir;
 using System.ComponentModel.DataAnnotations;
 
-namespace Kjarni.Nornir.Geimr.Rotation;
+namespace Nornir.Geimr.Rotation;
 
 /// <summary>Command to configure the rotational properties of a planetary body.</summary>
 /// <param name="Id">The entity id.</param>

@@ -1,9 +1,9 @@
+using Brunnr.Command;
+using Brunnr.Time;
 using Friflo.Engine.ECS;
-using Kjarni.Brunnr.Command;
-using Kjarni.Brunnr.Engine.Time;
-using Kjarni.Nornir.Ginnungagap.Seed;
+using Nornir.Ginnungagap.Seed;
 
-namespace Kjarni.Nornir;
+namespace Nornir;
 
 /// <summary>Front engine. Instantiates the phase engines against an injected or private <see cref="EntityStore" />.</summary>
 public class Nornir : IDisposable
@@ -24,7 +24,7 @@ public class Nornir : IDisposable
     private readonly Verðandi _verðandi;
 
     /// <summary>
-    ///     Constructor. Injected with a shared <see cref="EntityStore" /> — see <see cref="Brunnr.Engine.BrunnrEngine" />
+    ///     Constructor. Injected with a shared <see cref="EntityStore" /> — see <see cref="Brunnr.BrunnrEngine" />
     ///     .
     /// </summary>
     public Nornir(EntityStore store)

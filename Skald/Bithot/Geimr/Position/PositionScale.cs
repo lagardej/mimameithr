@@ -1,11 +1,11 @@
 using Godot;
 using UnitsNet;
 
-namespace Skald.Bithot.Geimr.Position;
+namespace Bithot.Geimr.Position;
 
 /// <summary>
 ///     Maps real Cartesian position to scene-space <see cref="Vector3" />. Linear, unlike
-///     <see cref="Geimr.Geometry.VisualScale" />'s log compression for radius — orbital distances in this
+///     <see cref="Skald.Bithot.Geimr.Geometry.VisualScale" />'s log compression for radius — orbital distances in this
 ///     system span a much narrower range (fractions of an AU to tens of AU) than body radii do (asteroid to
 ///     supergiant), so a fixed divisor keeps relative distances and orbit shapes undistorted.
 /// </summary>

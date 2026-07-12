@@ -1,7 +1,7 @@
 using System.Numerics;
 using UnitsNet;
 
-namespace Kjarni.Nornir.Geimr.Position;
+namespace Nornir.Geimr.Position;
 
 /// <summary>
 ///     Static utility methods for orbital mechanics calculations: mean and true anomaly conversions,

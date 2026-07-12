@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Skald.Bithot.Eldr.Irradiance;
+namespace Bithot.Eldr.Irradiance;
 
 internal sealed class IrradianceRenderer
 {

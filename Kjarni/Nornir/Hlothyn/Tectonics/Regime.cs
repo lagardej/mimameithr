@@ -1,4 +1,4 @@
-namespace Kjarni.Nornir.Hlothyn.Tectonics;
+namespace Nornir.Hlothyn.Tectonics;
 
 /// <summary>Tectonic regime model used by a planetary body.</summary>
 public enum Regime

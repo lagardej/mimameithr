@@ -1,6 +1,6 @@
 using UnitsNet;
 
-namespace Kjarni.Nornir.Eldr.Irradiance;
+namespace Nornir.Eldr.Irradiance;
 
 /// <summary>Static utility methods for computing insolation at a planetary surface cell.</summary>
 public static class StellarIrradiance

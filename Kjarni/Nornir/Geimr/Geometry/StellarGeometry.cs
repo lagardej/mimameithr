@@ -1,8 +1,8 @@
-using Kjarni.Kvasir.Foundation;
+using Kvasir;
 using System.Numerics;
 using UnitsNet;
 
-namespace Kjarni.Nornir.Geimr.Geometry;
+namespace Nornir.Geimr.Geometry;
 
 /// <summary>Static geometric utility methods for stellar position relative to a planetary surface.</summary>
 public static class StellarGeometry

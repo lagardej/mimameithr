@@ -1,12 +1,12 @@
+using Brunnr.SystemGroup;
+using Brunnr.Time;
 using Friflo.Engine.ECS;
 using Friflo.Engine.ECS.Systems;
-using Kjarni.Brunnr.Engine.Time;
-using Kjarni.Brunnr.System;
-using Kjarni.Nornir.Eldr.Irradiance;
-using Kjarni.Nornir.Geimr.Position;
-using Kjarni.Nornir.Geimr.Rotation;
+using Nornir.Eldr.Irradiance;
+using Nornir.Geimr.Position;
+using Nornir.Geimr.Rotation;
 
-namespace Kjarni.Nornir;
+namespace Nornir;
 
 /// <summary>
 ///     Headless simulation engine. Drives the <see cref="SystemRoot" /> tick loop.

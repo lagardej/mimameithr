@@ -1,16 +1,16 @@
+using Brunnr.Cell;
+using Brunnr.Command;
+using Brunnr.Grid;
 using Friflo.Engine.ECS;
-using Kjarni.Brunnr.Command;
-using Kjarni.Brunnr.Engine.Cell;
-using Kjarni.Brunnr.Grid;
-using Kjarni.Kvasir.Foundation;
-using Kjarni.Kvasir.Foundation.Grid;
-using Kjarni.Nornir.Geimr.Geometry;
-using Kjarni.Nornir.Geimr.Physics;
-using Kjarni.Nornir.Ginnungagap.Seed;
+using Kvasir;
+using Kvasir.Grid;
+using Nornir.Geimr.Geometry;
+using Nornir.Geimr.Physics;
+using Nornir.Ginnungagap.Seed;
 using UnitsNet;
-using static Kjarni.Kvasir.Foundation.Scaling;
+using static Kvasir.Scaling;
 
-namespace Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
+namespace Nornir.Hlothyn.Tectonics.MobileLid;
 
 /// <summary>Handles <see cref="SetTectonicsMobileLid" /> commands against the entity store.</summary>
 public class SetTectonicsMobileLidHandler(EntityStore store, RandomProvider randomProvider)

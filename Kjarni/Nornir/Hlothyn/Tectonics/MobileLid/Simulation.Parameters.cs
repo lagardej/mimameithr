@@ -1,8 +1,8 @@
-using Kjarni.Kvasir.Foundation;
-using Kjarni.Kvasir.Foundation.Grid;
+using Kvasir;
+using Kvasir.Grid;
 using UnitsNet;
 
-namespace Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
+namespace Nornir.Hlothyn.Tectonics.MobileLid;
 
 /// <summary>All inputs to the tectonics simulation.</summary>
 internal sealed record Parameters

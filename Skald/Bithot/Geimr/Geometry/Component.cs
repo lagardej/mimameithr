@@ -1,11 +1,11 @@
 using Friflo.Engine.ECS;
 using Godot;
 
-namespace Skald.Bithot.Geimr.Geometry;
+namespace Bithot.Geimr.Geometry;
 
 /// <summary>
-///     Scene-space radius for a body, derived from <see cref="Kjarni.Nornir.Geimr.Geometry.GeometryC.Radius" />
-///     via <see cref="VisualScale" />. Render-only — never read or written by <c>Kjarni.Nornir</c>.
+///     Scene-space radius for a body, derived from <see cref="Nornir.Geimr.Geometry.GeometryC.Radius" />
+///     via <see cref="VisualScale" />. Render-only — never read or written by <c>Nornir</c>.
 /// </summary>
 [ComponentKey("bithot-visual-radius")]
 public struct VisualRadiusC : IComponent

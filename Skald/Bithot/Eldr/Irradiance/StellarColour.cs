@@ -1,6 +1,6 @@
-namespace Skald.Bithot.Eldr.Irradiance;
-
 using UnitsNet;
+
+namespace Bithot.Eldr.Irradiance;
 
 /// <summary>Rendering-only colour approximation for a star. Not a simulation concern — Nornir has no notion of RGB.</summary>
 public static class StellarColour
@@ -67,14 +67,14 @@ public static class StellarColour
             : RedCoefficient * Math.Pow(kelvin100 - RedExponentOffset, RedExponent);
 
         var g = kelvin100 <= RedGreenBreakpointKelvin100
-            ? (GreenLowSlope * Math.Log(kelvin100)) - GreenLowIntercept
+            ? GreenLowSlope * Math.Log(kelvin100) - GreenLowIntercept
             : GreenHighCoefficient * Math.Pow(kelvin100 - GreenHighExponentOffset, GreenHighExponent);
 
         var b = kelvin100 >= RedGreenBreakpointKelvin100
             ? ByteScale
             : kelvin100 <= BlueZeroThresholdKelvin100
                 ? 0.0
-                : (BlueSlope * Math.Log(kelvin100 - BlueLogOffset)) - BlueIntercept;
+                : BlueSlope * Math.Log(kelvin100 - BlueLogOffset) - BlueIntercept;
 
         return (
             Math.Clamp(r / ByteScale, 0.0, 1.0),

@@ -1,15 +1,12 @@
+using Brunnr.SystemGroup;
 using Friflo.Engine.ECS;
 using Friflo.Engine.ECS.Systems;
-using Kjarni.Brunnr.System;
 using Xunit;
 
-namespace Kjarni.Brunnr.Tests;
+namespace Brunnr.Tests;
 
 /// <summary>Test-only component to give <see cref="RecordingSystem" /> a query type to bind to.</summary>
-public struct StaggerProbeC : IComponent
-{
-    public int Value;
-}
+public struct StaggerProbeC : IComponent;
 
 /// <summary>Records the cumulative real-time elapsed at each <see cref="OnUpdate" /> call.</summary>
 public sealed class RecordingSystem(List<float> fireTimes) : QuerySystem<StaggerProbeC>

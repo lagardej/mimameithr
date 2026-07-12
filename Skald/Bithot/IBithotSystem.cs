@@ -1,4 +1,4 @@
-namespace Skald.Bithot;
+namespace Bithot;
 
 /// <summary>Contract for a Bithot system that performs render-side synchronisation work.</summary>
 public interface IBithotSystem

@@ -1,12 +1,11 @@
+using Brunnr.Command;
+using Brunnr.SystemGroup;
 using Friflo.Engine.ECS;
-using Kjarni.Brunnr.Command;
-using Kjarni.Brunnr.System;
-using Kjarni.Kvasir.Geimr;
-using Kjarni.Nornir.Geimr.Physics;
+using Nornir.Geimr.Physics;
 using System.Numerics;
 using UnitsNet;
 
-namespace Kjarni.Nornir.Geimr.Position;
+namespace Nornir.Geimr.Position;
 
 /// <summary>Handles <see cref="SetPosition" /> commands against the entity store.</summary>
 public class SetPositionHandler(EntityStore store) : ICommandHandler<SetPosition>

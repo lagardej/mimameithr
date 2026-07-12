@@ -1,9 +1,7 @@
 = Mimameithr
 
 A civilization-scale planetary simulation engine.
-Models physical and civilizational processes over a 10 000-year horizon — tectonics, climate, hydrology, geology,
-weather, vegetation, fauna, and the civilizations that emerge from and are constrained by them.
-
+Models physical and civilizational processes over a 10 000-year horizon — tectonics, climate, hydrology, geology, weather, vegetation, fauna, and the civilizations that emerge from and are constrained by them.
 Godot 4 is the rendering layer.
 The engine runs headless.
 Not solar system bound, engine supports arbitrary planetary systems.

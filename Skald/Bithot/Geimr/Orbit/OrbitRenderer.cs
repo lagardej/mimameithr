@@ -1,14 +1,13 @@
+using Bithot.Geimr.Geometry;
 using Godot;
-using Kjarni.Nornir;
-using Skald.Bithot.Geimr.Geometry;
 
-namespace Skald.Bithot.Geimr.Orbit;
+namespace Bithot.Geimr.Orbit;
 
 internal sealed class OrbitRenderer
 {
-    private readonly Nornir _nornir;
+    private readonly Nornir.Nornir _nornir;
 
-    internal OrbitRenderer(Nornir nornir)
+    internal OrbitRenderer(Nornir.Nornir nornir)
     {
         _nornir = nornir;
     }

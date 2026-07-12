@@ -1,8 +1,8 @@
+using Bithot.Geimr.Geometry;
 using Friflo.Engine.ECS;
-using Kjarni.Nornir.Geimr.Position;
-using Skald.Bithot.Geimr.Geometry;
+using Nornir.Geimr.Position;
 
-namespace Skald.Bithot.Geimr.Position;
+namespace Bithot.Geimr.Position;
 
 /// <summary>
 ///     Bithot's side of the shared store. Pushes <see cref="PositionC" />, scaled via <see cref="PositionScale" />,

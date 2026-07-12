@@ -1,4 +1,4 @@
-namespace Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
+namespace Nornir.Hlothyn.Tectonics.MobileLid;
 
 /// <summary>Tectonic plate boundary type at a cell.</summary>
 public enum BoundaryType

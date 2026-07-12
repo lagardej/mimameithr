@@ -1,7 +1,7 @@
-using Kjarni.Brunnr.Command;
+using Brunnr.Command;
 using System.ComponentModel.DataAnnotations;
 
-namespace Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
+namespace Nornir.Hlothyn.Tectonics.MobileLid;
 
 /// <summary>Command to configure the tectonics of a planetary body.</summary>
 /// <param name="Id">The entity id.</param>

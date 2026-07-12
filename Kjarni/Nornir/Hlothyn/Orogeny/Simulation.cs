@@ -1,9 +1,9 @@
-using Kjarni.Kvasir.Foundation;
-using Kjarni.Kvasir.Foundation.Grid;
-using Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
+using Kvasir;
+using Kvasir.Grid;
+using Nornir.Hlothyn.Tectonics.MobileLid;
 using UnitsNet;
 
-namespace Kjarni.Nornir.Hlothyn.Orogeny;
+namespace Nornir.Hlothyn.Orogeny;
 
 /// <summary>
 ///     One-shot orogeny world-generation simulation.
@@ -21,7 +21,7 @@ namespace Kjarni.Nornir.Hlothyn.Orogeny;
 ///         Revisit once <c>Tectonics</c> classifies boundary type per plate pair instead of per cell.
 ///     </para>
 /// </remarks>
-public static class Simulation
+public static class OrogenySimulation
 {
     /// <summary>Runs the orogeny simulation and returns the per-cell orogenic state.</summary>
     /// <param name="parameters">Simulation parameters.</param>
@@ -57,7 +57,9 @@ public static class Simulation
 
                 result[cellId] = new OrogenyCell
                 {
-                    OrogenicAge = age, AccumulatedCrustalShortening = shortening, ReliefPotential = relief
+                    OrogenicAge = age,
+                    AccumulatedCrustalShortening = shortening,
+                    ReliefPotential = relief
                 };
             }
         }

@@ -1,9 +1,9 @@
-using Kjarni.Brunnr.Command;
-using Kjarni.Brunnr.Grid;
-using Kjarni.Kvasir.Foundation;
+using Brunnr.Command;
+using Brunnr.Grid;
+using Kvasir;
 using System.ComponentModel.DataAnnotations;
 
-namespace Kjarni.Nornir.Geimr.Geometry;
+namespace Nornir.Geimr.Geometry;
 
 /// <summary>Command to configure the geometry of a planetary body.</summary>
 /// <param name="Id">The entity id.</param>

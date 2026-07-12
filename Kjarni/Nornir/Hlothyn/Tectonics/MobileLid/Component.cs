@@ -1,10 +1,10 @@
 using Friflo.Engine.ECS;
-using Kjarni.Kvasir.Foundation.Grid;
-using Kjarni.Nornir.Hlothyn.Lithosphere;
+using Kvasir.Grid;
+using Nornir.Hlothyn.Lithosphere;
 using System.Numerics;
 using UnitsNet;
 
-namespace Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
+namespace Nornir.Hlothyn.Tectonics.MobileLid;
 
 /// <summary>Tectonic boundary state of an R2 cell. Only cells with an actual boundary or hot spot get this component.</summary>
 [ComponentKey("hlothyn-tectonics-boundary")]

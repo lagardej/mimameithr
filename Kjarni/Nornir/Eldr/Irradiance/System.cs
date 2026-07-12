@@ -1,15 +1,15 @@
+using Brunnr.Cell;
+using Brunnr.Grid;
 using Friflo.Engine.ECS;
 using Friflo.Engine.ECS.Systems;
-using Kjarni.Brunnr.Engine.Cell;
-using Kjarni.Brunnr.Grid;
-using Kjarni.Kvasir.Foundation.Grid;
-using Kjarni.Nornir.Eldr.Luminosity;
-using Kjarni.Nornir.Geimr.Geometry;
-using Kjarni.Nornir.Geimr.Position;
-using Kjarni.Nornir.Geimr.Rotation;
-using static Kjarni.Nornir.Geimr.Geometry.StellarGeometry;
+using Kvasir.Grid;
+using Nornir.Eldr.Luminosity;
+using Nornir.Geimr.Geometry;
+using Nornir.Geimr.Position;
+using Nornir.Geimr.Rotation;
+using static Nornir.Geimr.Geometry.StellarGeometry;
 
-namespace Kjarni.Nornir.Eldr.Irradiance;
+namespace Nornir.Eldr.Irradiance;
 
 /// <summary>Updates <see cref="IrradianceC" /> for each cell entity from planet state via <see cref="CellParentRefC" />.</summary>
 public sealed class IrradianceSystem : QuerySystem<IrradianceC, CellIdentityC, CellParentRefC>

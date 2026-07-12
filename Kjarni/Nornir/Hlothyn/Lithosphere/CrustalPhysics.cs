@@ -1,6 +1,6 @@
 using UnitsNet;
 
-namespace Kjarni.Nornir.Hlothyn.Lithosphere;
+namespace Nornir.Hlothyn.Lithosphere;
 
 /// <summary>Provides physics calculations for planetary crustal properties.</summary>
 public static class CrustalPhysics

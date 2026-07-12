@@ -1,7 +1,7 @@
-using Kjarni.Kvasir.Foundation;
-using Kjarni.Kvasir.Foundation.Grid;
+using Kvasir;
+using Kvasir.Grid;
 
-namespace Kjarni.Nornir.Tests;
+namespace Nornir.Tests;
 
 public sealed class StubGrid : IGeodesicGrid
 {

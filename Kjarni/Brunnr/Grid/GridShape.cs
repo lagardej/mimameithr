@@ -1,4 +1,4 @@
-namespace Kjarni.Brunnr.Grid;
+namespace Brunnr.Grid;
 
 /// <summary>Grid backend shape for a body's discrete global grid.</summary>
 public enum GridShape

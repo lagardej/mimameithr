@@ -1,10 +1,10 @@
+using Brunnr.Command;
+using Brunnr.SystemGroup;
 using Friflo.Engine.ECS;
-using Kjarni.Brunnr.Command;
-using Kjarni.Brunnr.System;
 using UnitsNet;
-using static Kjarni.Nornir.Geimr.Rotation.SetRotationScale;
+using static Nornir.Geimr.Rotation.SetRotationScale;
 
-namespace Kjarni.Nornir.Geimr.Rotation;
+namespace Nornir.Geimr.Rotation;
 
 /// <summary>Handles <see cref="SetRotation" /> commands against the entity store.</summary>
 public class SetRotationHandler(EntityStore store) : ICommandHandler<SetRotation>

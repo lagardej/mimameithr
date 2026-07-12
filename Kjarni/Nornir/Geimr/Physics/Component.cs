@@ -1,7 +1,7 @@
 using Friflo.Engine.ECS;
 using UnitsNet;
 
-namespace Kjarni.Nornir.Geimr.Physics;
+namespace Nornir.Geimr.Physics;
 
 /// <summary>Physical properties of a planetary body.</summary>
 [ComponentKey("geimr-physics")]

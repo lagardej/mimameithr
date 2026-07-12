@@ -1,9 +1,9 @@
+using Bithot.Geimr.Geometry;
 using Friflo.Engine.ECS;
 using Godot;
-using Kjarni.Nornir.Geimr.Rotation;
-using Skald.Bithot.Geimr.Geometry;
+using Nornir.Geimr.Rotation;
 
-namespace Skald.Bithot.Geimr.Rotation;
+namespace Bithot.Geimr.Rotation;
 
 /// <summary>
 ///     Bithot's side of the shared store. Pushes <see cref="RotationC.CurrentAngle" /> onto each body's

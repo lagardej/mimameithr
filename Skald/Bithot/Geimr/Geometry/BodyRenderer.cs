@@ -1,18 +1,17 @@
 using Friflo.Engine.ECS;
 using Godot;
-using Kjarni.Nornir;
-using Kjarni.Nornir.Eldr.Luminosity;
-using Kjarni.Nornir.Geimr.Geometry;
-using Kjarni.Nornir.Geimr.Position;
+using Nornir.Eldr.Luminosity;
+using Nornir.Geimr.Geometry;
+using Nornir.Geimr.Position;
 
-namespace Skald.Bithot.Geimr.Geometry;
+namespace Bithot.Geimr.Geometry;
 
 internal sealed class BodyRenderer
 {
-    private readonly Nornir _nornir;
+    private readonly Nornir.Nornir _nornir;
     private readonly EntityStore _store;
 
-    internal BodyRenderer(Nornir nornir, EntityStore store)
+    internal BodyRenderer(Nornir.Nornir nornir, EntityStore store)
     {
         _nornir = nornir;
         _store = store;

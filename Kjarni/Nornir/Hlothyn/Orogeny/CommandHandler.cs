@@ -1,17 +1,17 @@
+using Brunnr.Cell;
+using Brunnr.Command;
+using Brunnr.Grid;
 using Friflo.Engine.ECS;
-using Kjarni.Brunnr.Command;
-using Kjarni.Brunnr.Engine.Cell;
-using Kjarni.Brunnr.Grid;
-using Kjarni.Kvasir.Foundation;
-using Kjarni.Kvasir.Foundation.Grid;
-using Kjarni.Nornir.Geimr.Geometry;
-using Kjarni.Nornir.Geimr.Physics;
-using Kjarni.Nornir.Ginnungagap.Seed;
-using Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
+using Kvasir;
+using Kvasir.Grid;
+using Nornir.Geimr.Geometry;
+using Nornir.Geimr.Physics;
+using Nornir.Ginnungagap.Seed;
+using Nornir.Hlothyn.Tectonics.MobileLid;
 using UnitsNet;
-using static Kjarni.Kvasir.Foundation.Scaling;
+using static Kvasir.Scaling;
 
-namespace Kjarni.Nornir.Hlothyn.Orogeny;
+namespace Nornir.Hlothyn.Orogeny;
 
 /// <summary>Handles <see cref="SetOrogeny" /> commands against the entity store.</summary>
 public class SetOrogenyHandler(EntityStore store, RandomProvider randomProvider) : ICommandHandler<SetOrogeny>
@@ -51,7 +51,7 @@ public class SetOrogenyHandler(EntityStore store, RandomProvider randomProvider)
             Grid = grid
         };
 
-        var result = Simulation.Run(parameters, tectonics, rng);
+        var result = OrogenySimulation.Run(parameters, tectonics, rng);
 
         foreach (var (cellId, cell) in result.Cells)
         {

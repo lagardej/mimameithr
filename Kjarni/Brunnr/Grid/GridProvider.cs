@@ -1,6 +1,6 @@
-using Kjarni.Kvasir.Foundation.Grid;
+using Kvasir.Grid;
 
-namespace Kjarni.Brunnr.Grid;
+namespace Brunnr.Grid;
 
 /// <summary>
 ///     Global grid instances, one per <see cref="GridShape" />. Initialized once at engine startup before any system

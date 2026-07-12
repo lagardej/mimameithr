@@ -1,14 +1,14 @@
-using Kjarni.Kvasir.Foundation;
-using Kjarni.Kvasir.Foundation.Grid;
-using Kjarni.Kvasir.Geimr;
-using Kjarni.Nornir.Hlothyn.Lithosphere;
+using Kvasir;
+using Kvasir.Grid;
+using Nornir.Geimr;
+using Nornir.Hlothyn.Lithosphere;
 using System.Numerics;
 using UnitsNet;
-using static Kjarni.Nornir.Hlothyn.Lithosphere.CrustalPhysics;
-using static Kjarni.Nornir.Hlothyn.Mantle.MantlePhysics;
-using static Kjarni.Nornir.Hlothyn.Tectonics.MobileLid.BoundaryType;
+using static Nornir.Hlothyn.Lithosphere.CrustalPhysics;
+using static Nornir.Hlothyn.Mantle.MantlePhysics;
+using static Nornir.Hlothyn.Tectonics.MobileLid.BoundaryType;
 
-namespace Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
+namespace Nornir.Hlothyn.Tectonics.MobileLid;
 
 /// <summary>
 ///     One-shot tectonic world-generation simulation.
@@ -206,11 +206,11 @@ internal static class MobileLidSimulation
         var frontier = new PriorityQueue<(CellId cell, CellId plate, double cost), double>();
 
         foreach (var seed in seeds)
-        foreach (var neighbour in grid.Disk(seed, 1).Where(c => c != seed))
-        {
-            var cost = rng.NextDouble() / weights[seed];
-            frontier.Enqueue((neighbour, seed, cost), cost);
-        }
+            foreach (var neighbour in grid.Disk(seed, 1).Where(c => c != seed))
+            {
+                var cost = rng.NextDouble() / weights[seed];
+                frontier.Enqueue((neighbour, seed, cost), cost);
+            }
 
         // Drain frontier in cost order; skip already-claimed cells; keep growing
         // the claiming plate's border by enqueuing the newly-claimed cell's own neighbours
@@ -311,7 +311,11 @@ internal static class MobileLidSimulation
         if (neighbourPlates.All(p => p == ownPlate))
         {
             // Interior cell — check for hot spot.
-            return (rng.NextDouble() < parameters.HotSpotDensity.DecimalFractions * (1.0 - parameters.BoundaryFocus.DecimalFractions) ? HotSpot : None, null);
+            return (
+                rng.NextDouble() < parameters.HotSpotDensity.DecimalFractions *
+                (1.0 - parameters.BoundaryFocus.DecimalFractions)
+                    ? HotSpot
+                    : None, null);
         }
 
         var ownPos = grid.CenterOf(r2Cell).ToUnitVector();

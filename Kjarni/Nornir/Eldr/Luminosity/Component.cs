@@ -1,6 +1,6 @@
 using Friflo.Engine.ECS;
 
-namespace Kjarni.Nornir.Eldr.Luminosity;
+namespace Nornir.Eldr.Luminosity;
 
 /// <summary>Radiative output of a star.</summary>
 [ComponentKey("eldr-luminosity")]

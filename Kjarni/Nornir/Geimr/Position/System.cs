@@ -1,8 +1,9 @@
+using Brunnr.SystemGroup;
 using Friflo.Engine.ECS;
 using Friflo.Engine.ECS.Systems;
 using UnitsNet;
 
-namespace Kjarni.Nornir.Geimr.Position;
+namespace Nornir.Geimr.Position;
 
 /// <summary>
 ///     Updates <see cref="OrbitC.MeanAnomaly" />, <see cref="OrbitC.OrbitalAngle" />,
@@ -16,7 +17,7 @@ public sealed class PositionSystem : QuerySystem<OrbitC, OrbitParentC, PositionC
     }
 
     /// <summary>Creates a system limited to entities tagged with <paramref name="tier" />.</summary>
-    /// <param name="tier">Update-cadence tier, e.g. from <see cref="Kjarni.Brunnr.System.UpdateTiering" />.</param>
+    /// <param name="tier">Update-cadence tier, e.g. from <see cref="UpdateTiering" />.</param>
     public PositionSystem(Tags tier) => Filter.AnyTags(tier);
 
     /// <inheritdoc />

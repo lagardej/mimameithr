@@ -1,7 +1,7 @@
-using Kjarni.Brunnr.Command;
+using Brunnr.Command;
 using System.ComponentModel.DataAnnotations;
 
-namespace Kjarni.Nornir.Hlothyn.Orogeny;
+namespace Nornir.Hlothyn.Orogeny;
 
 /// <summary>Command to configure the orogenic process of a planetary body.</summary>
 /// <param name="Id">The entity id.</param>

@@ -1,9 +1,9 @@
+using Bithot.Geimr.Geometry;
+using Bithot.Geimr.Position;
+using Bithot.Geimr.Rotation;
 using Friflo.Engine.ECS;
-using Skald.Bithot.Geimr.Geometry;
-using Skald.Bithot.Geimr.Position;
-using Skald.Bithot.Geimr.Rotation;
 
-namespace Skald.Bithot;
+namespace Bithot;
 
 /// <summary>Builds the ordered set of Bithot systems attached to a shared <see cref="EntityStore" />.</summary>
 internal static class BithotSystemRegistry

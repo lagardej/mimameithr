@@ -1,4 +1,4 @@
-namespace Kjarni.Brunnr.Command;
+namespace Brunnr.Command;
 
 /// <summary>A command.</summary>
 public interface ICommand;

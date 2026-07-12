@@ -1,8 +1,8 @@
+using Brunnr.Grid;
 using Friflo.Engine.ECS;
-using Kjarni.Brunnr.Grid;
 using UnitsNet;
 
-namespace Kjarni.Nornir.Geimr.Geometry;
+namespace Nornir.Geimr.Geometry;
 
 /// <summary>Physical geometry of a planetary body.</summary>
 [ComponentKey("geimr-geometry")]

@@ -1,7 +1,7 @@
-using static Kjarni.Nornir.Eldr.Luminosity.SetLuminosityScale;
-using static Kjarni.Nornir.Geimr.Geometry.SetGeometryScale;
-using static Kjarni.Nornir.Geimr.Physics.SetPhysicsScale;
-using static Kjarni.Nornir.Geimr.Rotation.SetRotationScale;
+using static Nornir.Eldr.Luminosity.SetLuminosityScale;
+using static Nornir.Geimr.Geometry.SetGeometryScale;
+using static Nornir.Geimr.Physics.SetPhysicsScale;
+using static Nornir.Geimr.Rotation.SetRotationScale;
 
 namespace Skald.Bithot;
 

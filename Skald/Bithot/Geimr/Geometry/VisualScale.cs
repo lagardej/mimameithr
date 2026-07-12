@@ -1,6 +1,6 @@
 using UnitsNet;
 
-namespace Skald.Bithot.Geimr.Geometry;
+namespace Bithot.Geimr.Geometry;
 
 /// <summary>
 ///     Maps real body radius to a bounded scene-space radius. Real body radius spans 1 km (asteroid) to

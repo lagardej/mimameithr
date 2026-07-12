@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace Kjarni.Nornir.Tests;
+namespace Nornir.Tests;
 
 internal static class AssertEx
 {

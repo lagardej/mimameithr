@@ -2,7 +2,7 @@ using Friflo.Engine.ECS;
 using System.Numerics;
 using UnitsNet;
 
-namespace Kjarni.Nornir.Geimr.Position;
+namespace Nornir.Geimr.Position;
 
 /// <summary>Cartesian position and velocity of a planetary body.</summary>
 [ComponentKey("geimr-position")]

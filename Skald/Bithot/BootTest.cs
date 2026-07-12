@@ -1,11 +1,9 @@
-using Bifrost.Kart;
+using Brunnr;
+using Brunnr.Grid;
 using Godot;
-using Kjarni.Brunnr.Engine;
-using Kjarni.Brunnr.Grid;
-using Kjarni.Nornir;
-using Kjarni.Nornir.Ginnungagap.Seed;
+using Nornir.Ginnungagap.Seed;
 
-namespace Skald.Bithot;
+namespace Bithot;
 
 public partial class BootTest : Node3D
 {
@@ -14,15 +12,15 @@ public partial class BootTest : Node3D
     // Composition root: one shared store, sub-engines built on top of it.
     private readonly BrunnrEngine _brunnr = new();
     private Bithot _bithot = null!;
-    private Nornir _nornir = null!;
+    private Nornir.Nornir _nornir = null!;
 
 
     public override void _Ready()
     {
-        _nornir = new Nornir(_brunnr.Store);
+        _nornir = new Nornir.Nornir(_brunnr.Store);
         _bithot = new Bithot(_brunnr.Store, _nornir);
 
-        GridProvider.Initialize(GridShape.Spherical, new BifrostKart());
+        GridProvider.Initialize(GridShape.Spherical, new Kart.Kart());
         _nornir.Handle(new SetSeed(Seed));
         NornirBootstrap.CreateSolarSystem(_nornir);
         _bithot.Advance();

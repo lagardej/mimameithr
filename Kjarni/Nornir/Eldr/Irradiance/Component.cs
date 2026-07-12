@@ -1,7 +1,7 @@
 using Friflo.Engine.ECS;
 using UnitsNet;
 
-namespace Kjarni.Nornir.Eldr.Irradiance;
+namespace Nornir.Eldr.Irradiance;
 
 /// <summary>Stellar irradiance state at a surface cell.</summary>
 [ComponentKey("eldr-irradiance")]

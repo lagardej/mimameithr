@@ -1,11 +1,10 @@
+using Bithot.Eldr.Irradiance;
+using Bithot.Geimr.Geometry;
+using Bithot.Geimr.Orbit;
 using Friflo.Engine.ECS;
 using Godot;
-using Kjarni.Nornir;
-using Skald.Bithot.Eldr.Irradiance;
-using Skald.Bithot.Geimr.Geometry;
-using Skald.Bithot.Geimr.Orbit;
 
-namespace Skald.Bithot;
+namespace Bithot;
 
 /// <summary>
 ///     Front engine for Bithot. Instantiates Bithot systems against a shared <see cref="EntityStore" />,
@@ -13,17 +12,17 @@ namespace Skald.Bithot;
 ///     tree.
 /// </summary>
 /// <remarks>
-///     Domain simulation stays in <c>Kjarni.Nornir.Nornir</c>. Bithot only derives and updates render components
+///     Domain simulation stays in <c>Nornir.Nornir</c>. Bithot only derives and updates render components
 ///     from domain state already present in the same store.
 /// </remarks>
 public sealed class Bithot
 {
-    private readonly Nornir _nornir;
+    private readonly Nornir.Nornir _nornir;
     private readonly EntityStore _store;
     private readonly IReadOnlyList<IBithotSystem> _systems;
 
     /// <summary>Creates a Bithot engine on top of an existing shared <paramref name="store" />.</summary>
-    public Bithot(EntityStore store, Nornir nornir)
+    public Bithot(EntityStore store, Nornir.Nornir nornir)
     {
         _store = store;
         _nornir = nornir;

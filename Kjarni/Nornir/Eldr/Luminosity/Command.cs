@@ -1,8 +1,8 @@
-using Kjarni.Brunnr.Command;
-using Kjarni.Kvasir.Foundation;
+using Brunnr.Command;
+using Kvasir;
 using System.ComponentModel.DataAnnotations;
 
-namespace Kjarni.Nornir.Eldr.Luminosity;
+namespace Nornir.Eldr.Luminosity;
 
 /// <summary>Command to configure the luminosity of a star.</summary>
 /// <param name="Id">The entity id.</param>

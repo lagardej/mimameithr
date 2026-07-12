@@ -1,10 +1,10 @@
 using Friflo.Engine.ECS;
-using Kjarni.Nornir.Geimr.Geometry;
+using Nornir.Geimr.Geometry;
 
-namespace Skald.Bithot.Geimr.Geometry;
+namespace Bithot.Geimr.Geometry;
 
 /// <summary>
-///     Bithot's side of the shared store (see <see cref="Kjarni.Brunnr.Engine.BrunnrEngine" />). Derives
+///     Bithot's side of the shared store (see <see cref="Brunnr.BrunnrEngine" />). Derives
 ///     render-only components from domain state and keeps them in sync as the domain changes.
 /// </summary>
 /// <remarks>
