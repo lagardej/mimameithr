@@ -34,7 +34,7 @@ public sealed class RotationSystem : IBithotSystem
             var node = entity.GetComponent<BodyNodeC>().Node;
             node.Rotation = new Vector3(0f, (float)rotation.CurrentAngle.Radians, 0f);
 
-            GD.Print($"Body_{entity.Id}: rotation angle={rotation.CurrentAngle.Degrees:F1}\u00b0");
+            // GD.Print($"Body_{entity.Id}: rotation angle={rotation.CurrentAngle.Degrees:F1}\u00b0");
         }
     }
 }

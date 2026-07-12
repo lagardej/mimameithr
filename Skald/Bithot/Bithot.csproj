@@ -1,4 +1,4 @@
-<Project Sdk="Godot.NET.Sdk/4.6.3">
+<Project Sdk="Godot.NET.Sdk/4.7.0">
 
     <PropertyGroup>
         <EnableDynamicLoading>true</EnableDynamicLoading>
@@ -10,24 +10,24 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Kjarni\Nornir\Nornir.csproj"/>
-        <ProjectReference Include="..\..\Bifrost\Kart\Kart.csproj"/>
+        <ProjectReference Include="..\..\Kjarni\Nornir\Nornir.csproj" />
+        <ProjectReference Include="..\..\Bifrost\Kart\Kart.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="BootstrapScales.cs.uid"/>
+        <Content Include="BootstrapScales.cs.uid" />
     </ItemGroup>
 
     <Target Name="CopyRustLibWindows" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('Windows'))">
-        <Copy SourceFiles="..\..\Rustr\Kart\target\release\rustr_kart.dll" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
+        <Copy SourceFiles="..\..\Rustr\Kart\target\release\rustr_kart.dll" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
     </Target>
 
     <Target Name="CopyRustLibLinux" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('Linux'))">
-        <Copy SourceFiles="..\..\Rustr\Kart\target\release\librustr_kart.so" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
+        <Copy SourceFiles="..\..\Rustr\Kart\target\release\librustr_kart.so" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
     </Target>
 
     <Target Name="CopyRustLibMac" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('OSX'))">
-        <Copy SourceFiles="..\..\Rustr\Kart\target\release\librustr_kart.dylib" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true"/>
+        <Copy SourceFiles="..\..\Rustr\Kart\target\release\librustr_kart.dylib" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
     </Target>
 
 </Project>
