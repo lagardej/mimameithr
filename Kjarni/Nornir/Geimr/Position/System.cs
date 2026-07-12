@@ -1,3 +1,4 @@
+using Friflo.Engine.ECS;
 using Friflo.Engine.ECS.Systems;
 using UnitsNet;
 
@@ -9,10 +10,19 @@ namespace Kjarni.Nornir.Geimr.Position;
 /// </summary>
 public sealed class PositionSystem : QuerySystem<OrbitC, OrbitParentC, PositionC>
 {
+    /// <summary>Creates a system that updates every orbiting entity.</summary>
+    public PositionSystem()
+    {
+    }
+
+    /// <summary>Creates a system limited to entities tagged with <paramref name="tier" />.</summary>
+    /// <param name="tier">Update-cadence tier, e.g. from <see cref="Kjarni.Brunnr.System.UpdateTiering" />.</param>
+    public PositionSystem(Tags tier) => Filter.AnyTags(tier);
+
     /// <inheritdoc />
     protected override void OnUpdate()
     {
-        var elapsed = Duration.FromSeconds(Tick.time);
+        var elapsed = Duration.FromSeconds(Tick.deltaTime);
         Query.ForEachEntity((ref orbit, ref parentRef, ref position, _) =>
         {
             orbit.MeanAnomaly = OrbitalMechanics.CurrentMeanAnomaly(orbit.MeanAnomaly, orbit.OrbitalPeriod, elapsed);

@@ -74,15 +74,15 @@ public static class OrbitalMechanics
         return Angle.FromRadians(eccentricAnomaly - (eccentricity * Math.Sin(eccentricAnomaly)));
     }
 
-    /// <summary>Computes the current mean anomaly from an initial mean anomaly and elapsed time.</summary>
-    /// <param name="initialMeanAnomaly">Mean anomaly at epoch (t = 0).</param>
+    /// <summary>Computes the current mean anomaly from the mean anomaly at the start of this update interval and elapsed time.</summary>
+    /// <param name="previousMeanAnomaly">Mean anomaly at the start of this update interval.</param>
     /// <param name="orbitalPeriod">Sidereal orbital period.</param>
-    /// <param name="elapsedTime">Total elapsed time since epoch.</param>
+    /// <param name="elapsedTime">Elapsed time since <paramref name="previousMeanAnomaly" /> was recorded.</param>
     /// <returns>Current mean anomaly, wrapped to [0°, 360°).</returns>
-    public static Angle CurrentMeanAnomaly(Angle initialMeanAnomaly, Duration orbitalPeriod, Duration elapsedTime)
+    public static Angle CurrentMeanAnomaly(Angle previousMeanAnomaly, Duration orbitalPeriod, Duration elapsedTime)
     {
         var meanMotionDeg = 360.0 / orbitalPeriod.Seconds;
-        return Angle.FromDegrees((initialMeanAnomaly.Degrees + (meanMotionDeg * elapsedTime.Seconds)) % 360.0);
+        return Angle.FromDegrees((previousMeanAnomaly.Degrees + (meanMotionDeg * elapsedTime.Seconds)) % 360.0);
     }
 
     /// <summary>

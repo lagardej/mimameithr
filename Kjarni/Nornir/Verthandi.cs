@@ -46,20 +46,39 @@ internal class Verðandi(EntityStore store)
 ///     Builds the <see cref="SystemRoot" /> for the Kjarni.Nornir simulation.
 ///     Systems are registered in execution order — dependencies must run before dependents.
 /// </summary>
+/// <remarks>
+///     Entities are bucketed into three update-cadence tiers by physical period (see
+///     <see cref="UpdateTiering" />) — a fast rotator/orbiter updates far more often than a slow
+///     one, instead of every entity sharing one blanket interval regardless of its own timescale.
+///     <see cref="IrradianceSystem" /> operates on cell entities, not the tiered planet-level
+///     components, and stays in the medium tier untagged — it isn't currently tiered.
+/// </remarks>
 internal static class VerðandiSystems
 {
-    private const float SimSecond = 1f;
     private const float StaggerOffset = 1f;
 
     /// <summary>
     ///     Creates and returns a configured <see cref="SystemRoot" /> bound to the given <paramref name="store" />.
     /// </summary>
     /// <param name="store">Entity store to bind the system root to.</param>
-    public static SystemRoot Build(EntityStore store) => new(store) { StaggeredAt10S() };
+    public static SystemRoot Build(EntityStore store) => new(store) { FastTier(), MediumTier(), SlowTier() };
 
-    private static StaggeredSystemGroup StaggeredAt10S() =>
-        new("10s staggered systems", SimSecond * 10, StaggerOffset)
+    private static StaggeredSystemGroup FastTier() =>
+        new("Fast tier", UpdateTiering.FastInterval, StaggerOffset)
         {
-            new RotationSystem(), new PositionSystem(), new IrradianceSystem()
+            new RotationSystem(Tags.Get<FastTierTag>()), new PositionSystem(Tags.Get<FastTierTag>())
+        };
+
+    private static StaggeredSystemGroup MediumTier() =>
+        new("Medium tier", UpdateTiering.MediumInterval, StaggerOffset)
+        {
+            new RotationSystem(Tags.Get<MediumTierTag>()), new PositionSystem(Tags.Get<MediumTierTag>()),
+            new IrradianceSystem()
+        };
+
+    private static StaggeredSystemGroup SlowTier() =>
+        new("Slow tier", UpdateTiering.SlowInterval, StaggerOffset)
+        {
+            new RotationSystem(Tags.Get<SlowTierTag>()), new PositionSystem(Tags.Get<SlowTierTag>())
         };
 }

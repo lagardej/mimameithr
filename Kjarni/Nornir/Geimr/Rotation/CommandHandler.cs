@@ -1,5 +1,6 @@
 using Friflo.Engine.ECS;
 using Kjarni.Brunnr.Command;
+using Kjarni.Brunnr.System;
 using UnitsNet;
 using static Kjarni.Nornir.Geimr.Rotation.SetRotationScale;
 
@@ -20,5 +21,7 @@ public class SetRotationHandler(EntityStore store) : ICommandHandler<SetRotation
             CurrentAngle = Angle.FromDegrees(command.InitialAngle),
             RotationalSpeed = RotationalSpeed.FromRevolutionsPerSecond(revolutionsPerSecond)
         });
+
+        entity.AddTags(UpdateTiering.TagFor(Duration.FromSeconds(rotationPeriod)));
     }
 }

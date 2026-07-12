@@ -1,5 +1,6 @@
 using Friflo.Engine.ECS;
 using Kjarni.Brunnr.Command;
+using Kjarni.Brunnr.System;
 using Kjarni.Kvasir.Geimr;
 using Kjarni.Nornir.Geimr.Physics;
 using System.Numerics;
@@ -38,7 +39,9 @@ public class SetPositionHandler(EntityStore store) : ICommandHandler<SetPosition
 
         var parentEntity = store.GetEntityById(command.ParentId.Value);
         entity.AddComponent(new OrbitParentC { Parent = parentEntity });
-        entity.AddComponent(DeriveOrbit(entity, parentEntity));
+        var orbit = DeriveOrbit(entity, parentEntity);
+        entity.AddComponent(orbit);
+        entity.AddTags(UpdateTiering.TagFor(orbit.OrbitalPeriod));
     }
 
     /// <summary>

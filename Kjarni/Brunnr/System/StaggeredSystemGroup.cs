@@ -13,7 +13,7 @@ public class StaggeredSystemGroup : SystemGroup
 {
     private readonly SystemGroup _inner;
     private readonly float _interval;
-    private readonly List<(SystemGroup Wrapper, float Accumulator)> _members = [];
+    private readonly List<(SystemGroup Wrapper, float Accumulator, float Threshold)> _members = [];
     private readonly float _offset;
 
     /// <summary>
@@ -31,13 +31,19 @@ public class StaggeredSystemGroup : SystemGroup
     }
 
     /// <summary>Adds a system to the staggered group, phased by its insertion order.</summary>
+    /// <remarks>
+    ///     The member's first fire happens after <c>offset * insertion index</c> seconds — quickly,
+    ///     not after a full <see cref="_interval" /> — so entities get an initial update shortly after
+    ///     boot instead of sitting on stale generation-phase state for up to one interval. Every fire
+    ///     after the first uses the full <see cref="_interval" />.
+    /// </remarks>
     public new void Add(BaseSystem system)
     {
-        var initialAccumulator = -_offset * _members.Count;
+        var firstFireThreshold = _offset * _members.Count;
         var wrapper = new SystemGroup(system.Name) { system };
         _inner.Add(wrapper);
         wrapper.Enabled = false;
-        _members.Add((wrapper, initialAccumulator));
+        _members.Add((wrapper, 0f, firstFireThreshold));
     }
 
     /// <summary>Updates the staggered group by accumulating time and executing systems on interval.</summary>
@@ -47,18 +53,19 @@ public class StaggeredSystemGroup : SystemGroup
 
         for (var i = 0; i < _members.Count; i++)
         {
-            var (wrapper, accumulator) = _members[i];
+            var (wrapper, accumulator, threshold) = _members[i];
             accumulator += delta;
 
-            if (accumulator >= _interval)
+            if (accumulator >= threshold)
             {
                 wrapper.Enabled = true;
                 wrapper.Update(new UpdateTick(accumulator, Tick.time));
                 wrapper.Enabled = false;
                 accumulator = 0f;
+                threshold = _interval;
             }
 
-            _members[i] = (wrapper, accumulator);
+            _members[i] = (wrapper, accumulator, threshold);
         }
     }
 }
