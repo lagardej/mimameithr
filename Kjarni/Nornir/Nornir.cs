@@ -6,8 +6,14 @@ using Kjarni.Nornir.Ginnungagap.Seed;
 namespace Kjarni.Nornir;
 
 /// <summary>Front engine. Instantiates the phase engines against an injected or private <see cref="EntityStore" />.</summary>
-public class Nornir
+public class Nornir : IDisposable
 {
+    /// <summary>
+    ///     Only set (and owned) when using the private-store constructor below — an injected store's JobRunner is the
+    ///     caller's responsibility (see Brunnr.Engine.BrunnrEngine).
+    /// </summary>
+    private readonly ParallelJobRunner? _ownedJobRunner;
+
     private readonly RandomProvider _randomProvider = new();
     private readonly EntityStore _store;
 
@@ -29,12 +35,20 @@ public class Nornir
     }
 
     /// <summary>Constructor. Owns a private, unshared store — for headless use with no other engine attached.</summary>
-    public Nornir() : this(new EntityStore())
-    {
-    }
+    public Nornir() : this(CreateHeadlessStore(out var runner)) => _ownedJobRunner = runner;
 
     /// <summary>Current time compression factor. Defaults to <see cref="TimeCompression.RealTime" />.</summary>
     public TimeCompression Compression { get; set; } = TimeCompression.RealTime;
+
+    /// <inheritdoc />
+    public void Dispose() => _ownedJobRunner?.Dispose();
+
+    /// <summary>Parallel query jobs (e.g. IrradianceSystem) require a ParallelJobRunner assigned to the store.</summary>
+    private static EntityStore CreateHeadlessStore(out ParallelJobRunner runner)
+    {
+        runner = new ParallelJobRunner(Environment.ProcessorCount);
+        return new EntityStore { JobRunner = runner };
+    }
 
     #region Commands
 

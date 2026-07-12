@@ -1,9 +1,9 @@
 using UnitsNet;
 
-namespace Kjarni.Kvasir.Geimr;
+namespace Kjarni.Kvasir.Foundation;
 
-/// <summary>Stellar geometry functions for computing a star's position, flux, and eclipses at a surface cell.</summary>
-public static class StellarGeometry
+/// <summary>Pure geometry functions for angular size and disc overlap. No domain or physical coupling — usable anywhere two circular discs or their angular sizes are involved.</summary>
+public static class AngularGeometry
 {
     /// <summary>Angular radius of a body as seen from a given distance.</summary>
     /// <param name="radius">Physical radius of the body.</param>
@@ -12,16 +12,16 @@ public static class StellarGeometry
         Angle.FromRadians(Math.Atan(radius.Meters / distance.Meters));
 
     /// <summary>
-    ///     Fraction of a star's disc obscured by an occluding body, as seen from a given observer point.
+    ///     Fraction of one disc obscured by another, as seen from a given observer point.
     ///     Zero when the two discs do not overlap; one for a total or annular eclipse.
     /// </summary>
-    /// <param name="starAngularRadius">Angular radius of the star as seen from the observer.</param>
-    /// <param name="occluderAngularRadius">Angular radius of the occluding body as seen from the observer.</param>
-    /// <param name="angularSeparation">Angular separation between the star's and occluder's centres.</param>
-    /// <returns>Obscured fraction of the star's disc, in [0, 1].</returns>
-    public static double EclipseFraction(Angle starAngularRadius, Angle occluderAngularRadius, Angle angularSeparation)
+    /// <param name="discAngularRadius">Angular radius of the obscured disc as seen from the observer.</param>
+    /// <param name="occluderAngularRadius">Angular radius of the occluding disc as seen from the observer.</param>
+    /// <param name="angularSeparation">Angular separation between the two discs' centres.</param>
+    /// <returns>Obscured fraction of the disc, in [0, 1].</returns>
+    public static double EclipseFraction(Angle discAngularRadius, Angle occluderAngularRadius, Angle angularSeparation)
     {
-        var r1 = starAngularRadius.Radians;
+        var r1 = discAngularRadius.Radians;
         var r2 = occluderAngularRadius.Radians;
         var d = angularSeparation.Radians;
 

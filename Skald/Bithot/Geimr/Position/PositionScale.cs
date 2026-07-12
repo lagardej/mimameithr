@@ -18,9 +18,11 @@ public static class PositionScale
     private const double KmPerSceneUnit = 3_000_000.0;
 
     /// <summary>Maps a physical position to a scene-space position via linear scale.</summary>
-    public static Vector3 ToVisualPosition(Length x, Length y, Length z) =>
-        new(
+    public static Vector3 ToVisualPosition(Length x, Length y, Length z)
+    {
+        return new Vector3(
             (float)(x.Kilometers / KmPerSceneUnit),
             (float)(y.Kilometers / KmPerSceneUnit),
             (float)(z.Kilometers / KmPerSceneUnit));
+    }
 }

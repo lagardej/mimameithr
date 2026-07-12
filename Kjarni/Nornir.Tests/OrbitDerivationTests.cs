@@ -16,13 +16,13 @@ public class OrbitDerivationTests
 
         // Create Sun
         var sun = nornir.CreateEntity();
-        nornir.Handle(new SetPhysics(sun, Age: 1000, Mass: 1000));
-        nornir.Handle(new SetPosition(sun, X: 0, Y: 0, Z: 0, VelocityX: 0, VelocityY: 0, VelocityZ: 0));
+        nornir.Handle(new SetPhysics(sun, 1000, 1000));
+        nornir.Handle(new SetPosition(sun, 0, 0, 0, 0, 0, 0));
 
         // Create Earth at 150M km with 30 km/s orbital velocity
         var earth = nornir.CreateEntity();
-        nornir.Handle(new SetPhysics(earth, Age: 1000, Mass: 600));
-        nornir.Handle(new SetPosition(earth, X: 150_000_000, Y: 0, Z: 0, VelocityX: 0, VelocityY: 30, VelocityZ: 0, ParentId: sun));
+        nornir.Handle(new SetPhysics(earth, 1000, 600));
+        nornir.Handle(new SetPosition(earth, 150_000_000, 0, 0, 0, 30, 0, sun));
 
         // Verify Earth has an orbit component
         var earthEntity = engine.Store.GetEntityById(earth);
@@ -37,18 +37,18 @@ public class OrbitDerivationTests
 
         // Create Sun
         var sun = nornir.CreateEntity();
-        nornir.Handle(new SetPhysics(sun, Age: 1000, Mass: 1000));
-        nornir.Handle(new SetPosition(sun, X: 0, Y: 0, Z: 0, VelocityX: 0, VelocityY: 0, VelocityZ: 0));
+        nornir.Handle(new SetPhysics(sun, 1000, 1000));
+        nornir.Handle(new SetPosition(sun, 0, 0, 0, 0, 0, 0));
 
         // Create Earth at 150M km with 30 km/s orbital velocity
         var earth = nornir.CreateEntity();
-        nornir.Handle(new SetPhysics(earth, Age: 1000, Mass: 600));
-        nornir.Handle(new SetPosition(earth, X: 150_000_000, Y: 0, Z: 0, VelocityX: 0, VelocityY: 30, VelocityZ: 0, ParentId: sun));
+        nornir.Handle(new SetPhysics(earth, 1000, 600));
+        nornir.Handle(new SetPosition(earth, 150_000_000, 0, 0, 0, 30, 0, sun));
 
         // Create Moon at 150M+384k km (absolute) with relative velocity 1.022 km/s
         var moon = nornir.CreateEntity();
-        nornir.Handle(new SetPhysics(moon, Age: 1000, Mass: 73));
-        nornir.Handle(new SetPosition(moon, X: 150_000_000 + 384_400, Y: 0, Z: 0, VelocityX: 0, VelocityY: 1.022, VelocityZ: 0, ParentId: earth));
+        nornir.Handle(new SetPhysics(moon, 1000, 73));
+        nornir.Handle(new SetPosition(moon, 150_000_000 + 384_400, 0, 0, 0, 1.022, 0, earth));
 
         // Verify Moon has an orbit component
         var moonEntity = engine.Store.GetEntityById(moon);

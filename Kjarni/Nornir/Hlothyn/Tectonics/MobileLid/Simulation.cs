@@ -35,7 +35,7 @@ namespace Kjarni.Nornir.Hlothyn.Tectonics.MobileLid;
 ///         </item>
 ///     </list>
 /// </remarks>
-internal static class Simulation
+internal static class MobileLidSimulation
 {
     private static readonly Resolution s_boundaryResolution = new(2);
 

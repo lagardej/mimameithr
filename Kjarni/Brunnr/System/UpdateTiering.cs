@@ -11,15 +11,6 @@ namespace Kjarni.Brunnr.System;
 /// </summary>
 public static class UpdateTiering
 {
-    /// <summary>Periods below this threshold are tagged <see cref="FastTierTag" />.</summary>
-    public static readonly Duration FastThreshold = Duration.FromMinutes(1);
-
-    /// <summary>
-    ///     Periods at or above this threshold are tagged <see cref="SlowTierTag" />; periods between
-    ///     <see cref="FastThreshold" /> and this are tagged <see cref="MediumTierTag" />.
-    /// </summary>
-    public static readonly Duration SlowThreshold = Duration.FromDays(1);
-
     /// <summary>Simulated-time update interval for <see cref="FastTierTag" /> entities, in seconds.</summary>
     public const float FastInterval = 0.5f;
 
@@ -28,6 +19,15 @@ public static class UpdateTiering
 
     /// <summary>Simulated-time update interval for <see cref="SlowTierTag" /> entities, in seconds.</summary>
     public const float SlowInterval = 600f;
+
+    /// <summary>Periods below this threshold are tagged <see cref="FastTierTag" />.</summary>
+    public static readonly Duration FastThreshold = Duration.FromMinutes(1);
+
+    /// <summary>
+    ///     Periods at or above this threshold are tagged <see cref="SlowTierTag" />; periods between
+    ///     <see cref="FastThreshold" /> and this are tagged <see cref="MediumTierTag" />.
+    /// </summary>
+    public static readonly Duration SlowThreshold = Duration.FromDays(1);
 
     /// <summary>Returns the tier tag matching the given physical <paramref name="period" />.</summary>
     public static Tags TagFor(Duration period) =>

@@ -23,7 +23,7 @@ public class SetTectonicsMobileLidHandler(EntityStore store, RandomProvider rand
         var rng = randomProvider.CreateStream((ulong) command.Id);
 
         var parameters = command.ToParameters(entity, rng);
-        var result = Simulation.Run(parameters);
+        var result = MobileLidSimulation.Run(parameters);
 
         RegimeInvariant.RemoveAllRegimeComponents(store, entity);
         entity.AddComponent(new TectonicsRegimeC { Regime = Regime.MobileLid });

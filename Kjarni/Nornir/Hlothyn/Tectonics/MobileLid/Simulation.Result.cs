@@ -36,7 +36,7 @@ internal sealed record Plate
 }
 
 /// <summary>
-///     Tectonic boundary fact occupying a single R2 cell. Output of <see cref="Simulation" />.
+///     Tectonic boundary fact occupying a single R2 cell. Output of <see cref="MobileLidSimulation" />.
 ///     Not "the cell's boundary property" — a boundary is a domain fact about plate interaction that happens to
 ///     sample at R2 resolution; it isn't owned by the cell it occupies.
 /// </summary>

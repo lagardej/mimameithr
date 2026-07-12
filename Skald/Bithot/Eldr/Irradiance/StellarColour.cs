@@ -1,12 +1,10 @@
+namespace Skald.Bithot.Eldr.Irradiance;
+
 using UnitsNet;
 
-namespace Kjarni.Kvasir.Geimr;
-
-/// <summary>Photometric functions for a star.</summary>
-public static class StellarPhotometry
+/// <summary>Rendering-only colour approximation for a star. Not a simulation concern — Nornir has no notion of RGB.</summary>
+public static class StellarColour
 {
-    #region Blackbody colour
-
     /// <summary>Lower bound of the fit's valid temperature range.</summary>
     private const double MinValidTemperatureKelvin = 1000.0;
 
@@ -83,22 +81,4 @@ public static class StellarPhotometry
             Math.Clamp(g / ByteScale, 0.0, 1.0),
             Math.Clamp(b / ByteScale, 0.0, 1.0));
     }
-
-    #endregion
-
-    #region Effective temperature
-
-    private const double StefanBoltzmann = 5.670374419e-8;
-
-    /// <summary>Effective temperature of a star, derived from luminosity and radius via the Stefan–Boltzmann law.</summary>
-    /// <param name="luminosity">Total power radiated by the star across all wavelengths.</param>
-    /// <param name="radius">Physical radius of the star.</param>
-    public static Temperature EffectiveTemperature(Luminosity luminosity, Length radius)
-    {
-        var surfaceArea = 4.0 * Math.PI * radius.Meters * radius.Meters;
-        var kelvin = Math.Pow(luminosity.Watts / (surfaceArea * StefanBoltzmann), 0.25);
-        return Temperature.FromKelvins(kelvin);
-    }
-
-    #endregion
 }

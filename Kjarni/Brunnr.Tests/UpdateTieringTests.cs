@@ -1,3 +1,4 @@
+using Kjarni.Brunnr.System;
 using UnitsNet;
 using Xunit;
 
@@ -11,11 +12,11 @@ public class UpdateTieringTests
     [InlineData(59)] // just below FastThreshold (60s)
     public void TagFor_ShortPeriod_ReturnsFastTier(double seconds)
     {
-        var tag = System.UpdateTiering.TagFor(Duration.FromSeconds(seconds));
+        var tag = UpdateTiering.TagFor(Duration.FromSeconds(seconds));
 
-        Assert.True(tag.Has<System.FastTierTag>());
-        Assert.False(tag.Has<System.MediumTierTag>());
-        Assert.False(tag.Has<System.SlowTierTag>());
+        Assert.True(tag.Has<FastTierTag>());
+        Assert.False(tag.Has<MediumTierTag>());
+        Assert.False(tag.Has<SlowTierTag>());
     }
 
     [Theory]
@@ -23,23 +24,23 @@ public class UpdateTieringTests
     [InlineData(3600)] // 1 hour
     public void TagFor_MediumPeriod_ReturnsMediumTier(double seconds)
     {
-        var tag = System.UpdateTiering.TagFor(Duration.FromSeconds(seconds));
+        var tag = UpdateTiering.TagFor(Duration.FromSeconds(seconds));
 
-        Assert.True(tag.Has<System.MediumTierTag>());
-        Assert.False(tag.Has<System.FastTierTag>());
-        Assert.False(tag.Has<System.SlowTierTag>());
+        Assert.True(tag.Has<MediumTierTag>());
+        Assert.False(tag.Has<FastTierTag>());
+        Assert.False(tag.Has<SlowTierTag>());
     }
 
     [Fact]
     public void TagFor_LongPeriod_ReturnsSlowTier()
     {
-        var tag = System.UpdateTiering.TagFor(Duration.FromDays(1)); // exactly SlowThreshold
+        var tag = UpdateTiering.TagFor(Duration.FromDays(1)); // exactly SlowThreshold
 
-        Assert.True(tag.Has<System.SlowTierTag>());
-        Assert.False(tag.Has<System.FastTierTag>());
-        Assert.False(tag.Has<System.MediumTierTag>());
+        Assert.True(tag.Has<SlowTierTag>());
+        Assert.False(tag.Has<FastTierTag>());
+        Assert.False(tag.Has<MediumTierTag>());
 
-        var farOut = System.UpdateTiering.TagFor(Duration.FromDays(365 * 30)); // 30yr rotator example
-        Assert.True(farOut.Has<System.SlowTierTag>());
+        var farOut = UpdateTiering.TagFor(Duration.FromDays(365 * 30)); // 30yr rotator example
+        Assert.True(farOut.Has<SlowTierTag>());
     }
 }

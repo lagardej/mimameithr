@@ -1,5 +1,4 @@
 using Friflo.Engine.ECS;
-
 using Skald.Bithot.Geimr.Geometry;
 using Skald.Bithot.Geimr.Position;
 using Skald.Bithot.Geimr.Rotation;

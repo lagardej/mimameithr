@@ -17,7 +17,7 @@ public class RotationSystemTests
         var id = nornir.CreateEntity();
 
         // RotationPeriod scale 1000 -> 10 s period (see SetRotation doc table) -> 36 deg/s.
-        nornir.Handle(new SetRotation(id, InitialAngle: 1, RotationPeriod: 1000));
+        nornir.Handle(new SetRotation(id, 1, 1000));
 
         // Non-uniform Advance() calls straddling the 10s stagger interval twice (fires at
         // cumulative 11s and again at cumulative 22s), rather than one call per interval.

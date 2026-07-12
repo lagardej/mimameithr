@@ -1,5 +1,6 @@
 using Friflo.Engine.ECS;
 using Friflo.Engine.ECS.Systems;
+using Kjarni.Brunnr.System;
 using Xunit;
 
 namespace Kjarni.Brunnr.Tests;
@@ -33,7 +34,7 @@ public class StaggeredSystemGroupTests
         var fireTimesB = new List<float>();
         var fireTimesC = new List<float>();
 
-        var group = new System.StaggeredSystemGroup("test", interval: 10f, offset: 1f)
+        var group = new StaggeredSystemGroup("test", 10f, 1f)
         {
             new RecordingSystem(fireTimesA), new RecordingSystem(fireTimesB), new RecordingSystem(fireTimesC)
         };

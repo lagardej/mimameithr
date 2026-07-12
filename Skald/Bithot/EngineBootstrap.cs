@@ -32,7 +32,7 @@ public static class NornirBootstrap
         engine.Handle(new SetGeometry(id, Spherical, RadiusKm(696_000)));
         engine.Handle(new SetPhysics(id, AgeYears(4.6e9), MassKg(1.989e30)));
         engine.Handle(new SetLuminosity(id, LuminositySolar(1.0)));
-        engine.Handle(new SetRotation(id, InitialAngle: 1, RotationPeriodDays(25)));
+        engine.Handle(new SetRotation(id, 1, RotationPeriodDays(25)));
         engine.Handle(new SetPosition(id));
         return id;
     }
@@ -40,10 +40,10 @@ public static class NornirBootstrap
     private static int CreateEarth(Nornir engine, int sunId)
     {
         var id = engine.CreateEntity();
-        engine.Handle(new SetGeometry(id, Spherical, RadiusKm(6_371), AxialTilt: 23));
+        engine.Handle(new SetGeometry(id, Spherical, RadiusKm(6_371), 23));
         engine.Handle(new SetPhysics(id, AgeYears(4.54e9), MassKg(5.972e24)));
-        engine.Handle(new SetRotation(id, InitialAngle: 1, RotationPeriodDays(1)));
-        engine.Handle(new SetPosition(id, X: 150_000_000, VelocityY: 30, ParentId: sunId));
+        engine.Handle(new SetRotation(id, 1, RotationPeriodDays(1)));
+        engine.Handle(new SetPosition(id, 150_000_000, VelocityY: 30, ParentId: sunId));
         return id;
     }
 
@@ -52,8 +52,8 @@ public static class NornirBootstrap
         var id = engine.CreateEntity();
         engine.Handle(new SetGeometry(id, Spherical, RadiusKm(1_737)));
         engine.Handle(new SetPhysics(id, AgeYears(4.54e9), MassKg(7.342e22)));
-        engine.Handle(new SetRotation(id, InitialAngle: 1, RotationPeriodDays(27.3)));
-        engine.Handle(new SetPosition(id, X: 150_000_000 + 384_400, Y: 0, Z: 0, VelocityX: 0, VelocityY: 1.022, VelocityZ: 0, ParentId: earthId));
+        engine.Handle(new SetRotation(id, 1, RotationPeriodDays(27.3)));
+        engine.Handle(new SetPosition(id, 150_000_000 + 384_400, 0, 0, 0, 1.022, 0, earthId));
     }
 
     /// <summary>

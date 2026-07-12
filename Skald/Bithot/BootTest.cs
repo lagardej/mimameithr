@@ -11,10 +11,10 @@ public partial class BootTest : Node3D
 {
     private const uint Seed = 42;
 
-	// Composition root: one shared store, sub-engines built on top of it.
-	private readonly BrunnrEngine _brunnr = new();
-	private Bithot _bithot = null!;
-	private Nornir _nornir = null!;
+    // Composition root: one shared store, sub-engines built on top of it.
+    private readonly BrunnrEngine _brunnr = new();
+    private Bithot _bithot = null!;
+    private Nornir _nornir = null!;
 
 
     public override void _Ready()
@@ -22,13 +22,13 @@ public partial class BootTest : Node3D
         _nornir = new Nornir(_brunnr.Store);
         _bithot = new Bithot(_brunnr.Store, _nornir);
 
-		GridProvider.Initialize(GridShape.Spherical, new BifrostKart());
-		_nornir.Handle(new SetSeed(Seed));
-		NornirBootstrap.CreateSolarSystem(_nornir);
-		_bithot.Advance();
+        GridProvider.Initialize(GridShape.Spherical, new BifrostKart());
+        _nornir.Handle(new SetSeed(Seed));
+        NornirBootstrap.CreateSolarSystem(_nornir);
+        _bithot.Advance();
 
-		_bithot.AttachTo(this);
-	}
+        _bithot.AttachTo(this);
+    }
 
     public override void _PhysicsProcess(double delta)
     {
@@ -38,5 +38,10 @@ public partial class BootTest : Node3D
     public override void _Process(double delta)
     {
         _bithot.Advance();
+    }
+
+    public override void _ExitTree()
+    {
+        _brunnr.Dispose();
     }
 }

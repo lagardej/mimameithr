@@ -72,7 +72,8 @@ internal static class VerðandiSystems
     private static StaggeredSystemGroup MediumTier() =>
         new("Medium tier", UpdateTiering.MediumInterval, StaggerOffset)
         {
-            new RotationSystem(Tags.Get<MediumTierTag>()), new PositionSystem(Tags.Get<MediumTierTag>()),
+            new RotationSystem(Tags.Get<MediumTierTag>()),
+            new PositionSystem(Tags.Get<MediumTierTag>()),
             new IrradianceSystem()
         };
 
