@@ -1,3 +1,4 @@
+using Bithot.Eldr.Irradiance;
 using Bithot.Geimr.Geometry;
 using Bithot.Geimr.Position;
 using Bithot.Geimr.Rotation;
@@ -15,7 +16,8 @@ internal static class BithotSystemRegistry
         [
             new GeometrySystem(store),
             new PositionSystem(store),
-            new RotationSystem(store)
+            new RotationSystem(store),
+            new IrradianceColorSystem(store)
         ];
     }
 }

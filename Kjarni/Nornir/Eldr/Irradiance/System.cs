@@ -26,10 +26,22 @@ public sealed class IrradianceSystem : QuerySystem<IrradianceC, CellIdentityC, C
             for (var n = 0; n < irradiances.Length; n++)
             {
                 var planet = planetRefs[n].Parent;
+
+                // A cell's parent must orbit a luminous body (the star) to receive stellar irradiance.
+                // Skips the star's own cells and cells on bodies not orbiting a star directly (e.g. moons
+                // orbiting a planet) — multi-hop irradiance is not handled yet.
+                if (!planet.HasComponent<OrbitC>() ||
+                    !planet.HasComponent<OrbitParentC>() ||
+                    !planet.GetComponent<OrbitParentC>().Parent.HasComponent<LuminosityC>())
+                {
+                    continue;
+                }
+
+                var star = planet.GetComponent<OrbitParentC>().Parent;
                 var orbit = planet.GetComponent<OrbitC>();
                 var rotation = planet.GetComponent<RotationC>();
                 var geometry = planet.GetComponent<GeometryC>();
-                var luminosity = planet.GetComponent<LuminosityC>();
+                var luminosity = star.GetComponent<LuminosityC>();
 
                 var grid = (IGeodesicGrid) GridProvider.Get(geometry.GridShape);
                 var position = grid.CenterOf(identities[n].Id);

@@ -20,6 +20,7 @@ public sealed class Bithot
     private readonly Nornir.Nornir _nornir;
     private readonly EntityStore _store;
     private readonly IReadOnlyList<IBithotSystem> _systems;
+    private IrradianceMapRenderer? _irradianceMap;
 
     /// <summary>Creates a Bithot engine on top of an existing shared <paramref name="store" />.</summary>
     public Bithot(EntityStore store, Nornir.Nornir nornir)
@@ -33,6 +34,9 @@ public sealed class Bithot
     public void Advance()
     {
         foreach (var system in _systems) system.Advance();
+
+        // Depends on BodyNodeC, which only exists once AttachTo has run — see IrradianceMapRenderer remarks.
+        _irradianceMap?.Advance();
     }
 
     /// <summary>Attaches body, lighting, and camera renderers to <paramref name="parent" />.</summary>
@@ -41,5 +45,7 @@ public sealed class Bithot
         new BodyRenderer(_nornir, _store).AttachTo(parent);
         new IrradianceRenderer().AttachStellarLight(parent, lightDirection ?? new Vector3(-1f, -0.6f, -0.4f));
         new OrbitRenderer(_nornir).AttachCamera(parent);
+
+        _irradianceMap = new IrradianceMapRenderer(_store);
     }
 }

@@ -17,3 +17,9 @@ public struct GeometryC : IComponent
     /// <summary>Mean radius of the body.</summary>
     public Length Radius;
 }
+
+/// <summary>Marker: this body's R0 grid cell entities have been created by <see cref="CellGridSystem" />.</summary>
+[ComponentKey("geimr-cell-grid-seeded")]
+public struct CellGridSeededC : IComponent
+{
+}

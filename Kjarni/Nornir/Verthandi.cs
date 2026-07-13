@@ -3,6 +3,7 @@ using Brunnr.Time;
 using Friflo.Engine.ECS;
 using Friflo.Engine.ECS.Systems;
 using Nornir.Eldr.Irradiance;
+using Nornir.Geimr.Geometry;
 using Nornir.Geimr.Position;
 using Nornir.Geimr.Rotation;
 
@@ -61,7 +62,14 @@ internal static class VerðandiSystems
     ///     Creates and returns a configured <see cref="SystemRoot" /> bound to the given <paramref name="store" />.
     /// </summary>
     /// <param name="store">Entity store to bind the system root to.</param>
-    public static SystemRoot Build(EntityStore store) => new(store) { FastTier(), MediumTier(), SlowTier() };
+    public static SystemRoot Build(EntityStore store) => new(store)
+    {
+        // Untiered — cell provisioning is near-zero-cost once seeded (single HasComponent check per body/cell)
+        // and must run every tick so a body's cells exist in time for the same tick's IrradianceSystem.
+        new CellGridSystem(),
+        new IrradianceProvisionSystem(),
+        FastTier(), MediumTier(), SlowTier()
+    };
 
     private static StaggeredSystemGroup FastTier() =>
         new("Fast tier", UpdateTiering.FastInterval, StaggerOffset)
