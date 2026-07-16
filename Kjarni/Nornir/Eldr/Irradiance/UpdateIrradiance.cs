@@ -12,7 +12,7 @@ using static Nornir.Geimr.Geometry.StellarGeometry;
 namespace Nornir.Eldr.Irradiance;
 
 /// <summary>Updates <see cref="IrradianceC" /> for each cell entity from planet state via <see cref="CellParentRefC" />.</summary>
-public sealed class IrradianceSystem : QuerySystem<IrradianceC, CellIdentityC, CellParentRefC>
+public sealed class UpdateIrradiance : QuerySystem<IrradianceC, CellIdentityC, CellParentRefC>
 {
     // Reused across ticks per Friflo docs — avoids GC allocation on repeated RunParallel() calls.
     // Built lazily: Query is not populated until the system is attached to a store.

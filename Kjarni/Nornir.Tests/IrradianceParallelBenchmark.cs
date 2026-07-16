@@ -18,7 +18,7 @@ using static Nornir.Geimr.Geometry.StellarGeometry;
 namespace Nornir.Tests;
 
 /// <summary>
-///     Manual perf comparison for <see cref="IrradianceSystem" />'s parallel query conversion.
+///     Manual perf comparison for <see cref="UpdateIrradiance" />'s parallel query conversion.
 ///     See <c>.kanban/2_Doing/irradiance-albedo-parallel-query.md</c>, sub-task 4.
 /// </summary>
 /// <remarks>
@@ -94,7 +94,7 @@ public class IrradianceParallelBenchmark(ITestOutputHelper output)
         var store = new EntityStore { JobRunner = runner };
         BuildBodies(store, cellCount);
 
-        var root = new SystemRoot(store) { new IrradianceSystem() };
+        var root = new SystemRoot(store) { new UpdateIrradiance() };
         root.Update(default); // warm-up: builds + runs the cached QueryJob once
 
         var sw = Stopwatch.StartNew();

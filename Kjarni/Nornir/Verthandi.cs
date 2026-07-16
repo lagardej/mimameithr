@@ -51,7 +51,7 @@ internal class Verðandi(EntityStore store)
 ///     Entities are bucketed into three update-cadence tiers by physical period (see
 ///     <see cref="UpdateTiering" />) — a fast rotator/orbiter updates far more often than a slow
 ///     one, instead of every entity sharing one blanket interval regardless of its own timescale.
-///     <see cref="IrradianceSystem" /> operates on cell entities, not the tiered planet-level
+///     <see cref="UpdateIrradiance" /> operates on cell entities, not the tiered planet-level
 ///     components, and stays in the medium tier untagged — it isn't currently tiered.
 /// </remarks>
 internal static class VerðandiSystems
@@ -66,8 +66,8 @@ internal static class VerðandiSystems
     {
         // Untiered — cell provisioning is near-zero-cost once seeded (single HasComponent check per body/cell)
         // and must run every tick so a body's cells exist in time for the same tick's IrradianceSystem.
-        new CellGridSystem(),
-        new IrradianceProvisionSystem(),
+        new AddGrid(),
+        new ProvisionIrradiance(),
         FastTier(), MediumTier(), SlowTier()
     };
 
@@ -82,7 +82,7 @@ internal static class VerðandiSystems
         {
             new RotationSystem(Tags.Get<MediumTierTag>()),
             new PositionSystem(Tags.Get<MediumTierTag>()),
-            new IrradianceSystem()
+            new UpdateIrradiance()
         };
 
     private static StaggeredSystemGroup SlowTier() =>

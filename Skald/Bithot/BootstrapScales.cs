@@ -1,5 +1,5 @@
 using static Nornir.Eldr.Luminosity.SetLuminosityScale;
-using static Nornir.Geimr.Geometry.SetGeometryScale;
+using static Nornir.Geimr.Geometry.AddGeometryScale;
 using static Nornir.Geimr.Physics.SetPhysicsScale;
 using static Nornir.Geimr.Rotation.SetRotationScale;
 

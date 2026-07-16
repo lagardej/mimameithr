@@ -1,7 +1,10 @@
 using Brunnr.Command;
 using Brunnr.Grid;
+using Friflo.Engine.ECS;
 using Kvasir;
 using System.ComponentModel.DataAnnotations;
+using UnitsNet;
+using static Nornir.Geimr.Geometry.AddGeometryScale;
 
 namespace Nornir.Geimr.Geometry;
 
@@ -28,7 +31,7 @@ namespace Nornir.Geimr.Geometry;
 ///  1000 | 1,000,000,000 | Largest hypergiants (1,428 R☉)
 /// </code>
 /// </remarks>
-public record SetGeometry(
+public record AddGeometry(
     int Id,
     GridShape GridShape,
     [Range(1u, 1000u)] uint Radius,
@@ -36,9 +39,28 @@ public record SetGeometry(
 ) : ICommand;
 
 /// <summary>The scales used by the command properties.</summary>
-public static class SetGeometryScale
+public static class AddGeometryScale
 {
     /// <summary>Radius scale: 1 km to 10⁹ km exponentially.</summary>
     public static readonly PiecewiseExponentialScale RadiusScale =
         new(Scaling.Range1000, [0, 4, 6, 9], [400, 700, 1000]);
+}
+
+/// <summary>Handles <see cref="AddGeometry" /> commands against the entity store.</summary>
+public class AddGeometryHandler(EntityStore store) : ICommandHandler<AddGeometry>
+{
+    /// <inheritdoc />
+    public void Handle(AddGeometry command)
+    {
+        var entity = store.GetEntityById(command.Id);
+        var radius = RadiusScale.Evaluate(command.Radius);
+
+        entity.AddComponent(new GeometryC
+        {
+            AxialTilt = Angle.FromDegrees(command.AxialTilt),
+            GridShape = command.GridShape,
+            Radius = Length.FromKilometers(radius)
+        });
+        entity.AddTag<SeedCellGridTag>();
+    }
 }

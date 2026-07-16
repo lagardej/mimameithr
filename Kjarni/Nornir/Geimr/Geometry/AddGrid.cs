@@ -2,9 +2,11 @@ using Brunnr.Cell;
 using Brunnr.Grid;
 using Friflo.Engine.ECS;
 using Friflo.Engine.ECS.Systems;
-using Kvasir.Grid;
 
 namespace Nornir.Geimr.Geometry;
+
+/// <summary>Tag indicating that <see cref="AddGrid" /> should create R0 grid cells for a body.</summary>
+public struct SeedCellGridTag : ITag;
 
 /// <summary>
 ///     Creates R0 grid cell entities for a body once its <see cref="GeometryC" /> is set. Cell partition is
@@ -18,8 +20,11 @@ namespace Nornir.Geimr.Geometry;
 ///     <c>Query.ForEachEntity</c> throws <c>StructuralChangeException</c> on direct structural changes while
 ///     iterating.
 /// </remarks>
-public sealed class CellGridSystem : QuerySystem<GeometryC>
+public sealed class AddGrid : QuerySystem<GeometryC>
 {
+    /// <summary>Creates a new system instance.</summary>
+    public AddGrid() => Filter.AnyTags(Tags.Get<SeedCellGridTag>());
+
     /// <inheritdoc />
     protected override void OnUpdate()
     {
@@ -27,20 +32,15 @@ public sealed class CellGridSystem : QuerySystem<GeometryC>
 
         Query.ForEachEntity((ref geometry, entity) =>
         {
-            if (entity.HasComponent<CellGridSeededC>())
-            {
-                return;
-            }
-
-            var grid = (IGeodesicGrid) GridProvider.Get(geometry.GridShape);
-            foreach (var cellId in grid.CellsAtResolution(Resolution.R0))
+            var grid = GridProvider.Get(geometry.GridShape);
+            foreach (var cellId in grid.RootCells())
             {
                 var cellEntityId = buffer.CreateEntity();
                 buffer.AddComponent(cellEntityId, new CellIdentityC { Id = cellId });
                 buffer.AddComponent(cellEntityId, new CellParentRefC { Parent = entity });
             }
 
-            buffer.AddComponent(entity.Id, new CellGridSeededC());
+            buffer.RemoveTag<SeedCellGridTag>(entity.Id);
         });
     }
 }
